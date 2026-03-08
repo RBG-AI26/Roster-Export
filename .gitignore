@@ -1,0 +1,14 @@
+# Sensitive roster inputs
+webCisRoster_*.txt
+**/webCisRoster_*.txt
+
+# Generated calendar exports
+*.ics
+
+# Local system/editor artifacts
+.DS_Store
+.vscode/
+.idea/
+*.log
+*.swp
+*.swo
