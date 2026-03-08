@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roster Export iCal</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header>
+        <h1>Roster to iCal Export</h1>
+        <p>Upload each new roster text file and export flights, SIM, and training as a single <code>.ics</code> file.</p>
+      </header>
+
+      <section class="card">
+        <label for="rosterFile" class="field-label">Roster file</label>
+        <input id="rosterFile" type="file" accept=".txt,text/plain" />
+
+        <div class="actions">
+          <button id="parseBtn" type="button">Parse roster</button>
+          <button id="downloadBtn" type="button" disabled>Download .ics</button>
+          <button id="shareBtn" type="button" disabled>Export to iPad</button>
+        </div>
+
+        <p id="status" aria-live="polite">Choose a roster file to begin.</p>
+      </section>
+
+      <section class="card">
+        <h2>Events preview</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Code</th>
+                <th>Info</th>
+                <th>Start</th>
+                <th>End</th>
+              </tr>
+            </thead>
+            <tbody id="eventsBody">
+              <tr>
+                <td colspan="5">No data yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="./app.mjs"></script>
+  </body>
+</html>
