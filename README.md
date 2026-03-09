@@ -26,7 +26,7 @@ Then open:
 ## Use
 1. Click **Roster file** and choose a new roster `.txt` file.
 2. Click **Parse roster**.
-3. Click **Download .ics** or **Export to iPad**.
+3. Click **Download .ics**, **Export to iPad**, or **Open .ics**.
 4. Import the `.ics` file into Apple Calendar.
 
 ## iPad export flow
@@ -36,6 +36,7 @@ Then open:
 4. In the share sheet, choose:
 - **Calendar** to import directly, or
 - **Save to Files** and then open the `.ics` file in Files.
+5. If share is blocked by Safari, tap **Open .ics** and use the iPad share button from the opened file.
 
 ## Notes
 - Flight events use UTC times from the roster data.

@@ -4,6 +4,7 @@ const rosterFileInput = document.getElementById("rosterFile");
 const parseBtn = document.getElementById("parseBtn");
 const downloadBtn = document.getElementById("downloadBtn");
 const shareBtn = document.getElementById("shareBtn");
+const openBtn = document.getElementById("openBtn");
 const statusEl = document.getElementById("status");
 const eventsBody = document.getElementById("eventsBody");
 
@@ -28,6 +29,26 @@ function withAirdropHint(message) {
 
 function setStatus(message) {
   statusEl.textContent = message;
+}
+
+function buildExportPayload() {
+  if (!parsedRoster) {
+    return null;
+  }
+
+  const content = rosterToIcs(parsedRoster, currentFileName || "roster.txt");
+  const fileName = `BP${parsedRoster.bidPeriod}_events.ics`;
+  const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
+  return { content, fileName, blob };
+}
+
+function blobToDataUrl(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error("Failed to convert calendar file."));
+    reader.readAsDataURL(blob);
+  });
 }
 
 function resetPreview() {
@@ -80,6 +101,7 @@ async function parseSelectedFile() {
       setStatus("No supported events found. Check the roster layout or file type.");
       downloadBtn.disabled = true;
       shareBtn.disabled = true;
+      openBtn.disabled = true;
       return;
     }
 
@@ -90,55 +112,81 @@ async function parseSelectedFile() {
     );
     downloadBtn.disabled = false;
     shareBtn.disabled = false;
+    openBtn.disabled = false;
   } catch (error) {
     console.error(error);
     setStatus("Failed to parse roster file.");
     downloadBtn.disabled = true;
     shareBtn.disabled = true;
+    openBtn.disabled = true;
   }
 }
 
 function downloadIcs() {
-  if (!parsedRoster) {
+  const payload = buildExportPayload();
+  if (!payload) {
     setStatus("Parse a roster first.");
     return;
   }
 
-  const content = rosterToIcs(parsedRoster, currentFileName || "roster.txt");
-  const fileName = `BP${parsedRoster.bidPeriod}_events.ics`;
-  const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
+  const url = URL.createObjectURL(payload.blob);
 
   const link = document.createElement("a");
   link.href = url;
-  link.download = fileName;
+  link.download = payload.fileName;
   document.body.appendChild(link);
   link.click();
   link.remove();
 
   setTimeout(() => URL.revokeObjectURL(url), 0);
-  setStatus(withAirdropHint(`Downloaded ${fileName}`));
+  setStatus(withAirdropHint(`Downloaded ${payload.fileName}`));
 }
 
-async function shareForIpad() {
-  if (!parsedRoster) {
+async function openIcsInBrowser() {
+  const payload = buildExportPayload();
+  if (!payload) {
     setStatus("Parse a roster first.");
     return;
   }
 
-  const content = rosterToIcs(parsedRoster, currentFileName || "roster.txt");
-  const fileName = `BP${parsedRoster.bidPeriod}_events.ics`;
-  const file = new File([content], fileName, { type: "text/calendar;charset=utf-8" });
+  try {
+    const dataUrl = await blobToDataUrl(payload.blob);
+    const opened = window.open(dataUrl, "_blank");
+    if (!opened) {
+      window.location.href = dataUrl;
+    }
+    setStatus("Opened .ics file. On iPad tap Share, then Calendar or Save to Files.");
+  } catch (error) {
+    console.error(error);
+    downloadIcs();
+  }
+}
+
+async function shareForIpad() {
+  const payload = buildExportPayload();
+  if (!payload) {
+    setStatus("Parse a roster first.");
+    return;
+  }
+
+  const shareableTypes = ["text/calendar;charset=utf-8", "text/plain;charset=utf-8"];
 
   try {
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      await navigator.share({
-        title: fileName,
-        text: "Roster calendar export",
-        files: [file],
-      });
-      setStatus(withAirdropHint("Shared .ics file. On iPad choose Calendar or Save to Files."));
-      return;
+    if (navigator.share) {
+      for (const type of shareableTypes) {
+        const file = new File([payload.content], payload.fileName, { type });
+        if (navigator.canShare && !navigator.canShare({ files: [file] })) {
+          continue;
+        }
+
+        await navigator.share({
+          title: payload.fileName,
+          text: "Roster calendar export",
+          files: [file],
+        });
+        setStatus(withAirdropHint("Shared .ics file. On iPad choose Calendar or Save to Files."));
+        return;
+      }
     }
   } catch (error) {
     if (error?.name === "AbortError") {
@@ -148,16 +196,17 @@ async function shareForIpad() {
     console.error(error);
   }
 
-  downloadIcs();
-  setStatus(withAirdropHint("Share not supported in this browser. Downloaded .ics instead."));
+  await openIcsInBrowser();
 }
 
 parseBtn.addEventListener("click", parseSelectedFile);
 downloadBtn.addEventListener("click", downloadIcs);
 shareBtn.addEventListener("click", shareForIpad);
+openBtn.addEventListener("click", openIcsInBrowser);
 rosterFileInput.addEventListener("change", () => {
   downloadBtn.disabled = true;
   shareBtn.disabled = true;
+  openBtn.disabled = true;
   parsedRoster = null;
   setStatus('File selected. Click "Parse roster".');
 });
