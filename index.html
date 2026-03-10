@@ -48,6 +48,69 @@
           </table>
         </div>
       </section>
+
+      <section class="card">
+        <h2>DTA Checker</h2>
+        <p>Select a roster pattern and calculate DTA using Part A + Part B rules.</p>
+
+        <div class="dta-controls">
+          <label for="patternSelect" class="field-label">Pattern</label>
+          <select id="patternSelect" disabled>
+            <option value="">Parse a roster first</option>
+          </select>
+          <button id="checkDtaBtn" type="button" disabled>Check DTA</button>
+        </div>
+
+        <p id="dtaStatus" aria-live="polite">Parse a roster, then select a pattern.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Section</th>
+                <th>Hours</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody id="dtaSummaryBody">
+              <tr>
+                <td colspan="3">No DTA calculation yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>DTA Rates By Port</h3>
+        <p>If a required port is missing, add it below and save rates.</p>
+
+        <form id="addRateForm" class="rate-form">
+          <div class="rate-field">
+            <label for="newRatePort" class="field-label">Port code</label>
+            <input id="newRatePort" type="text" maxlength="3" placeholder="e.g. SIN" />
+          </div>
+          <div class="rate-field">
+            <label for="newRateValue" class="field-label">Hourly rate</label>
+            <input id="newRateValue" type="number" min="0" step="0.01" placeholder="e.g. 12.34" />
+          </div>
+          <button id="addRateBtn" type="submit">Add / Update Rate</button>
+        </form>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Port</th>
+                <th>Rate</th>
+              </tr>
+            </thead>
+            <tbody id="rateTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="actions">
+          <button id="saveRatesBtn" type="button">Save Rates</button>
+        </div>
+      </section>
     </main>
 
     <script type="module" src="./app.mjs"></script>

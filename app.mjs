@@ -7,9 +7,35 @@ const shareBtn = document.getElementById("shareBtn");
 const openBtn = document.getElementById("openBtn");
 const statusEl = document.getElementById("status");
 const eventsBody = document.getElementById("eventsBody");
+const patternSelect = document.getElementById("patternSelect");
+const checkDtaBtn = document.getElementById("checkDtaBtn");
+const dtaStatusEl = document.getElementById("dtaStatus");
+const dtaSummaryBody = document.getElementById("dtaSummaryBody");
+const rateTableBody = document.getElementById("rateTableBody");
+const saveRatesBtn = document.getElementById("saveRatesBtn");
+const addRateForm = document.getElementById("addRateForm");
+const newRatePortInput = document.getElementById("newRatePort");
+const newRateValueInput = document.getElementById("newRateValue");
+const dtaFeatureEnabled =
+  !!patternSelect &&
+  !!checkDtaBtn &&
+  !!dtaStatusEl &&
+  !!dtaSummaryBody &&
+  !!rateTableBody &&
+  !!saveRatesBtn &&
+  !!addRateForm &&
+  !!newRatePortInput &&
+  !!newRateValueInput;
 
 let parsedRoster = null;
 let currentFileName = null;
+let dtaPatterns = [];
+let dtaRates = {};
+let dtaModuleReady = false;
+let calculateDtaForPattern = () => null;
+let getDtaPatterns = () => [];
+let loadDtaRates = () => ({});
+let saveDtaRates = () => {};
 
 function isMacSafari() {
   const ua = navigator.userAgent || "";
@@ -29,6 +55,39 @@ function withAirdropHint(message) {
 
 function setStatus(message) {
   statusEl.textContent = message;
+}
+
+function setDtaStatus(message) {
+  if (!dtaFeatureEnabled) {
+    return;
+  }
+  dtaStatusEl.textContent = message;
+}
+
+async function initDtaModule() {
+  if (!dtaFeatureEnabled) {
+    return;
+  }
+
+  try {
+    const dtaModule = await import("./dta.mjs");
+    calculateDtaForPattern = dtaModule.calculateDtaForPattern;
+    getDtaPatterns = dtaModule.getDtaPatterns;
+    loadDtaRates = dtaModule.loadDtaRates;
+    saveDtaRates = dtaModule.saveDtaRates;
+    dtaRates = loadDtaRates();
+    dtaModuleReady = true;
+    renderRateTable();
+    setDtaStatus("Parse a roster, then select a pattern.");
+  } catch (error) {
+    console.error("Failed to load DTA module", error);
+    dtaModuleReady = false;
+    dtaRates = {};
+    dtaPatterns = [];
+    resetDtaPatternSelect("DTA module unavailable");
+    resetDtaSummary("DTA module unavailable.");
+    setDtaStatus("DTA module unavailable. Calendar parse/export still works.");
+  }
 }
 
 function buildExportPayload() {
@@ -59,6 +118,287 @@ function resetPreview() {
   cell.textContent = "No data yet.";
   row.appendChild(cell);
   eventsBody.appendChild(row);
+}
+
+function resetDtaSummary(message = "No DTA calculation yet.") {
+  if (!dtaFeatureEnabled) {
+    return;
+  }
+  dtaSummaryBody.innerHTML = "";
+  const row = document.createElement("tr");
+  const cell = document.createElement("td");
+  cell.colSpan = 3;
+  cell.textContent = message;
+  row.appendChild(cell);
+  dtaSummaryBody.appendChild(row);
+}
+
+function resetDtaPatternSelect(message = "Parse a roster first") {
+  if (!dtaFeatureEnabled) {
+    return;
+  }
+  patternSelect.innerHTML = "";
+  const option = document.createElement("option");
+  option.value = "";
+  option.textContent = message;
+  patternSelect.appendChild(option);
+  patternSelect.disabled = true;
+  checkDtaBtn.disabled = true;
+}
+
+function formatMoney(amount) {
+  if (amount == null || Number.isNaN(amount)) {
+    return "Missing rate";
+  }
+  return `$${amount.toFixed(2)}`;
+}
+
+function formatHours(hours) {
+  return Number(hours || 0).toFixed(2);
+}
+
+function renderRateTable() {
+  if (!dtaFeatureEnabled) {
+    return;
+  }
+  rateTableBody.innerHTML = "";
+  const portCodes = Object.keys(dtaRates).sort();
+
+  if (portCodes.length === 0) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = 2;
+    cell.textContent = "No rates configured.";
+    row.appendChild(cell);
+    rateTableBody.appendChild(row);
+    return;
+  }
+
+  for (const portCode of portCodes) {
+    const row = document.createElement("tr");
+
+    const portCell = document.createElement("td");
+    portCell.textContent = portCode;
+
+    const rateCell = document.createElement("td");
+    const input = document.createElement("input");
+    input.type = "number";
+    input.min = "0";
+    input.step = "0.01";
+    input.dataset.port = portCode;
+    input.value = Number(dtaRates[portCode]).toFixed(2);
+    rateCell.appendChild(input);
+
+    row.appendChild(portCell);
+    row.appendChild(rateCell);
+    rateTableBody.appendChild(row);
+  }
+}
+
+function readRatesFromTable() {
+  if (!dtaFeatureEnabled) {
+    return { nextRates: dtaRates, invalidPorts: [] };
+  }
+  const nextRates = {};
+  const invalidPorts = [];
+  const inputs = rateTableBody.querySelectorAll("input[data-port]");
+
+  for (const input of inputs) {
+    const portCode = String(input.dataset.port || "").trim().toUpperCase();
+    const rate = Number(input.value);
+    if (!portCode || !Number.isFinite(rate) || rate <= 0) {
+      invalidPorts.push(portCode || "(unknown)");
+      continue;
+    }
+    nextRates[portCode] = rate;
+  }
+
+  return { nextRates, invalidPorts };
+}
+
+function saveRateTable() {
+  if (!dtaModuleReady) {
+    setDtaStatus("DTA module unavailable.");
+    return;
+  }
+
+  const { nextRates, invalidPorts } = readRatesFromTable();
+  if (invalidPorts.length > 0) {
+    setDtaStatus(`Invalid rate value for: ${invalidPorts.join(", ")}.`);
+    return;
+  }
+
+  dtaRates = nextRates;
+  saveDtaRates(dtaRates);
+  renderRateTable();
+  setDtaStatus("DTA rates saved for future reference.");
+
+  if (patternSelect.value) {
+    checkSelectedPatternDta();
+  }
+}
+
+function populatePatternSelect(patterns) {
+  if (!dtaFeatureEnabled) {
+    return;
+  }
+  if (!dtaModuleReady) {
+    resetDtaPatternSelect("DTA module unavailable");
+    setDtaStatus("DTA module unavailable.");
+    resetDtaSummary("DTA module unavailable.");
+    return;
+  }
+  patternSelect.innerHTML = "";
+  if (!patterns.length) {
+    resetDtaPatternSelect("No patterns found in roster");
+    setDtaStatus("No patterns available to calculate DTA.");
+    resetDtaSummary("No patterns found in this roster.");
+    return;
+  }
+
+  const countByCode = new Map();
+  for (const pattern of patterns) {
+    countByCode.set(pattern.patternCode, (countByCode.get(pattern.patternCode) || 0) + 1);
+  }
+
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = "Select pattern code";
+  patternSelect.appendChild(placeholder);
+
+  for (const pattern of patterns) {
+    const option = document.createElement("option");
+    option.value = pattern.id;
+    const hasDuplicates = (countByCode.get(pattern.patternCode) || 0) > 1;
+    option.textContent = hasDuplicates ? `${pattern.patternCode} (${pattern.tripStartIso})` : pattern.patternCode;
+    patternSelect.appendChild(option);
+  }
+
+  patternSelect.disabled = false;
+  checkDtaBtn.disabled = false;
+  setDtaStatus("Select a pattern code and click Check DTA.");
+}
+
+function renderDtaSummary(result) {
+  if (!dtaFeatureEnabled) {
+    return;
+  }
+  dtaSummaryBody.innerHTML = "";
+
+  if (!result || result.flightsCount === 0) {
+    resetDtaSummary("No flight sectors available for this pattern.");
+    return;
+  }
+
+  const addRow = (section, hours, amount) => {
+    const row = document.createElement("tr");
+    const sectionCell = document.createElement("td");
+    const hoursCell = document.createElement("td");
+    const amountCell = document.createElement("td");
+    sectionCell.textContent = section;
+    hoursCell.textContent = formatHours(hours);
+    amountCell.textContent = formatMoney(amount);
+    row.appendChild(sectionCell);
+    row.appendChild(hoursCell);
+    row.appendChild(amountCell);
+    dtaSummaryBody.appendChild(row);
+  };
+
+  for (const segment of result.partA.segments) {
+    addRow(
+      `Part A ${segment.flightNumber} ${segment.origin}/${segment.destination} @ ${segment.ratePort}`,
+      segment.hours,
+      segment.amount
+    );
+  }
+  addRow("Part A subtotal", result.partA.totalHours, result.partA.totalAmount);
+
+  for (const segment of result.partB.segments) {
+    addRow(`Part B layover ${segment.slipPort} @ ${segment.ratePort}`, segment.hours, segment.amount);
+  }
+  addRow("Part B subtotal", result.partB.totalHours, result.partB.totalAmount);
+
+  addRow("Total DTA", result.partA.totalHours + result.partB.totalHours, result.grandTotal);
+}
+
+function getSelectedPattern() {
+  if (!dtaFeatureEnabled) {
+    return null;
+  }
+  const selectedId = patternSelect.value;
+  if (!selectedId) {
+    return null;
+  }
+
+  return dtaPatterns.find((pattern) => pattern.id === selectedId) || null;
+}
+
+function checkSelectedPatternDta() {
+  if (!dtaFeatureEnabled) {
+    return;
+  }
+  if (!dtaModuleReady) {
+    setDtaStatus("DTA module unavailable.");
+    return;
+  }
+  const selectedPattern = getSelectedPattern();
+  if (!selectedPattern) {
+    setDtaStatus("Select a pattern code to check DTA.");
+    return;
+  }
+
+  const result = calculateDtaForPattern(selectedPattern, dtaRates);
+  renderDtaSummary(result);
+
+  if (result.missingPorts.length > 0) {
+    const missingList = result.missingPorts.join(", ");
+    setDtaStatus(`Missing DTA rate for: ${missingList}. Add the rate and save, then check again.`);
+    if (!newRatePortInput.value) {
+      newRatePortInput.value = result.missingPorts[0];
+    }
+    return;
+  }
+
+  setDtaStatus(
+    `DTA for ${result.patternCode} (${result.tripStartIso} to ${result.tripEndIso}) is ${formatMoney(result.grandTotal)}.`
+  );
+}
+
+function handleAddOrUpdateRate(event) {
+  if (!dtaFeatureEnabled) {
+    return;
+  }
+  if (!dtaModuleReady) {
+    setDtaStatus("DTA module unavailable.");
+    return;
+  }
+  event.preventDefault();
+
+  const portCode = String(newRatePortInput.value || "")
+    .trim()
+    .toUpperCase();
+  const rate = Number(newRateValueInput.value);
+
+  if (!/^[A-Z]{3}$/.test(portCode)) {
+    setDtaStatus("Enter a valid 3-letter port code.");
+    return;
+  }
+  if (!Number.isFinite(rate) || rate <= 0) {
+    setDtaStatus("Enter a valid positive hourly rate.");
+    return;
+  }
+
+  dtaRates[portCode] = rate;
+  saveDtaRates(dtaRates);
+  renderRateTable();
+
+  newRatePortInput.value = "";
+  newRateValueInput.value = "";
+  setDtaStatus(`Saved rate for ${portCode}.`);
+
+  if (patternSelect.value) {
+    checkSelectedPatternDta();
+  }
 }
 
 function renderPreview(events) {
@@ -96,12 +436,21 @@ async function parseSelectedFile() {
     parsedRoster = parseRosterText(text);
 
     renderPreview(parsedRoster.events);
+    if (dtaFeatureEnabled && dtaModuleReady) {
+      dtaPatterns = getDtaPatterns(parsedRoster);
+      populatePatternSelect(dtaPatterns);
+      resetDtaSummary("Select a pattern and click Check DTA.");
+    }
 
     if (parsedRoster.events.length === 0) {
       setStatus("No supported events found. Check the roster layout or file type.");
       downloadBtn.disabled = true;
       shareBtn.disabled = true;
       openBtn.disabled = true;
+      if (dtaFeatureEnabled) {
+        resetDtaPatternSelect("No patterns found in roster");
+        setDtaStatus(dtaModuleReady ? "No patterns available to calculate DTA." : "DTA module unavailable.");
+      }
       return;
     }
 
@@ -119,6 +468,11 @@ async function parseSelectedFile() {
     downloadBtn.disabled = true;
     shareBtn.disabled = true;
     openBtn.disabled = true;
+    if (dtaFeatureEnabled) {
+      resetDtaPatternSelect("Parse failed");
+      resetDtaSummary("No DTA calculation yet.");
+      setDtaStatus("Unable to calculate DTA because parsing failed.");
+    }
   }
 }
 
@@ -203,12 +557,30 @@ parseBtn.addEventListener("click", parseSelectedFile);
 downloadBtn.addEventListener("click", downloadIcs);
 shareBtn.addEventListener("click", shareForIpad);
 openBtn.addEventListener("click", openIcsInBrowser);
+if (dtaFeatureEnabled) {
+  checkDtaBtn.addEventListener("click", checkSelectedPatternDta);
+  saveRatesBtn.addEventListener("click", saveRateTable);
+  addRateForm.addEventListener("submit", handleAddOrUpdateRate);
+}
 rosterFileInput.addEventListener("change", () => {
   downloadBtn.disabled = true;
   shareBtn.disabled = true;
   openBtn.disabled = true;
   parsedRoster = null;
+  if (dtaFeatureEnabled) {
+    dtaPatterns = [];
+    resetDtaPatternSelect("Parse a roster first");
+    resetDtaSummary("No DTA calculation yet.");
+    setDtaStatus('File selected. Click "Parse roster", then choose a pattern.');
+  }
   setStatus('File selected. Click "Parse roster".');
 });
 
 resetPreview();
+setStatus('Ready. Choose a roster file, then click "Parse roster".');
+if (dtaFeatureEnabled) {
+  resetDtaPatternSelect("Parse a roster first");
+  resetDtaSummary("No DTA calculation yet.");
+  setDtaStatus("Parse a roster, then select a pattern.");
+  initDtaModule();
+}

@@ -10,6 +10,7 @@ Upload your `webCisRoster_*.txt` file, parse trips/flights plus SIM/training dut
 - Creates one all-day event per pattern occurrence with sector details in notes.
 - Adds `SIM` and training duties from the roster table.
 - Adds all-day `A Day` and `X Day` markers (including `Last X Day` at end of an X run).
+- Includes a DTA checker per pattern code with editable, saved-by-port rates.
 - Exports all events in one `.ics` file.
 
 ## Run
@@ -26,8 +27,10 @@ Then open:
 ## Use
 1. Click **Roster file** and choose a new roster `.txt` file.
 2. Click **Parse roster**.
-3. Click **Download .ics**, **Export to iPad**, or **Open .ics**.
-4. Import the `.ics` file into Apple Calendar.
+3. Optional: in **DTA Checker**, select a pattern code and click **Check DTA**.
+4. If a required port rate is missing, add/update it and click **Save Rates**.
+5. Click **Download .ics**, **Export to iPad**, or **Open .ics**.
+6. Import the `.ics` file into Apple Calendar.
 
 ## iPad export flow
 1. Open the app in Safari (on iPad or iPhone).

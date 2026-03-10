@@ -90,6 +90,64 @@ button:disabled {
   overflow-x: auto;
 }
 
+select,
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.45rem 0.6rem;
+  font: inherit;
+  color: var(--text);
+  background: #fff;
+}
+
+.dta-controls {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.6rem 0.8rem;
+  align-items: end;
+}
+
+.dta-controls .field-label {
+  margin-bottom: 0.2rem;
+  grid-column: 1 / span 2;
+}
+
+#dtaStatus {
+  margin-top: 0.8rem;
+  color: var(--muted);
+}
+
+.rate-form {
+  margin-top: 0.9rem;
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-end;
+}
+
+.rate-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.rate-field .field-label {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.rate-field input {
+  min-width: 170px;
+}
+
+#addRateBtn {
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -116,5 +174,27 @@ th {
 
   button {
     width: 100%;
+  }
+
+  .dta-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .dta-controls .field-label {
+    grid-column: 1;
+  }
+
+  .rate-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .rate-field {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .rate-field .field-label {
+    margin-bottom: 0.2rem;
   }
 }
