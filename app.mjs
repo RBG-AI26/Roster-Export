@@ -206,7 +206,7 @@ function resetDtaSummary(message = "No DTA calculation yet.") {
   dtaSummaryBody.innerHTML = "";
   const row = document.createElement("tr");
   const cell = document.createElement("td");
-  cell.colSpan = 3;
+  cell.colSpan = 4;
   cell.textContent = message;
   row.appendChild(cell);
   dtaSummaryBody.appendChild(row);
@@ -234,6 +234,13 @@ function formatMoney(amount) {
 
 function formatHours(hours) {
   return Number(hours || 0).toFixed(2);
+}
+
+function formatRate(rate) {
+  if (rate == null || Number.isNaN(rate)) {
+    return "Missing rate";
+  }
+  return `$${Number(rate).toFixed(2)}/hr`;
 }
 
 function renderRateTable() {
@@ -369,15 +376,18 @@ function renderDtaSummary(result) {
     return;
   }
 
-  const addRow = (section, hours, amount) => {
+  const addRow = (section, rate, hours, amount) => {
     const row = document.createElement("tr");
     const sectionCell = document.createElement("td");
+    const rateCell = document.createElement("td");
     const hoursCell = document.createElement("td");
     const amountCell = document.createElement("td");
     sectionCell.textContent = section;
+    rateCell.textContent = rate;
     hoursCell.textContent = formatHours(hours);
     amountCell.textContent = formatMoney(amount);
     row.appendChild(sectionCell);
+    row.appendChild(rateCell);
     row.appendChild(hoursCell);
     row.appendChild(amountCell);
     dtaSummaryBody.appendChild(row);
@@ -386,18 +396,19 @@ function renderDtaSummary(result) {
   for (const segment of result.partA.segments) {
     addRow(
       `Part A ${segment.flightNumber} ${segment.origin}/${segment.destination} @ ${segment.ratePort}`,
+      formatRate(segment.rate),
       segment.hours,
       segment.amount
     );
   }
-  addRow("Part A subtotal", result.partA.totalHours, result.partA.totalAmount);
+  addRow("Part A subtotal", "-", result.partA.totalHours, result.partA.totalAmount);
 
   for (const segment of result.partB.segments) {
-    addRow(`Part B layover ${segment.slipPort} @ ${segment.ratePort}`, segment.hours, segment.amount);
+    addRow(`Part B layover ${segment.slipPort} @ ${segment.ratePort}`, formatRate(segment.rate), segment.hours, segment.amount);
   }
-  addRow("Part B subtotal", result.partB.totalHours, result.partB.totalAmount);
+  addRow("Part B subtotal", "-", result.partB.totalHours, result.partB.totalAmount);
 
-  addRow("Total DTA", result.partA.totalHours + result.partB.totalHours, result.grandTotal);
+  addRow("Total DTA", "-", result.partA.totalHours + result.partB.totalHours, result.grandTotal);
 }
 
 function getSelectedPattern() {
