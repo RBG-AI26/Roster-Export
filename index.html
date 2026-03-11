@@ -112,6 +112,19 @@
       </section>
     </main>
 
-    <script type="module" src="./app.mjs?v=20260311b"></script>
+    <script>
+      (async () => {
+        try {
+          await import("./app.mjs?v=20260311c");
+        } catch (error) {
+          console.error("Failed to load app module", error);
+          const statusEl = document.getElementById("status");
+          if (statusEl) {
+            statusEl.textContent =
+              "App failed to load. Start local server (python3 -m http.server 8000) and open http://localhost:8000";
+          }
+        }
+      })();
+    </script>
   </body>
 </html>
