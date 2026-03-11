@@ -1,4 +1,6 @@
-import { parseRosterText, rosterToIcs } from "./rosterParser.mjs";
+import { parseRosterText, rosterToIcs } from "./rosterParser.mjs?v=20260311b";
+
+const APP_VERSION = "2026-03-11b";
 
 const rosterFileInput = document.getElementById("rosterFile");
 const parseBtn = document.getElementById("parseBtn");
@@ -71,7 +73,7 @@ async function initDtaModule() {
   }
 
   try {
-    const dtaModule = await import("./dta.mjs");
+    const dtaModule = await import("./dta.mjs?v=20260311b");
     calculateDtaForPattern = dtaModule.calculateDtaForPattern;
     getDtaPatterns = dtaModule.getDtaPatterns;
     loadDtaRates = dtaModule.loadDtaRates;
@@ -665,7 +667,7 @@ rosterFileInput.addEventListener("change", () => {
 });
 
 resetPreview();
-setStatus('Ready. Choose a roster file, then click "Parse roster".');
+setStatus(`Ready (v${APP_VERSION}). Choose a roster file, then click "Parse roster".`);
 if (dtaFeatureEnabled) {
   resetDtaPatternSelect("Parse a roster first");
   resetDtaSummary("No DTA calculation yet.");
