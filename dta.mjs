@@ -1,4 +1,6 @@
 const STORAGE_KEY = "rosterExport.dtaRates.v1";
+const SIGN_ON_BUFFER_MS = 60 * 60 * 1000;
+const SIGN_OFF_BUFFER_MS = 30 * 60 * 1000;
 
 export const DEFAULT_DTA_RATES = Object.freeze({
   AUS: 8.89,
@@ -228,7 +230,13 @@ export function calculateDtaForPattern(pattern, rates) {
   };
 
   for (const flight of flights) {
-    const hours = getHoursBetween(flight.dtStartUtc, flight.dtEndUtc);
+    if (!(flight.dtStartUtc instanceof Date) || !(flight.dtEndUtc instanceof Date)) {
+      continue;
+    }
+
+    const dutyStartUtc = new Date(flight.dtStartUtc.getTime() - SIGN_ON_BUFFER_MS);
+    const dutyEndUtc = new Date(flight.dtEndUtc.getTime() + SIGN_OFF_BUFFER_MS);
+    const hours = getHoursBetween(dutyStartUtc, dutyEndUtc);
     if (hours <= 0) {
       continue;
     }
@@ -248,8 +256,8 @@ export function calculateDtaForPattern(pattern, rates) {
       hours: round2(hours),
       rate,
       amount,
-      startUtc: flight.dtStartUtc,
-      endUtc: flight.dtEndUtc,
+      startUtc: dutyStartUtc,
+      endUtc: dutyEndUtc,
     });
     partA.totalHours += hours;
     if (amount != null) {
@@ -260,7 +268,13 @@ export function calculateDtaForPattern(pattern, rates) {
   for (let i = 0; i < flights.length - 1; i += 1) {
     const current = flights[i];
     const next = flights[i + 1];
-    const hours = getHoursBetween(current.dtEndUtc, next.dtStartUtc);
+    if (!(current.dtEndUtc instanceof Date) || !(next.dtStartUtc instanceof Date)) {
+      continue;
+    }
+
+    const slipStartUtc = new Date(current.dtEndUtc.getTime() + SIGN_OFF_BUFFER_MS);
+    const slipEndUtc = new Date(next.dtStartUtc.getTime() - SIGN_ON_BUFFER_MS);
+    const hours = getHoursBetween(slipStartUtc, slipEndUtc);
     if (hours <= 0) {
       continue;
     }
@@ -278,8 +292,8 @@ export function calculateDtaForPattern(pattern, rates) {
       hours: round2(hours),
       rate,
       amount,
-      startUtc: current.dtEndUtc,
-      endUtc: next.dtStartUtc,
+      startUtc: slipStartUtc,
+      endUtc: slipEndUtc,
     });
     partB.totalHours += hours;
     if (amount != null) {
