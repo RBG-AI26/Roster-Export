@@ -234,7 +234,10 @@ export function calculateDtaForPattern(pattern, rates) {
       continue;
     }
 
-    const dutyStartUtc = new Date(flight.dtStartUtc.getTime() - SIGN_ON_BUFFER_MS);
+    const dutyStartUtc =
+      flight.reportStartUtc instanceof Date
+        ? flight.reportStartUtc
+        : new Date(flight.dtStartUtc.getTime() - SIGN_ON_BUFFER_MS);
     const dutyEndUtc = new Date(flight.dtEndUtc.getTime() + SIGN_OFF_BUFFER_MS);
     const hours = getHoursBetween(dutyStartUtc, dutyEndUtc);
     if (hours <= 0) {
@@ -273,7 +276,10 @@ export function calculateDtaForPattern(pattern, rates) {
     }
 
     const slipStartUtc = new Date(current.dtEndUtc.getTime() + SIGN_OFF_BUFFER_MS);
-    const slipEndUtc = new Date(next.dtStartUtc.getTime() - SIGN_ON_BUFFER_MS);
+    const slipEndUtc =
+      next.reportStartUtc instanceof Date
+        ? next.reportStartUtc
+        : new Date(next.dtStartUtc.getTime() - SIGN_ON_BUFFER_MS);
     const hours = getHoursBetween(slipStartUtc, slipEndUtc);
     if (hours <= 0) {
       continue;

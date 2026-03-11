@@ -415,6 +415,35 @@ function parseLocalPseudoDateTime(date, hhmm) {
   return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), hh, mm, 0));
 }
 
+function hhmmToMinutes(hhmm) {
+  if (!/^\d{4}$/.test(hhmm || "")) {
+    return null;
+  }
+  return Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(2, 4));
+}
+
+function deriveReportStartUtc(depLocalDate, depLocalHhmm, reportLocalHhmm, depDateTimeUtc) {
+  if (!(depLocalDate instanceof Date) || !(depDateTimeUtc instanceof Date)) {
+    return null;
+  }
+  if (!/^\d{4}$/.test(depLocalHhmm || "") || !/^\d{4}$/.test(reportLocalHhmm || "")) {
+    return null;
+  }
+
+  const depMinutes = hhmmToMinutes(depLocalHhmm);
+  const reportMinutes = hhmmToMinutes(reportLocalHhmm);
+  if (depMinutes == null || reportMinutes == null) {
+    return null;
+  }
+
+  // If report local appears after departure local, assume sign-on was previous local day.
+  const reportLocalDate = reportMinutes > depMinutes ? addDays(depLocalDate, -1) : depLocalDate;
+  const depLocalPseudo = parseLocalPseudoDateTime(depLocalDate, depLocalHhmm);
+  const reportLocalPseudo = parseLocalPseudoDateTime(reportLocalDate, reportLocalHhmm);
+  const localDiffMs = reportLocalPseudo.getTime() - depLocalPseudo.getTime();
+  return new Date(depDateTimeUtc.getTime() + localDiffMs);
+}
+
 function inferUtcCandidates(localDate, localHhmm, utcHhmm) {
   const localDateTime = parseLocalPseudoDateTime(localDate, localHhmm);
   const shifts = [-1, 0, 1];
@@ -580,6 +609,7 @@ function buildFlightEvents(tripOccurrences, patternMap, bidPeriod) {
         flight.flightDurationMinutes
       );
       const arrDateTimeUtc = arrInference.utc;
+      const reportStartUtc = deriveReportStartUtc(depLocalDate, flight.depLocal, flight.reportLocal, depDateTimeUtc);
 
       const summary = `${flight.flightNumber} ${flight.origin}->${flight.destination} (${trip.patternCode})`;
       events.push({
@@ -600,6 +630,7 @@ function buildFlightEvents(tripOccurrences, patternMap, bidPeriod) {
         arrDay: flight.arrDay,
         scheduledFlightMinutes: flight.flightDurationMinutes,
         scheduledFlightTime: minutesToDurationString(flight.flightDurationMinutes),
+        reportStartUtc,
         dtStartUtc: depDateTimeUtc,
         dtEndUtc: arrDateTimeUtc,
         startSort: depDateTimeUtc.getTime(),
