@@ -36,6 +36,7 @@ let calculateDtaForPattern = () => null;
 let getDtaPatterns = () => [];
 let loadDtaRates = () => ({});
 let saveDtaRates = () => {};
+let pdfJsModulePromise = null;
 
 function isMacSafari() {
   const ua = navigator.userAgent || "";
@@ -108,6 +109,82 @@ function blobToDataUrl(blob) {
     reader.onerror = () => reject(new Error("Failed to convert calendar file."));
     reader.readAsDataURL(blob);
   });
+}
+
+function isPdfFile(file) {
+  const name = String(file?.name || "").toLowerCase();
+  const type = String(file?.type || "").toLowerCase();
+  return name.endsWith(".pdf") || type === "application/pdf";
+}
+
+async function loadPdfJsModule() {
+  if (!pdfJsModulePromise) {
+    pdfJsModulePromise = import("https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.mjs");
+  }
+  return pdfJsModulePromise;
+}
+
+function linesFromPdfTextItems(items) {
+  const rowMap = new Map();
+
+  for (const item of items || []) {
+    const text = String(item?.str || "").trim();
+    if (!text) {
+      continue;
+    }
+
+    const x = Number(item?.transform?.[4] || 0);
+    const y = Number(item?.transform?.[5] || 0);
+    const rowKey = String(Math.round(y * 2) / 2);
+    if (!rowMap.has(rowKey)) {
+      rowMap.set(rowKey, []);
+    }
+    rowMap.get(rowKey).push({ x, text });
+  }
+
+  const rows = [...rowMap.entries()]
+    .map(([rowKey, cells]) => ({
+      y: Number(rowKey),
+      cells: cells.sort((a, b) => a.x - b.x),
+    }))
+    .sort((a, b) => b.y - a.y)
+    .map((row) => row.cells.map((cell) => cell.text).join(" ").replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+
+  return rows.join("\n");
+}
+
+async function extractTextFromPdf(file) {
+  let pdfjs;
+  try {
+    pdfjs = await loadPdfJsModule();
+  } catch (error) {
+    throw new Error("Could not load PDF reader library.");
+  }
+
+  const { getDocument, GlobalWorkerOptions } = pdfjs;
+  GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.mjs";
+
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  const loadingTask = getDocument({ data: bytes, useSystemFonts: true });
+  const pdf = await loadingTask.promise;
+  const pages = [];
+
+  for (let pageNum = 1; pageNum <= pdf.numPages; pageNum += 1) {
+    const page = await pdf.getPage(pageNum);
+    const content = await page.getTextContent();
+    pages.push(linesFromPdfTextItems(content.items));
+  }
+
+  return pages.join("\n\n");
+}
+
+async function readRosterFileText(file) {
+  if (isPdfFile(file)) {
+    return extractTextFromPdf(file);
+  }
+
+  return file.text();
 }
 
 function resetPreview() {
@@ -426,13 +503,16 @@ function renderPreview(events) {
 async function parseSelectedFile() {
   const file = rosterFileInput.files?.[0];
   if (!file) {
-    setStatus("Choose a roster .txt file first.");
+    setStatus("Choose a roster .txt or .pdf file first.");
     return;
   }
 
   try {
     currentFileName = file.name;
-    const text = await file.text();
+    if (isPdfFile(file)) {
+      setStatus("Reading PDF roster...");
+    }
+    const text = await readRosterFileText(file);
     parsedRoster = parseRosterText(text);
 
     renderPreview(parsedRoster.events);
@@ -443,7 +523,11 @@ async function parseSelectedFile() {
     }
 
     if (parsedRoster.events.length === 0) {
-      setStatus("No supported events found. Check the roster layout or file type.");
+      if (isPdfFile(file)) {
+        setStatus("PDF read complete but no supported roster events were found.");
+      } else {
+        setStatus("No supported events found. Check the roster layout or file type.");
+      }
       downloadBtn.disabled = true;
       shareBtn.disabled = true;
       openBtn.disabled = true;
@@ -456,7 +540,7 @@ async function parseSelectedFile() {
 
     setStatus(
       withAirdropHint(
-        `Parsed BP${parsedRoster.bidPeriod}: ${parsedRoster.counts.flights} flights + ${parsedRoster.counts.patterns} patterns + ${parsedRoster.counts.training} SIM/training + ${parsedRoster.counts.dayMarkers} A/X days = ${parsedRoster.counts.total} total events.`
+        `Parsed BP${parsedRoster.bidPeriod}: ${parsedRoster.counts.flights} flights + ${parsedRoster.counts.patterns} patterns + ${parsedRoster.counts.training} SIM/training + ${parsedRoster.counts.dayMarkers} A/X days + ${(parsedRoster.counts.leaveDays || 0)} AL days = ${parsedRoster.counts.total} total events.`
       )
     );
     downloadBtn.disabled = false;
@@ -464,7 +548,11 @@ async function parseSelectedFile() {
     openBtn.disabled = false;
   } catch (error) {
     console.error(error);
-    setStatus("Failed to parse roster file.");
+    if (isPdfFile(file)) {
+      setStatus("Failed to read PDF roster. If this persists, export as text and parse that file.");
+    } else {
+      setStatus("Failed to parse roster file.");
+    }
     downloadBtn.disabled = true;
     shareBtn.disabled = true;
     openBtn.disabled = true;

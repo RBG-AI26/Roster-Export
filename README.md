@@ -1,6 +1,6 @@
 # Roster Export iCal
 
-Upload your `webCisRoster_*.txt` file, parse trips/flights plus SIM/training duties, and download one Apple Calendar-compatible `.ics` file.
+Upload your `webCisRoster_*.txt` or roster `.pdf` file, parse trips/flights plus SIM/training duties, and download one Apple Calendar-compatible `.ics` file.
 
 ## What it does
 - Detects Bid Period (for example `BP374`).
@@ -9,9 +9,10 @@ Upload your `webCisRoster_*.txt` file, parse trips/flights plus SIM/training dut
 - Creates one calendar event per flight.
 - Creates one all-day event per pattern occurrence with sector details in notes.
 - Adds `SIM` and training duties from the roster table.
-- Adds all-day `A Day` and `X Day` markers (including `Last X Day` at end of an X run).
+- Adds all-day `A Day`, `X Day`, and `AL` (annual leave) markers (`Last X Day` shown at end of an X run).
 - Includes a DTA checker per pattern code with editable, saved-by-port rates.
 - Exports all events in one `.ics` file.
+- Supports direct PDF roster upload (parsed in-browser).
 
 ## Run
 From the project folder:
@@ -25,7 +26,7 @@ Then open:
 - [http://localhost:8000](http://localhost:8000)
 
 ## Use
-1. Click **Roster file** and choose a new roster `.txt` file.
+1. Click **Roster file** and choose a new roster `.txt` or `.pdf` file.
 2. Click **Parse roster**.
 3. Optional: in **DTA Checker**, select a pattern code and click **Check DTA**.
 4. If a required port rate is missing, add/update it and click **Save Rates**.

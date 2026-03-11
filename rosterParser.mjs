@@ -136,20 +136,71 @@ function parseScheduleSegment(segment, headerDate) {
   };
 }
 
-function parseScheduleRows(lines, headerDate) {
-  const startIndex = lines.findIndex((line) => line.includes("Date    Duty") && line.includes("Detail") && line.includes("Credit"));
-  if (startIndex < 0) {
+function splitScheduleLineIntoSegments(line) {
+  const source = String(line || "");
+  if (!source.trim()) {
     return [];
   }
 
+  if (/[|│]/.test(source)) {
+    return source.split(/[|│]/);
+  }
+
+  const starts = [...source.matchAll(/\d{2}\/\d{2}\s+[MTWFS]\s+/g)].map((match) => match.index);
+  if (starts.length <= 1) {
+    return [source];
+  }
+
+  const segments = [];
+  for (let i = 0; i < starts.length; i += 1) {
+    const start = starts[i];
+    const end = i + 1 < starts.length ? starts[i + 1] : source.length;
+    segments.push(source.slice(start, end));
+  }
+
+  return segments;
+}
+
+function dedupeScheduleRows(rows) {
+  const output = [];
+  const seen = new Set();
+
+  for (const row of rows) {
+    const key = [row.iso, row.dutyCode, row.detail || "", row.rept || "", row.end || "", row.credit || ""].join("|");
+    if (seen.has(key)) {
+      continue;
+    }
+
+    seen.add(key);
+    output.push(row);
+  }
+
+  return output;
+}
+
+function parseScheduleRows(lines, headerDate) {
+  const startIndex = lines.findIndex(
+    (line) => /Date\s+Duty/.test(line) && /Detail/.test(line) && /Credit/.test(line)
+  );
+
   const rows = [];
-  for (let i = startIndex + 1; i < lines.length; i += 1) {
+  const begin = startIndex >= 0 ? startIndex + 1 : 0;
+  let inScheduleTable = startIndex >= 0;
+
+  for (let i = begin; i < lines.length; i += 1) {
     const line = lines[i];
     if (line.includes("Carry Out")) {
       break;
     }
 
-    const segments = line.split("|");
+    if (!inScheduleTable && /^\s*\d{2}\/\d{2}\s+[MTWFS]\s+/.test(line)) {
+      inScheduleTable = true;
+    }
+    if (!inScheduleTable) {
+      continue;
+    }
+
+    const segments = splitScheduleLineIntoSegments(line);
     for (const segment of segments) {
       const parsed = parseScheduleSegment(segment, headerDate);
       if (parsed) {
@@ -158,8 +209,21 @@ function parseScheduleRows(lines, headerDate) {
     }
   }
 
-  rows.sort((a, b) => a.date - b.date);
-  return rows;
+  if (rows.length === 0) {
+    for (const line of lines) {
+      const segments = splitScheduleLineIntoSegments(line);
+      for (const segment of segments) {
+        const parsed = parseScheduleSegment(segment, headerDate);
+        if (parsed) {
+          rows.push(parsed);
+        }
+      }
+    }
+  }
+
+  const dedupedRows = dedupeScheduleRows(rows);
+  dedupedRows.sort((a, b) => a.date - b.date);
+  return dedupedRows;
 }
 
 function parseFlightLine(line) {
@@ -247,12 +311,13 @@ function parsePatternBlocks(lines) {
 
   for (let i = 0; i < lines.length; i += 1) {
     const line = lines[i];
-    const patternMatch = line.match(/\|\*\s*Pattern:\s*([A-Z0-9]+)\s*\|/);
+    const patternMatch =
+      line.match(/\|\*\s*Pattern:\s*([A-Z0-9]+)\s*\|/i) || line.match(/\bPattern\s*:?\s*([A-Z0-9]{4,})\b/i);
     if (!patternMatch) {
       continue;
     }
 
-    const patternCode = patternMatch[1];
+    const patternCode = patternMatch[1].toUpperCase();
     const flights = [];
 
     for (let j = i + 1; j < lines.length; j += 1) {
@@ -736,6 +801,40 @@ function buildAXDayEvents(scheduleRows, bidPeriod) {
   return events;
 }
 
+function buildALDayEvents(scheduleRows, bidPeriod) {
+  const events = [];
+
+  for (const row of scheduleRows) {
+    if (row.dutyCode !== "AL") {
+      continue;
+    }
+
+    const nextDay = addDays(row.date, 1);
+    events.push({
+      eventType: "leave_day",
+      timeKind: "all_day",
+      uid: `${bidPeriod}-${row.iso}-AL-day`,
+      bidPeriod,
+      category: "LEAVE",
+      dutyCode: row.dutyCode,
+      title: "AL",
+      summary: "AL",
+      detail: row.detail,
+      dateIso: row.iso,
+      dtStartDate: ymdForIcs(row.date),
+      dtEndDate: ymdForIcs(nextDay),
+      startSort: parseLocalPseudoDateTime(row.date, "0000").getTime(),
+      previewType: "LEAVE",
+      previewCode: "AL",
+      previewInfo: "Annual Leave",
+      previewStart: `${row.iso} all day`,
+      previewEnd: `${isoDate(nextDay)} all day`,
+    });
+  }
+
+  return events;
+}
+
 export function parseRosterText(text) {
   const lines = text.split(/\r?\n/);
   const headerDate = parseHeaderDate(text);
@@ -750,7 +849,8 @@ export function parseRosterText(text) {
   const patternEvents = buildPatternEvents(tripOccurrences, flightEvents, bidPeriod);
   const trainingEvents = buildTrainingEvents(scheduleRows, bidPeriod);
   const dayMarkerEvents = buildAXDayEvents(scheduleRows, bidPeriod);
-  const events = [...flightEvents, ...patternEvents, ...trainingEvents, ...dayMarkerEvents].sort(
+  const leaveEvents = buildALDayEvents(scheduleRows, bidPeriod);
+  const events = [...flightEvents, ...patternEvents, ...trainingEvents, ...dayMarkerEvents, ...leaveEvents].sort(
     (a, b) => a.startSort - b.startSort || a.uid.localeCompare(b.uid)
   );
 
@@ -762,6 +862,7 @@ export function parseRosterText(text) {
       patterns: patternEvents.length,
       training: trainingEvents.length,
       dayMarkers: dayMarkerEvents.length,
+      leaveDays: leaveEvents.length,
       total: events.length,
     },
     events,
