@@ -1,4 +1,4 @@
-import { parseRosterText, rosterToIcs } from "./rosterParser.mjs?v=20260311b";
+import { parseRosterText, rosterToIcs } from "./rosterParser.mjs";
 
 const APP_VERSION = "2026-03-11b";
 
@@ -73,7 +73,7 @@ async function initDtaModule() {
   }
 
   try {
-    const dtaModule = await import("./dta.mjs?v=20260311b");
+    const dtaModule = await import("./dta.mjs");
     calculateDtaForPattern = dtaModule.calculateDtaForPattern;
     getDtaPatterns = dtaModule.getDtaPatterns;
     loadDtaRates = dtaModule.loadDtaRates;
@@ -511,6 +511,7 @@ async function parseSelectedFile() {
 
   try {
     currentFileName = file.name;
+    setStatus(`Parsing ${file.name}...`);
     if (isPdfFile(file)) {
       setStatus("Reading PDF roster...");
     }
@@ -565,6 +566,16 @@ async function parseSelectedFile() {
     }
   }
 }
+
+window.addEventListener("error", (event) => {
+  console.error("Unhandled error", event.error || event.message);
+  setStatus("App error occurred. Hard refresh and try again.");
+});
+
+window.addEventListener("unhandledrejection", (event) => {
+  console.error("Unhandled promise rejection", event.reason);
+  setStatus("App error occurred. Hard refresh and try again.");
+});
 
 function downloadIcs() {
   const payload = buildExportPayload();
