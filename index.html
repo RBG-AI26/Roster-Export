@@ -67,6 +67,7 @@
             <thead>
               <tr>
                 <th>Section</th>
+                <th>Time Basis (UTC)</th>
                 <th>Rate/hr</th>
                 <th>Hours</th>
                 <th>Amount</th>
@@ -74,7 +75,7 @@
             </thead>
             <tbody id="dtaSummaryBody">
               <tr>
-                <td colspan="4">No DTA calculation yet.</td>
+                <td colspan="5">No DTA calculation yet.</td>
               </tr>
             </tbody>
           </table>
@@ -116,7 +117,7 @@
     <script>
       (async () => {
         try {
-          await import("./app.mjs?v=20260311d");
+          await import("./app.mjs?v=20260311e");
         } catch (error) {
           console.error("Failed to load app module", error);
           const statusEl = document.getElementById("status");

@@ -1,6 +1,6 @@
 import { parseRosterText, rosterToIcs } from "./rosterParser.mjs";
 
-const APP_VERSION = "2026-03-11d";
+const APP_VERSION = "2026-03-11e";
 
 const rosterFileInput = document.getElementById("rosterFile");
 const parseBtn = document.getElementById("parseBtn");
@@ -206,7 +206,7 @@ function resetDtaSummary(message = "No DTA calculation yet.") {
   dtaSummaryBody.innerHTML = "";
   const row = document.createElement("tr");
   const cell = document.createElement("td");
-  cell.colSpan = 4;
+  cell.colSpan = 5;
   cell.textContent = message;
   row.appendChild(cell);
   dtaSummaryBody.appendChild(row);
@@ -241,6 +241,27 @@ function formatRate(rate) {
     return "Missing rate";
   }
   return `$${Number(rate).toFixed(2)}/hr`;
+}
+
+function formatUtcDateTime(value) {
+  if (!(value instanceof Date)) {
+    return "-";
+  }
+
+  const dd = String(value.getUTCDate()).padStart(2, "0");
+  const mm = String(value.getUTCMonth() + 1).padStart(2, "0");
+  const yy = String(value.getUTCFullYear()).slice(-2);
+  const hh = String(value.getUTCHours()).padStart(2, "0");
+  const mi = String(value.getUTCMinutes()).padStart(2, "0");
+  return `${dd}/${mm}/${yy} ${hh}:${mi} UTC`;
+}
+
+function formatTimeBasis(startUtc, endUtc) {
+  if (!(startUtc instanceof Date) || !(endUtc instanceof Date)) {
+    return "-";
+  }
+
+  return `${formatUtcDateTime(startUtc)} to ${formatUtcDateTime(endUtc)}`;
 }
 
 function renderRateTable() {
@@ -376,17 +397,20 @@ function renderDtaSummary(result) {
     return;
   }
 
-  const addRow = (section, rate, hours, amount) => {
+  const addRow = (section, timeBasis, rate, hours, amount) => {
     const row = document.createElement("tr");
     const sectionCell = document.createElement("td");
+    const timeBasisCell = document.createElement("td");
     const rateCell = document.createElement("td");
     const hoursCell = document.createElement("td");
     const amountCell = document.createElement("td");
     sectionCell.textContent = section;
+    timeBasisCell.textContent = timeBasis;
     rateCell.textContent = rate;
     hoursCell.textContent = formatHours(hours);
     amountCell.textContent = formatMoney(amount);
     row.appendChild(sectionCell);
+    row.appendChild(timeBasisCell);
     row.appendChild(rateCell);
     row.appendChild(hoursCell);
     row.appendChild(amountCell);
@@ -396,19 +420,26 @@ function renderDtaSummary(result) {
   for (const segment of result.partA.segments) {
     addRow(
       `Part A ${segment.flightNumber} ${segment.origin}/${segment.destination} @ ${segment.ratePort}`,
+      formatTimeBasis(segment.startUtc, segment.endUtc),
       formatRate(segment.rate),
       segment.hours,
       segment.amount
     );
   }
-  addRow("Part A subtotal", "-", result.partA.totalHours, result.partA.totalAmount);
+  addRow("Part A subtotal", "-", "-", result.partA.totalHours, result.partA.totalAmount);
 
   for (const segment of result.partB.segments) {
-    addRow(`Part B layover ${segment.slipPort} @ ${segment.ratePort}`, formatRate(segment.rate), segment.hours, segment.amount);
+    addRow(
+      `Part B layover ${segment.slipPort} @ ${segment.ratePort}`,
+      formatTimeBasis(segment.startUtc, segment.endUtc),
+      formatRate(segment.rate),
+      segment.hours,
+      segment.amount
+    );
   }
-  addRow("Part B subtotal", "-", result.partB.totalHours, result.partB.totalAmount);
+  addRow("Part B subtotal", "-", "-", result.partB.totalHours, result.partB.totalAmount);
 
-  addRow("Total DTA", "-", result.partA.totalHours + result.partB.totalHours, result.grandTotal);
+  addRow("Total DTA", "-", "-", result.partA.totalHours + result.partB.totalHours, result.grandTotal);
 }
 
 function getSelectedPattern() {
