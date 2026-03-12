@@ -12,6 +12,7 @@ Upload your `webCisRoster_*.txt` or roster `.pdf` file, parse trips/flights plus
 - Adds all-day `A Day`, `X Day`, and `AL` (annual leave) markers (`Last X Day` shown at end of an X run).
 - Includes a DTA checker per pattern code using country meal+incidental rates (hourly = meal + incidental).
 - Uses a saved airport-to-country map and prompts only when a new airport code needs mapping.
+- Supports saved per-port hourly rate overrides (auto-filled when known and editable).
 - Applies fallback Cost Group 1 rate ($5.00 meals + $1.25 incidentals = $6.25/hr) when a mapped country is not listed.
 - Supports importing updated country rates from `.xlsx`/`.csv` and downloading the current rates table.
 - Exports all events in one `.ics` file.

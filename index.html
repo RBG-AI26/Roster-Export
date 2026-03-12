@@ -97,6 +97,23 @@
           <button id="downloadRatesBtn" type="button">Download Current Table</button>
         </div>
 
+        <h3>Port Rate Override</h3>
+        <p>
+          Enter a port code to auto-fill the known hourly rate. If unknown, the rate field stays blank so you can enter
+          and save your own rate for future use.
+        </p>
+        <form id="portRateForm" class="rate-form">
+          <div class="rate-field">
+            <label for="portRateCode" class="field-label">Port code</label>
+            <input id="portRateCode" type="text" maxlength="3" placeholder="e.g. SIN" />
+          </div>
+          <div class="rate-field">
+            <label for="portRateHourly" class="field-label">Hourly rate</label>
+            <input id="portRateHourly" type="number" min="0" step="0.01" placeholder="e.g. 12.34" />
+          </div>
+          <button id="savePortRateBtn" type="submit">Add / Update Rate</button>
+        </form>
+
         <p>Rates table display hidden by request. Imported rates are still saved and used for calculations.</p>
 
         <h3>Airport To Country Mapping</h3>
@@ -134,7 +151,7 @@
     <script>
       (async () => {
         try {
-          await import("./app.mjs?v=20260313b");
+          await import("./app.mjs?v=20260313c");
         } catch (error) {
           console.error("Failed to load app module", error);
           const statusEl = document.getElementById("status");

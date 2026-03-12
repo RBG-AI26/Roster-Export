@@ -1,5 +1,6 @@
 const COUNTRY_RATES_STORAGE_KEY = "rosterExport.dtaCountryRates.v2";
 const AIRPORT_COUNTRY_STORAGE_KEY = "rosterExport.airportCountryMap.v2";
+const AIRPORT_RATE_OVERRIDE_STORAGE_KEY = "rosterExport.airportRateOverrides.v1";
 
 const SIGN_ON_BUFFER_MS = 60 * 60 * 1000;
 const SIGN_OFF_BUFFER_MS = 30 * 60 * 1000;
@@ -481,6 +482,56 @@ export function saveAirportCountryMap(airportCountryMap, storageOverride = null,
   storage.setItem(AIRPORT_COUNTRY_STORAGE_KEY, JSON.stringify(cleaned));
 }
 
+export function loadAirportRateOverrides(storageOverride = null) {
+  const storage = getStorage(storageOverride);
+  if (!storage) {
+    return {};
+  }
+
+  try {
+    const raw = storage.getItem(AIRPORT_RATE_OVERRIDE_STORAGE_KEY);
+    if (!raw) {
+      return {};
+    }
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") {
+      return {};
+    }
+
+    const cleaned = {};
+    for (const [airportCodeRaw, rateRaw] of Object.entries(parsed)) {
+      const airportCode = normaliseAirportCode(airportCodeRaw);
+      const rate = asPositiveNumber(rateRaw);
+      if (!/^[A-Z]{3}$/.test(airportCode) || rate == null) {
+        continue;
+      }
+      cleaned[airportCode] = round2(rate);
+    }
+    return cleaned;
+  } catch {
+    return {};
+  }
+}
+
+export function saveAirportRateOverrides(airportRateOverrides, storageOverride = null) {
+  const storage = getStorage(storageOverride);
+  if (!storage) {
+    return;
+  }
+
+  const cleaned = {};
+  for (const [airportCodeRaw, rateRaw] of Object.entries(airportRateOverrides || {})) {
+    const airportCode = normaliseAirportCode(airportCodeRaw);
+    const rate = asPositiveNumber(rateRaw);
+    if (!/^[A-Z]{3}$/.test(airportCode) || rate == null) {
+      continue;
+    }
+    cleaned[airportCode] = round2(rate);
+  }
+
+  storage.setItem(AIRPORT_RATE_OVERRIDE_STORAGE_KEY, JSON.stringify(cleaned));
+}
+
 export function getKnownCountries(countryRates) {
   return Object.keys(countryRates || {}).sort((a, b) => a.localeCompare(b));
 }
@@ -575,6 +626,51 @@ function resolveRateDetailsByCountry(countryName, countryRates) {
   };
 }
 
+export function getHourlyRateForAirport(airportCodeRaw, countryRates, airportCountryMap, airportRateOverrides = {}) {
+  const airportCode = normaliseAirportCode(airportCodeRaw);
+  if (!/^[A-Z]{3}$/.test(airportCode) && airportCode !== "AUS") {
+    return {
+      airportCode,
+      country: "",
+      rate: null,
+      costGroup: "",
+      source: "invalid-airport-code",
+    };
+  }
+
+  const overrideRate = asPositiveNumber(airportRateOverrides?.[airportCode]);
+  if (overrideRate != null) {
+    const country = resolveCountryForAirport(airportCode, airportCountryMap || {}, countryRates || {});
+    return {
+      airportCode,
+      country,
+      rate: round2(overrideRate),
+      costGroup: "OVERRIDE",
+      source: "override",
+    };
+  }
+
+  const country = resolveCountryForAirport(airportCode, airportCountryMap || {}, countryRates || {});
+  if (!country) {
+    return {
+      airportCode,
+      country: "",
+      rate: null,
+      costGroup: "",
+      source: "missing-airport-map",
+    };
+  }
+
+  const details = resolveRateDetailsByCountry(country, countryRates || {});
+  return {
+    airportCode,
+    country: details.country || country,
+    rate: details.rate,
+    costGroup: details.costGroup,
+    source: details.source,
+  };
+}
+
 export function getDtaPatterns(parsedRoster) {
   if (!parsedRoster?.events?.length) {
     return [];
@@ -628,7 +724,7 @@ export function getDtaPatterns(parsedRoster) {
   return patterns;
 }
 
-export function calculateDtaForPattern(pattern, countryRates, airportCountryMap) {
+export function calculateDtaForPattern(pattern, countryRates, airportCountryMap, airportRateOverrides = {}) {
   const flights = [...(pattern?.flights || [])].sort((a, b) => a.dtStartUtc - b.dtStartUtc);
   const rates = countryRates || {};
   const airportMap = airportCountryMap || {};
@@ -664,22 +760,17 @@ export function calculateDtaForPattern(pattern, countryRates, airportCountryMap)
     }
 
     const rateAirportCode = resolvePartAAirportCode(flight.origin, flight.destination);
-    const rateCountry = resolveCountryForAirport(rateAirportCode, airportMap, rates);
+    const details = getHourlyRateForAirport(rateAirportCode, rates, airportMap, airportRateOverrides);
+    const rateCountry = details.country;
+    const rate = details.rate;
+    const rateSource = details.source;
+    const costGroup = details.costGroup;
 
-    let rate = null;
-    let rateSource = "missing-airport-map";
-    let costGroup = "";
-
-    if (!rateCountry) {
+    if (rate == null) {
       missingAirportCodes.add(rateAirportCode);
-    } else {
-      const details = resolveRateDetailsByCountry(rateCountry, rates);
-      rate = details.rate;
-      rateSource = details.source;
-      costGroup = details.costGroup;
-      if (details.source === "fallback") {
-        fallbackCountriesUsed.add(details.country || rateCountry);
-      }
+    }
+    if (rateSource === "fallback") {
+      fallbackCountriesUsed.add(rateCountry || rateAirportCode);
     }
 
     const amount = rate == null ? null : round2(hours * rate);
@@ -722,22 +813,17 @@ export function calculateDtaForPattern(pattern, countryRates, airportCountryMap)
     }
 
     const rateAirportCode = resolveSlipAirportCode(current.destination);
-    const rateCountry = resolveCountryForAirport(rateAirportCode, airportMap, rates);
+    const details = getHourlyRateForAirport(rateAirportCode, rates, airportMap, airportRateOverrides);
+    const rateCountry = details.country;
+    const rate = details.rate;
+    const rateSource = details.source;
+    const costGroup = details.costGroup;
 
-    let rate = null;
-    let rateSource = "missing-airport-map";
-    let costGroup = "";
-
-    if (!rateCountry) {
+    if (rate == null) {
       missingAirportCodes.add(rateAirportCode);
-    } else {
-      const details = resolveRateDetailsByCountry(rateCountry, rates);
-      rate = details.rate;
-      rateSource = details.source;
-      costGroup = details.costGroup;
-      if (details.source === "fallback") {
-        fallbackCountriesUsed.add(details.country || rateCountry);
-      }
+    }
+    if (rateSource === "fallback") {
+      fallbackCountriesUsed.add(rateCountry || rateAirportCode);
     }
 
     const amount = rate == null ? null : round2(hours * rate);
