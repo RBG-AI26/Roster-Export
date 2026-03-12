@@ -10,7 +10,10 @@ Upload your `webCisRoster_*.txt` or roster `.pdf` file, parse trips/flights plus
 - Creates one all-day event per pattern occurrence with sector details in notes.
 - Adds `SIM` and training duties from the roster table.
 - Adds all-day `A Day`, `X Day`, and `AL` (annual leave) markers (`Last X Day` shown at end of an X run).
-- Includes a DTA checker per pattern code with editable, saved-by-port rates.
+- Includes a DTA checker per pattern code using country meal+incidental rates (hourly = meal + incidental).
+- Uses a saved airport-to-country map and prompts only when a new airport code needs mapping.
+- Applies fallback Cost Group 1 rate ($5.00 meals + $1.25 incidentals = $6.25/hr) when a mapped country is not listed.
+- Supports importing updated country rates from `.xlsx`/`.csv` and downloading the current rates table.
 - Exports all events in one `.ics` file.
 - Supports direct PDF roster upload (parsed in-browser).
 
@@ -29,9 +32,10 @@ Then open:
 1. Click **Roster file** and choose a new roster `.txt` or `.pdf` file.
 2. Click **Parse roster**.
 3. Optional: in **DTA Checker**, select a pattern code and click **Check DTA**.
-4. If a required port rate is missing, add/update it and click **Save Rates**.
-5. Click **Download .ics**, **Export to iPad**, or **Open .ics**.
-6. Import the `.ics` file into Apple Calendar.
+4. If prompted for an unknown airport code, add/update its country mapping (saved for future use).
+5. Optional: import an updated rates table (`.xlsx`/`.csv`) or download the current table.
+6. Click **Download .ics**, **Export to iPad**, or **Open .ics**.
+7. Import the `.ics` file into Apple Calendar.
 
 ## iPad export flow
 1. Open the app in Safari (on iPad or iPhone).

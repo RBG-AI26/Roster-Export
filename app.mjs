@@ -1,6 +1,6 @@
 import { parseRosterText, rosterToIcs } from "./rosterParser.mjs";
 
-const APP_VERSION = "2026-03-11h";
+const APP_VERSION = "2026-03-13a";
 
 const rosterFileInput = document.getElementById("rosterFile");
 const parseBtn = document.getElementById("parseBtn");
@@ -9,36 +9,57 @@ const shareBtn = document.getElementById("shareBtn");
 const openBtn = document.getElementById("openBtn");
 const statusEl = document.getElementById("status");
 const eventsBody = document.getElementById("eventsBody");
+
 const patternSelect = document.getElementById("patternSelect");
 const checkDtaBtn = document.getElementById("checkDtaBtn");
 const dtaStatusEl = document.getElementById("dtaStatus");
 const dtaSummaryBody = document.getElementById("dtaSummaryBody");
-const rateTableBody = document.getElementById("rateTableBody");
-const saveRatesBtn = document.getElementById("saveRatesBtn");
-const addRateForm = document.getElementById("addRateForm");
-const newRatePortInput = document.getElementById("newRatePort");
-const newRateValueInput = document.getElementById("newRateValue");
+const countryRateTableBody = document.getElementById("countryRateTableBody");
+const airportMapTableBody = document.getElementById("airportMapTableBody");
+const countryOptions = document.getElementById("countryOptions");
+const ratesFileInput = document.getElementById("ratesFile");
+const importRatesBtn = document.getElementById("importRatesBtn");
+const downloadRatesBtn = document.getElementById("downloadRatesBtn");
+const addAirportMapForm = document.getElementById("addAirportMapForm");
+const newAirportCodeInput = document.getElementById("newAirportCode");
+const newAirportCountryInput = document.getElementById("newAirportCountry");
+
 const dtaFeatureEnabled =
   !!patternSelect &&
   !!checkDtaBtn &&
   !!dtaStatusEl &&
   !!dtaSummaryBody &&
-  !!rateTableBody &&
-  !!saveRatesBtn &&
-  !!addRateForm &&
-  !!newRatePortInput &&
-  !!newRateValueInput;
+  !!countryRateTableBody &&
+  !!airportMapTableBody &&
+  !!countryOptions &&
+  !!ratesFileInput &&
+  !!importRatesBtn &&
+  !!downloadRatesBtn &&
+  !!addAirportMapForm &&
+  !!newAirportCodeInput &&
+  !!newAirportCountryInput;
 
 let parsedRoster = null;
 let currentFileName = null;
 let dtaPatterns = [];
-let dtaRates = {};
+let dtaCountryRates = {};
+let airportCountryMap = {};
+
 let dtaModuleReady = false;
 let calculateDtaForPattern = () => null;
 let getDtaPatterns = () => [];
-let loadDtaRates = () => ({});
-let saveDtaRates = () => {};
+let loadDtaCountryRates = () => ({});
+let saveDtaCountryRates = () => {};
+let loadAirportCountryMap = () => ({});
+let saveAirportCountryMap = () => {};
+let getCountryRateRows = () => [];
+let getKnownCountries = () => [];
+let normaliseAirportCodeForInput = (value) => String(value || "").trim().toUpperCase();
+let canonicaliseCountryNameForInput = (value) => String(value || "").trim();
+let defaultFallbackRate = { costGroup: "1", mealRate: 5, incidentalRate: 1.25, hourlyRate: 6.25 };
+
 let pdfJsModulePromise = null;
+let xlsxModulePromise = null;
 
 function isMacSafari() {
   const ua = navigator.userAgent || "";
@@ -76,16 +97,29 @@ async function initDtaModule() {
     const dtaModule = await import("./dta.mjs");
     calculateDtaForPattern = dtaModule.calculateDtaForPattern;
     getDtaPatterns = dtaModule.getDtaPatterns;
-    loadDtaRates = dtaModule.loadDtaRates;
-    saveDtaRates = dtaModule.saveDtaRates;
-    dtaRates = loadDtaRates();
+    loadDtaCountryRates = dtaModule.loadDtaCountryRates;
+    saveDtaCountryRates = dtaModule.saveDtaCountryRates;
+    loadAirportCountryMap = dtaModule.loadAirportCountryMap;
+    saveAirportCountryMap = dtaModule.saveAirportCountryMap;
+    getCountryRateRows = dtaModule.getCountryRateRows;
+    getKnownCountries = dtaModule.getKnownCountries;
+    normaliseAirportCodeForInput = dtaModule.normaliseAirportCodeForInput;
+    canonicaliseCountryNameForInput = dtaModule.canonicaliseCountryNameForInput;
+    defaultFallbackRate = dtaModule.DEFAULT_FALLBACK_RATE || defaultFallbackRate;
+
+    dtaCountryRates = loadDtaCountryRates();
+    airportCountryMap = loadAirportCountryMap(null, dtaCountryRates);
+
     dtaModuleReady = true;
-    renderRateTable();
+    renderCountryOptions();
+    renderCountryRateTable();
+    renderAirportMapTable();
     setDtaStatus("Parse a roster, then select a pattern.");
   } catch (error) {
     console.error("Failed to load DTA module", error);
     dtaModuleReady = false;
-    dtaRates = {};
+    dtaCountryRates = {};
+    airportCountryMap = {};
     dtaPatterns = [];
     resetDtaPatternSelect("DTA module unavailable");
     resetDtaSummary("DTA module unavailable.");
@@ -126,6 +160,13 @@ async function loadPdfJsModule() {
   return pdfJsModulePromise;
 }
 
+async function loadXlsxModule() {
+  if (!xlsxModulePromise) {
+    xlsxModulePromise = import("https://cdn.jsdelivr.net/npm/xlsx@0.18.5/+esm");
+  }
+  return xlsxModulePromise;
+}
+
 function linesFromPdfTextItems(items) {
   const rowMap = new Map();
 
@@ -160,7 +201,7 @@ async function extractTextFromPdf(file) {
   let pdfjs;
   try {
     pdfjs = await loadPdfJsModule();
-  } catch (error) {
+  } catch {
     throw new Error("Could not load PDF reader library.");
   }
 
@@ -227,7 +268,7 @@ function resetDtaPatternSelect(message = "Parse a roster first") {
 
 function formatMoney(amount) {
   if (amount == null || Number.isNaN(amount)) {
-    return "Missing rate";
+    return "Need mapping";
   }
   return `$${amount.toFixed(2)}`;
 }
@@ -236,9 +277,12 @@ function formatHours(hours) {
   return Number(hours || 0).toFixed(2);
 }
 
-function formatRate(rate) {
+function formatRate(rate, source = "table") {
   if (rate == null || Number.isNaN(rate)) {
-    return "Missing rate";
+    return "Need airport-country mapping";
+  }
+  if (source === "fallback") {
+    return `$${Number(rate).toFixed(2)}/hr (default)`;
   }
   return `$${Number(rate).toFixed(2)}/hr`;
 }
@@ -264,84 +308,83 @@ function formatTimeBasis(startUtc, endUtc) {
   return `${formatUtcDateTime(startUtc)} to ${formatUtcDateTime(endUtc)}`;
 }
 
-function renderRateTable() {
+function renderCountryOptions() {
   if (!dtaFeatureEnabled) {
     return;
   }
-  rateTableBody.innerHTML = "";
-  const portCodes = Object.keys(dtaRates).sort();
 
-  if (portCodes.length === 0) {
+  countryOptions.innerHTML = "";
+  for (const country of getKnownCountries(dtaCountryRates)) {
+    const option = document.createElement("option");
+    option.value = country;
+    countryOptions.appendChild(option);
+  }
+}
+
+function renderCountryRateTable() {
+  if (!dtaFeatureEnabled) {
+    return;
+  }
+
+  countryRateTableBody.innerHTML = "";
+  const rows = getCountryRateRows(dtaCountryRates);
+
+  if (rows.length === 0) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = 3;
+    cell.textContent = "No country rates configured.";
+    row.appendChild(cell);
+    countryRateTableBody.appendChild(row);
+    return;
+  }
+
+  for (const details of rows) {
+    const row = document.createElement("tr");
+
+    const countryCell = document.createElement("td");
+    countryCell.textContent = details.country;
+
+    const groupCell = document.createElement("td");
+    groupCell.textContent = details.costGroup || "-";
+
+    const hourlyCell = document.createElement("td");
+    hourlyCell.textContent = `$${Number(details.hourlyRate).toFixed(2)}/hr`;
+
+    row.appendChild(countryCell);
+    row.appendChild(groupCell);
+    row.appendChild(hourlyCell);
+    countryRateTableBody.appendChild(row);
+  }
+}
+
+function renderAirportMapTable() {
+  if (!dtaFeatureEnabled) {
+    return;
+  }
+
+  airportMapTableBody.innerHTML = "";
+  const rows = Object.entries(airportCountryMap).sort((a, b) => a[0].localeCompare(b[0]));
+
+  if (rows.length === 0) {
     const row = document.createElement("tr");
     const cell = document.createElement("td");
     cell.colSpan = 2;
-    cell.textContent = "No rates configured.";
+    cell.textContent = "No airport mappings saved yet.";
     row.appendChild(cell);
-    rateTableBody.appendChild(row);
+    airportMapTableBody.appendChild(row);
     return;
   }
 
-  for (const portCode of portCodes) {
+  for (const [airportCode, country] of rows) {
     const row = document.createElement("tr");
-
-    const portCell = document.createElement("td");
-    portCell.textContent = portCode;
-
-    const rateCell = document.createElement("td");
-    const input = document.createElement("input");
-    input.type = "number";
-    input.min = "0";
-    input.step = "0.01";
-    input.dataset.port = portCode;
-    input.value = Number(dtaRates[portCode]).toFixed(2);
-    rateCell.appendChild(input);
-
-    row.appendChild(portCell);
-    row.appendChild(rateCell);
-    rateTableBody.appendChild(row);
-  }
-}
-
-function readRatesFromTable() {
-  if (!dtaFeatureEnabled) {
-    return { nextRates: dtaRates, invalidPorts: [] };
-  }
-  const nextRates = {};
-  const invalidPorts = [];
-  const inputs = rateTableBody.querySelectorAll("input[data-port]");
-
-  for (const input of inputs) {
-    const portCode = String(input.dataset.port || "").trim().toUpperCase();
-    const rate = Number(input.value);
-    if (!portCode || !Number.isFinite(rate) || rate <= 0) {
-      invalidPorts.push(portCode || "(unknown)");
-      continue;
-    }
-    nextRates[portCode] = rate;
-  }
-
-  return { nextRates, invalidPorts };
-}
-
-function saveRateTable() {
-  if (!dtaModuleReady) {
-    setDtaStatus("DTA module unavailable.");
-    return;
-  }
-
-  const { nextRates, invalidPorts } = readRatesFromTable();
-  if (invalidPorts.length > 0) {
-    setDtaStatus(`Invalid rate value for: ${invalidPorts.join(", ")}.`);
-    return;
-  }
-
-  dtaRates = nextRates;
-  saveDtaRates(dtaRates);
-  renderRateTable();
-  setDtaStatus("DTA rates saved for future reference.");
-
-  if (patternSelect.value) {
-    checkSelectedPatternDta();
+    const airportCell = document.createElement("td");
+    const countryCell = document.createElement("td");
+    airportCell.textContent = airportCode;
+    countryCell.textContent = country;
+    row.appendChild(airportCell);
+    row.appendChild(countryCell);
+    airportMapTableBody.appendChild(row);
   }
 }
 
@@ -355,6 +398,7 @@ function populatePatternSelect(patterns) {
     resetDtaSummary("DTA module unavailable.");
     return;
   }
+
   patternSelect.innerHTML = "";
   if (!patterns.length) {
     resetDtaPatternSelect("No patterns found in roster");
@@ -390,6 +434,7 @@ function renderDtaSummary(result) {
   if (!dtaFeatureEnabled) {
     return;
   }
+
   dtaSummaryBody.innerHTML = "";
 
   if (!result || result.flightsCount === 0) {
@@ -404,11 +449,13 @@ function renderDtaSummary(result) {
     const rateCell = document.createElement("td");
     const hoursCell = document.createElement("td");
     const amountCell = document.createElement("td");
+
     sectionCell.textContent = section;
     timeBasisCell.textContent = timeBasis;
     rateCell.textContent = rate;
     hoursCell.textContent = formatHours(hours);
     amountCell.textContent = formatMoney(amount);
+
     row.appendChild(sectionCell);
     row.appendChild(timeBasisCell);
     row.appendChild(rateCell);
@@ -418,10 +465,11 @@ function renderDtaSummary(result) {
   };
 
   for (const segment of result.partA.segments) {
+    const labelCountry = segment.rateCountry || "Unknown country";
     addRow(
-      `Part A ${segment.flightNumber} ${segment.origin}/${segment.destination} @ ${segment.ratePort}`,
+      `Part A ${segment.flightNumber} ${segment.origin}/${segment.destination} @ ${labelCountry} (${segment.rateAirportCode})`,
       formatTimeBasis(segment.startUtc, segment.endUtc),
-      formatRate(segment.rate),
+      formatRate(segment.rate, segment.rateSource),
       segment.hours,
       segment.amount
     );
@@ -429,10 +477,11 @@ function renderDtaSummary(result) {
   addRow("Part A subtotal", "-", "-", result.partA.totalHours, result.partA.totalAmount);
 
   for (const segment of result.partB.segments) {
+    const labelCountry = segment.rateCountry || "Unknown country";
     addRow(
-      `Part B layover ${segment.slipPort} @ ${segment.ratePort}`,
+      `Part B layover ${segment.slipPort} @ ${labelCountry} (${segment.rateAirportCode})`,
       formatTimeBasis(segment.startUtc, segment.endUtc),
-      formatRate(segment.rate),
+      formatRate(segment.rate, segment.rateSource),
       segment.hours,
       segment.amount
     );
@@ -462,60 +511,295 @@ function checkSelectedPatternDta() {
     setDtaStatus("DTA module unavailable.");
     return;
   }
+
   const selectedPattern = getSelectedPattern();
   if (!selectedPattern) {
     setDtaStatus("Select a pattern code to check DTA.");
     return;
   }
 
-  const result = calculateDtaForPattern(selectedPattern, dtaRates);
+  const result = calculateDtaForPattern(selectedPattern, dtaCountryRates, airportCountryMap);
   renderDtaSummary(result);
 
-  if (result.missingPorts.length > 0) {
-    const missingList = result.missingPorts.join(", ");
-    setDtaStatus(`Missing DTA rate for: ${missingList}. Add the rate and save, then check again.`);
-    if (!newRatePortInput.value) {
-      newRatePortInput.value = result.missingPorts[0];
+  if (result.missingAirportCodes.length > 0) {
+    const missingList = result.missingAirportCodes.join(", ");
+    setDtaStatus(
+      `Need airport-country mapping for: ${missingList}. Add mapping below (saved for future), then check again.`
+    );
+    if (!newAirportCodeInput.value) {
+      newAirportCodeInput.value = result.missingAirportCodes[0];
     }
     return;
   }
 
+  const fallbackNote =
+    result.fallbackCountriesUsed.length > 0
+      ? ` Using default Cost Group 1 rate ($${defaultFallbackRate.hourlyRate.toFixed(2)}/hr) for: ${result.fallbackCountriesUsed.join(
+          ", "
+        )}.`
+      : "";
+
   setDtaStatus(
-    `DTA for ${result.patternCode} (${result.tripStartIso} to ${result.tripEndIso}) is ${formatMoney(result.grandTotal)}.`
+    `DTA for ${result.patternCode} (${result.tripStartIso} to ${result.tripEndIso}) is ${formatMoney(
+      result.grandTotal
+    )}.${fallbackNote}`
   );
 }
 
-function handleAddOrUpdateRate(event) {
-  if (!dtaFeatureEnabled) {
+function parseCsvLine(line) {
+  const values = [];
+  let current = "";
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i += 1) {
+    const char = line[i];
+    const next = line[i + 1];
+
+    if (char === '"') {
+      if (inQuotes && next === '"') {
+        current += '"';
+        i += 1;
+      } else {
+        inQuotes = !inQuotes;
+      }
+      continue;
+    }
+
+    if (char === "," && !inQuotes) {
+      values.push(current.trim());
+      current = "";
+      continue;
+    }
+
+    current += char;
+  }
+
+  values.push(current.trim());
+  return values;
+}
+
+function normaliseHeader(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
+}
+
+function buildCountryRatesFromRows(rows) {
+  const nextRates = {};
+
+  for (const row of rows) {
+    const country = String(
+      row.country || row.Country || row.countryname || row.CountryName || row["Country Name"] || ""
+    ).trim();
+    const costGroup = String(
+      row.costgroup || row["Cost Group"] || row.costGroup || row.CostGroup || row.group || ""
+    ).trim();
+    const mealRaw = row.mealrate ?? row["Meal Rate"] ?? row.mealsrate ?? row["Meals Rate"];
+    const incidentalRaw = row.incidentalrate ?? row["Incidental Rate"] ?? row.incidentalsrate ?? row["Incidentals Rate"];
+
+    const mealRate = Number(mealRaw);
+    const incidentalRate = Number(incidentalRaw);
+
+    if (!country || !Number.isFinite(mealRate) || mealRate <= 0 || !Number.isFinite(incidentalRate) || incidentalRate <= 0) {
+      continue;
+    }
+
+    nextRates[country] = {
+      costGroup,
+      mealRate,
+      incidentalRate,
+      hourlyRate: mealRate + incidentalRate,
+    };
+  }
+
+  if (Object.keys(nextRates).length === 0) {
+    throw new Error("No valid country rates found in file.");
+  }
+
+  return nextRates;
+}
+
+function parseCountryRatesFromCsv(csvText) {
+  const lines = String(csvText || "")
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  if (lines.length < 2) {
+    throw new Error("CSV needs a header row and at least one data row.");
+  }
+
+  const headers = parseCsvLine(lines[0]);
+  const headerMap = headers.map((header) => normaliseHeader(header));
+  const rows = [];
+
+  for (let i = 1; i < lines.length; i += 1) {
+    const values = parseCsvLine(lines[i]);
+    const row = {};
+    for (let j = 0; j < headerMap.length; j += 1) {
+      row[headerMap[j]] = values[j] ?? "";
+    }
+    rows.push(row);
+  }
+
+  return buildCountryRatesFromRows(rows);
+}
+
+async function parseCountryRatesFromXlsx(file) {
+  const xlsxModule = await loadXlsxModule();
+  const XLSX = xlsxModule.default || xlsxModule;
+  const bytes = await file.arrayBuffer();
+  const workbook = XLSX.read(bytes, { type: "array" });
+
+  if (!workbook.SheetNames.length) {
+    throw new Error("Workbook has no sheets.");
+  }
+
+  const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+  const rawRows = XLSX.utils.sheet_to_json(firstSheet, { defval: "" });
+  const rows = rawRows.map((row) => {
+    const normalised = {};
+    for (const [key, value] of Object.entries(row)) {
+      normalised[normaliseHeader(key)] = value;
+    }
+    return normalised;
+  });
+
+  return buildCountryRatesFromRows(rows);
+}
+
+function isCsvFile(file) {
+  const name = String(file?.name || "").toLowerCase();
+  const type = String(file?.type || "").toLowerCase();
+  return name.endsWith(".csv") || type.includes("csv");
+}
+
+function isXlsxFile(file) {
+  const name = String(file?.name || "").toLowerCase();
+  const type = String(file?.type || "").toLowerCase();
+  return (
+    name.endsWith(".xlsx") ||
+    type.includes("spreadsheetml") ||
+    type.includes("excel") ||
+    type.includes("officedocument")
+  );
+}
+
+async function importCountryRatesFromFile() {
+  if (!dtaFeatureEnabled || !dtaModuleReady) {
     return;
   }
-  if (!dtaModuleReady) {
-    setDtaStatus("DTA module unavailable.");
+
+  const file = ratesFileInput.files?.[0];
+  if (!file) {
+    setDtaStatus("Choose a .xlsx or .csv rates file first.");
+    return;
+  }
+
+  try {
+    let importedRates;
+    if (isCsvFile(file)) {
+      importedRates = parseCountryRatesFromCsv(await file.text());
+    } else if (isXlsxFile(file)) {
+      importedRates = await parseCountryRatesFromXlsx(file);
+    } else {
+      throw new Error("Unsupported rates file type. Use .xlsx or .csv.");
+    }
+
+    dtaCountryRates = importedRates;
+    saveDtaCountryRates(dtaCountryRates);
+
+    const recanonicalisedMap = {};
+    for (const [airportCode, country] of Object.entries(airportCountryMap || {})) {
+      recanonicalisedMap[airportCode] = canonicaliseCountryNameForInput(country, dtaCountryRates);
+    }
+    airportCountryMap = recanonicalisedMap;
+    saveAirportCountryMap(airportCountryMap, null, dtaCountryRates);
+
+    renderCountryOptions();
+    renderCountryRateTable();
+    renderAirportMapTable();
+
+    setDtaStatus(
+      `Imported ${Object.keys(dtaCountryRates).length} country rates and saved for future reference.`
+    );
+
+    if (patternSelect.value) {
+      checkSelectedPatternDta();
+    }
+  } catch (error) {
+    console.error(error);
+    setDtaStatus(`Could not import rates: ${error.message || "invalid file format"}.`);
+  }
+}
+
+function csvEscape(value) {
+  const text = String(value ?? "");
+  if (/[,"\n]/.test(text)) {
+    return `"${text.replace(/"/g, '""')}"`;
+  }
+  return text;
+}
+
+function downloadCountryRateTable() {
+  if (!dtaFeatureEnabled || !dtaModuleReady) {
+    return;
+  }
+
+  const lines = ["Country,Cost Group,Meal Rate,Incidental Rate,Hourly Rate"];
+  for (const row of getCountryRateRows(dtaCountryRates)) {
+    lines.push(
+      [
+        csvEscape(row.country),
+        csvEscape(row.costGroup || ""),
+        Number(row.mealRate).toFixed(2),
+        Number(row.incidentalRate).toFixed(2),
+        Number(row.hourlyRate).toFixed(2),
+      ].join(",")
+    );
+  }
+
+  const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "dta_country_rates.csv";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 0);
+
+  setDtaStatus("Downloaded current country rates table.");
+}
+
+function addOrUpdateAirportMapping(event) {
+  if (!dtaFeatureEnabled || !dtaModuleReady) {
     return;
   }
   event.preventDefault();
 
-  const portCode = String(newRatePortInput.value || "")
-    .trim()
-    .toUpperCase();
-  const rate = Number(newRateValueInput.value);
-
-  if (!/^[A-Z]{3}$/.test(portCode)) {
-    setDtaStatus("Enter a valid 3-letter port code.");
-    return;
-  }
-  if (!Number.isFinite(rate) || rate <= 0) {
-    setDtaStatus("Enter a valid positive hourly rate.");
+  const airportCode = normaliseAirportCodeForInput(newAirportCodeInput.value);
+  if (!/^[A-Z]{3}$/.test(airportCode)) {
+    setDtaStatus("Enter a valid 3-letter airport code.");
     return;
   }
 
-  dtaRates[portCode] = rate;
-  saveDtaRates(dtaRates);
-  renderRateTable();
+  const rawCountry = String(newAirportCountryInput.value || "").trim();
+  if (!rawCountry) {
+    setDtaStatus("Enter the country for this airport.");
+    return;
+  }
 
-  newRatePortInput.value = "";
-  newRateValueInput.value = "";
-  setDtaStatus(`Saved rate for ${portCode}.`);
+  const country = canonicaliseCountryNameForInput(rawCountry, dtaCountryRates);
+  airportCountryMap[airportCode] = country;
+  saveAirportCountryMap(airportCountryMap, null, dtaCountryRates);
+
+  renderAirportMapTable();
+  newAirportCodeInput.value = "";
+  newAirportCountryInput.value = "";
+
+  setDtaStatus(`Saved airport mapping ${airportCode} -> ${country} for future reference.`);
 
   if (patternSelect.value) {
     checkSelectedPatternDta();
@@ -557,10 +841,12 @@ async function parseSelectedFile() {
     if (isPdfFile(file)) {
       setStatus("Reading PDF roster...");
     }
+
     const text = await readRosterFileText(file);
     parsedRoster = parseRosterText(text);
 
     renderPreview(parsedRoster.events);
+
     if (dtaFeatureEnabled && dtaModuleReady) {
       dtaPatterns = getDtaPatterns(parsedRoster);
       populatePatternSelect(dtaPatterns);
@@ -588,6 +874,7 @@ async function parseSelectedFile() {
         `Parsed BP${parsedRoster.bidPeriod}: ${parsedRoster.counts.flights} flights + ${parsedRoster.counts.patterns} patterns + ${parsedRoster.counts.training} SIM/training + ${parsedRoster.counts.dayMarkers} A/X days + ${(parsedRoster.counts.leaveDays || 0)} AL days = ${parsedRoster.counts.total} total events.`
       )
     );
+
     downloadBtn.disabled = false;
     shareBtn.disabled = false;
     openBtn.disabled = false;
@@ -598,9 +885,11 @@ async function parseSelectedFile() {
     } else {
       setStatus("Failed to parse roster file.");
     }
+
     downloadBtn.disabled = true;
     shareBtn.disabled = true;
     openBtn.disabled = true;
+
     if (dtaFeatureEnabled) {
       resetDtaPatternSelect("Parse failed");
       resetDtaSummary("No DTA calculation yet.");
@@ -627,7 +916,6 @@ function downloadIcs() {
   }
 
   const url = URL.createObjectURL(payload.blob);
-
   const link = document.createElement("a");
   link.href = url;
   link.download = payload.fileName;
@@ -681,6 +969,7 @@ async function shareForIpad() {
           text: "Roster calendar export",
           files: [file],
         });
+
         setStatus(withAirdropHint("Shared .ics file. On iPad choose Calendar or Save to Files."));
         return;
       }
@@ -700,27 +989,33 @@ parseBtn.addEventListener("click", parseSelectedFile);
 downloadBtn.addEventListener("click", downloadIcs);
 shareBtn.addEventListener("click", shareForIpad);
 openBtn.addEventListener("click", openIcsInBrowser);
+
 if (dtaFeatureEnabled) {
   checkDtaBtn.addEventListener("click", checkSelectedPatternDta);
-  saveRatesBtn.addEventListener("click", saveRateTable);
-  addRateForm.addEventListener("submit", handleAddOrUpdateRate);
+  importRatesBtn.addEventListener("click", importCountryRatesFromFile);
+  downloadRatesBtn.addEventListener("click", downloadCountryRateTable);
+  addAirportMapForm.addEventListener("submit", addOrUpdateAirportMapping);
 }
+
 rosterFileInput.addEventListener("change", () => {
   downloadBtn.disabled = true;
   shareBtn.disabled = true;
   openBtn.disabled = true;
   parsedRoster = null;
+
   if (dtaFeatureEnabled) {
     dtaPatterns = [];
     resetDtaPatternSelect("Parse a roster first");
     resetDtaSummary("No DTA calculation yet.");
     setDtaStatus('File selected. Click "Parse roster", then choose a pattern.');
   }
+
   setStatus('File selected. Click "Parse roster".');
 });
 
 resetPreview();
 setStatus(`Ready (v${APP_VERSION}). Choose a roster file, then click "Parse roster".`);
+
 if (dtaFeatureEnabled) {
   resetDtaPatternSelect("Parse a roster first");
   resetDtaSummary("No DTA calculation yet.");

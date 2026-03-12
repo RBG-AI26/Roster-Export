@@ -126,6 +126,22 @@ input[type="number"] {
   align-items: flex-end;
 }
 
+.rate-import-row {
+  margin-top: 0.9rem;
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.rate-import-row input[type="file"] {
+  flex: 1 1 0;
+}
+
+.rate-import-row button {
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
 .rate-field {
   display: flex;
   align-items: center;
@@ -141,11 +157,6 @@ input[type="number"] {
 
 .rate-field input {
   min-width: 170px;
-}
-
-#addRateBtn {
-  white-space: nowrap;
-  flex: 0 0 auto;
 }
 
 table {
@@ -185,6 +196,11 @@ th {
   }
 
   .rate-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .rate-import-row {
     flex-direction: column;
     align-items: stretch;
   }
