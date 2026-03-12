@@ -104,16 +104,16 @@
         </p>
 
         <form id="addAirportMapForm" class="rate-form">
-          <div class="rate-field">
+          <div class="rate-field code-field">
             <label for="newAirportCode" class="field-label">Airport code</label>
             <input id="newAirportCode" type="text" maxlength="3" placeholder="e.g. NOU" />
           </div>
-          <div class="rate-field">
+          <div class="rate-field country-field">
             <label for="newAirportCountry" class="field-label">Country</label>
             <input id="newAirportCountry" type="text" list="countryOptions" placeholder="e.g. New Caledonia" />
             <datalist id="countryOptions"></datalist>
           </div>
-          <div class="rate-field">
+          <div class="rate-field hourly-field">
             <label for="newAirportRate" class="field-label">Hourly rate</label>
             <input id="newAirportRate" type="number" min="0" step="0.01" placeholder="e.g. 12.34" />
           </div>
@@ -125,7 +125,7 @@
     <script>
       (async () => {
         try {
-          await import("./app.mjs?v=20260313i");
+          await import("./app.mjs?v=20260313j");
         } catch (error) {
           console.error("Failed to load app module", error);
           const statusEl = document.getElementById("status");

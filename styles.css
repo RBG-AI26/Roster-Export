@@ -165,7 +165,7 @@ input[type="number"] {
 }
 
 #addAirportMapForm .rate-field {
-  flex: 0 1 auto;
+  flex: 0 0 auto;
   gap: 0.35rem;
 }
 
@@ -173,22 +173,27 @@ input[type="number"] {
   min-width: 0;
 }
 
-#newAirportCode {
-  width: 96px;
+#addAirportMapForm .code-field input {
+  width: 86px;
 }
 
-#newAirportCountry {
-  width: 190px;
+#addAirportMapForm .country-field {
+  flex: 1 1 300px;
+  min-width: 260px;
 }
 
-#newAirportRate {
-  width: 110px;
+#addAirportMapForm .country-field input {
+  width: 100%;
+}
+
+#addAirportMapForm .hourly-field input {
+  width: 102px;
 }
 
 #addAirportMapBtn {
   white-space: nowrap;
   flex: 0 0 auto;
-  padding-inline: 0.9rem;
+  padding-inline: 0.8rem;
 }
 
 table {
@@ -241,6 +246,10 @@ th {
   #newAirportCountry,
   #newAirportRate {
     width: 100%;
+  }
+
+  #addAirportMapForm .country-field {
+    min-width: 0;
   }
 
   .rate-import-row {
