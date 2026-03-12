@@ -1,6 +1,6 @@
 import { parseRosterText, rosterToIcs } from "./rosterParser.mjs";
 
-const APP_VERSION = "2026-03-13h";
+const APP_VERSION = "2026-03-13i";
 
 const rosterFileInput = document.getElementById("rosterFile");
 const parseBtn = document.getElementById("parseBtn");
