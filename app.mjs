@@ -1,6 +1,6 @@
 import { parseRosterText, rosterToIcs } from "./rosterParser.mjs";
 
-const APP_VERSION = "2026-03-13c";
+const APP_VERSION = "2026-03-13d";
 
 const rosterFileInput = document.getElementById("rosterFile");
 const parseBtn = document.getElementById("parseBtn");
@@ -15,34 +15,28 @@ const checkDtaBtn = document.getElementById("checkDtaBtn");
 const dtaStatusEl = document.getElementById("dtaStatus");
 const dtaSummaryBody = document.getElementById("dtaSummaryBody");
 const countryRateTableBody = document.getElementById("countryRateTableBody");
-const airportMapTableBody = document.getElementById("airportMapTableBody");
 const countryOptions = document.getElementById("countryOptions");
 const ratesFileInput = document.getElementById("ratesFile");
 const importRatesBtn = document.getElementById("importRatesBtn");
 const downloadRatesBtn = document.getElementById("downloadRatesBtn");
-const portRateForm = document.getElementById("portRateForm");
-const portRateCodeInput = document.getElementById("portRateCode");
-const portRateHourlyInput = document.getElementById("portRateHourly");
 const addAirportMapForm = document.getElementById("addAirportMapForm");
 const newAirportCodeInput = document.getElementById("newAirportCode");
 const newAirportCountryInput = document.getElementById("newAirportCountry");
+const newAirportRateInput = document.getElementById("newAirportRate");
 
 const dtaFeatureEnabled =
   !!patternSelect &&
   !!checkDtaBtn &&
   !!dtaStatusEl &&
   !!dtaSummaryBody &&
-  !!airportMapTableBody &&
   !!countryOptions &&
   !!ratesFileInput &&
   !!importRatesBtn &&
   !!downloadRatesBtn &&
-  !!portRateForm &&
-  !!portRateCodeInput &&
-  !!portRateHourlyInput &&
   !!addAirportMapForm &&
   !!newAirportCodeInput &&
-  !!newAirportCountryInput;
+  !!newAirportCountryInput &&
+  !!newAirportRateInput;
 
 let parsedRoster = null;
 let currentFileName = null;
@@ -126,8 +120,7 @@ async function initDtaModule() {
     dtaModuleReady = true;
     renderCountryOptions();
     renderCountryRateTable();
-    renderAirportMapTable();
-    suggestRateForPortCode();
+    suggestAirportDetailsForCode();
     setDtaStatus("Parse a roster, then select a pattern.");
   } catch (error) {
     console.error("Failed to load DTA module", error);
@@ -375,36 +368,6 @@ function renderCountryRateTable() {
   }
 }
 
-function renderAirportMapTable() {
-  if (!dtaFeatureEnabled) {
-    return;
-  }
-
-  airportMapTableBody.innerHTML = "";
-  const rows = Object.entries(airportCountryMap).sort((a, b) => a[0].localeCompare(b[0]));
-
-  if (rows.length === 0) {
-    const row = document.createElement("tr");
-    const cell = document.createElement("td");
-    cell.colSpan = 2;
-    cell.textContent = "No airport mappings saved yet.";
-    row.appendChild(cell);
-    airportMapTableBody.appendChild(row);
-    return;
-  }
-
-  for (const [airportCode, country] of rows) {
-    const row = document.createElement("tr");
-    const airportCell = document.createElement("td");
-    const countryCell = document.createElement("td");
-    airportCell.textContent = airportCode;
-    countryCell.textContent = country;
-    row.appendChild(airportCell);
-    row.appendChild(countryCell);
-    airportMapTableBody.appendChild(row);
-  }
-}
-
 function populatePatternSelect(patterns) {
   if (!dtaFeatureEnabled) {
     return;
@@ -545,6 +508,7 @@ function checkSelectedPatternDta() {
     );
     if (!newAirportCodeInput.value) {
       newAirportCodeInput.value = result.missingAirportCodes[0];
+      suggestAirportDetailsForCode();
     }
     return;
   }
@@ -736,8 +700,7 @@ async function importCountryRatesFromFile() {
 
     renderCountryOptions();
     renderCountryRateTable();
-    renderAirportMapTable();
-    suggestRateForPortCode();
+    suggestAirportDetailsForCode();
 
     setDtaStatus(
       `Imported ${Object.keys(dtaCountryRates).length} country rates and saved for future reference.`
@@ -791,55 +754,28 @@ function downloadCountryRateTable() {
   setDtaStatus("Downloaded current country rates table.");
 }
 
-function suggestRateForPortCode() {
+function suggestAirportDetailsForCode() {
   if (!dtaFeatureEnabled || !dtaModuleReady) {
     return;
   }
 
-  const airportCode = normaliseAirportCodeForInput(portRateCodeInput.value);
-  portRateCodeInput.value = airportCode;
+  const airportCode = normaliseAirportCodeForInput(newAirportCodeInput.value);
+  newAirportCodeInput.value = airportCode;
 
   if (!/^[A-Z]{3}$/.test(airportCode)) {
-    portRateHourlyInput.value = "";
+    newAirportCountryInput.value = "";
+    newAirportRateInput.value = "";
     return;
   }
 
   const details = getHourlyRateForAirport(airportCode, dtaCountryRates, airportCountryMap, airportRateOverrides);
+  newAirportCountryInput.value = details.country || "";
   if (details.rate == null) {
-    portRateHourlyInput.value = "";
+    newAirportRateInput.value = "";
     return;
   }
 
-  portRateHourlyInput.value = Number(details.rate).toFixed(2);
-}
-
-function addOrUpdatePortRate(event) {
-  if (!dtaFeatureEnabled || !dtaModuleReady) {
-    return;
-  }
-  event.preventDefault();
-
-  const airportCode = normaliseAirportCodeForInput(portRateCodeInput.value);
-  const rate = Number(portRateHourlyInput.value);
-
-  if (!/^[A-Z]{3}$/.test(airportCode)) {
-    setDtaStatus("Enter a valid 3-letter port code.");
-    return;
-  }
-  if (!Number.isFinite(rate) || rate <= 0) {
-    setDtaStatus("Enter a valid positive hourly rate.");
-    return;
-  }
-
-  airportRateOverrides[airportCode] = rate;
-  saveAirportRateOverrides(airportRateOverrides);
-  portRateCodeInput.value = airportCode;
-  portRateHourlyInput.value = Number(rate).toFixed(2);
-
-  setDtaStatus(`Saved hourly rate override for ${airportCode}.`);
-  if (patternSelect.value) {
-    checkSelectedPatternDta();
-  }
+  newAirportRateInput.value = Number(details.rate).toFixed(2);
 }
 
 function addOrUpdateAirportMapping(event) {
@@ -859,17 +795,29 @@ function addOrUpdateAirportMapping(event) {
     setDtaStatus("Enter the country for this airport.");
     return;
   }
+  const rawRate = String(newAirportRateInput.value || "").trim();
+  if (!rawRate) {
+    setDtaStatus("Enter a valid hourly rate.");
+    return;
+  }
+  const hourlyRate = Number(rawRate);
+  if (!Number.isFinite(hourlyRate) || hourlyRate <= 0) {
+    setDtaStatus("Enter a valid positive hourly rate.");
+    return;
+  }
 
   const country = canonicaliseCountryNameForInput(rawCountry, dtaCountryRates);
   airportCountryMap[airportCode] = country;
   saveAirportCountryMap(airportCountryMap, null, dtaCountryRates);
 
-  renderAirportMapTable();
-  suggestRateForPortCode();
-  newAirportCodeInput.value = "";
-  newAirportCountryInput.value = "";
+  airportRateOverrides[airportCode] = hourlyRate;
+  saveAirportRateOverrides(airportRateOverrides);
 
-  setDtaStatus(`Saved airport mapping ${airportCode} -> ${country} for future reference.`);
+  newAirportCodeInput.value = airportCode;
+  newAirportCountryInput.value = country;
+  newAirportRateInput.value = Number(hourlyRate).toFixed(2);
+
+  setDtaStatus(`Saved ${airportCode}: ${country} at $${Number(hourlyRate).toFixed(2)}/hr for future reference.`);
 
   if (patternSelect.value) {
     checkSelectedPatternDta();
@@ -1064,8 +1012,7 @@ if (dtaFeatureEnabled) {
   checkDtaBtn.addEventListener("click", checkSelectedPatternDta);
   importRatesBtn.addEventListener("click", importCountryRatesFromFile);
   downloadRatesBtn.addEventListener("click", downloadCountryRateTable);
-  portRateForm.addEventListener("submit", addOrUpdatePortRate);
-  portRateCodeInput.addEventListener("input", suggestRateForPortCode);
+  newAirportCodeInput.addEventListener("input", suggestAirportDetailsForCode);
   addAirportMapForm.addEventListener("submit", addOrUpdateAirportMapping);
 }
 

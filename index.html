@@ -97,28 +97,12 @@
           <button id="downloadRatesBtn" type="button">Download Current Table</button>
         </div>
 
-        <h3>Port Rate Override</h3>
-        <p>
-          Enter a port code to auto-fill the known hourly rate. If unknown, the rate field stays blank so you can enter
-          and save your own rate for future use.
-        </p>
-        <form id="portRateForm" class="rate-form">
-          <div class="rate-field">
-            <label for="portRateCode" class="field-label">Port code</label>
-            <input id="portRateCode" type="text" maxlength="3" placeholder="e.g. SIN" />
-          </div>
-          <div class="rate-field">
-            <label for="portRateHourly" class="field-label">Hourly rate</label>
-            <input id="portRateHourly" type="number" min="0" step="0.01" placeholder="e.g. 12.34" />
-          </div>
-          <button id="savePortRateBtn" type="submit">Add / Update Rate</button>
-        </form>
-
         <p>Rates table display hidden by request. Imported rates are still saved and used for calculations.</p>
 
         <h3>Airport To Country Mapping</h3>
         <p>
-          If an airport code cannot be matched, add it here. Once saved, it is stored for future reference.
+          Enter an airport code to auto-fill known country/rate. If unknown, fields stay blank so you can add and save
+          both values for future reference.
         </p>
 
         <form id="addAirportMapForm" class="rate-form">
@@ -131,27 +115,19 @@
             <input id="newAirportCountry" type="text" list="countryOptions" placeholder="e.g. New Caledonia" />
             <datalist id="countryOptions"></datalist>
           </div>
+          <div class="rate-field">
+            <label for="newAirportRate" class="field-label">Hourly rate</label>
+            <input id="newAirportRate" type="number" min="0" step="0.01" placeholder="e.g. 12.34" />
+          </div>
           <button id="addAirportMapBtn" type="submit">Add / Update Mapping</button>
         </form>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Airport</th>
-                <th>Country</th>
-              </tr>
-            </thead>
-            <tbody id="airportMapTableBody"></tbody>
-          </table>
-        </div>
       </section>
     </main>
 
     <script>
       (async () => {
         try {
-          await import("./app.mjs?v=20260313c");
+          await import("./app.mjs?v=20260313d");
         } catch (error) {
           console.error("Failed to load app module", error);
           const statusEl = document.getElementById("status");
