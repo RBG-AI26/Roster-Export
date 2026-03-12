@@ -97,18 +97,7 @@
           <button id="downloadRatesBtn" type="button">Download Current Table</button>
         </div>
 
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Country</th>
-                <th>Cost Group</th>
-                <th>Hourly Rate</th>
-              </tr>
-            </thead>
-            <tbody id="countryRateTableBody"></tbody>
-          </table>
-        </div>
+        <p>Rates table display hidden by request. Imported rates are still saved and used for calculations.</p>
 
         <h3>Airport To Country Mapping</h3>
         <p>
@@ -145,7 +134,7 @@
     <script>
       (async () => {
         try {
-          await import("./app.mjs?v=20260313a");
+          await import("./app.mjs?v=20260313b");
         } catch (error) {
           console.error("Failed to load app module", error);
           const statusEl = document.getElementById("status");

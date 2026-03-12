@@ -1,6 +1,6 @@
 import { parseRosterText, rosterToIcs } from "./rosterParser.mjs";
 
-const APP_VERSION = "2026-03-13a";
+const APP_VERSION = "2026-03-13b";
 
 const rosterFileInput = document.getElementById("rosterFile");
 const parseBtn = document.getElementById("parseBtn");
@@ -29,7 +29,6 @@ const dtaFeatureEnabled =
   !!checkDtaBtn &&
   !!dtaStatusEl &&
   !!dtaSummaryBody &&
-  !!countryRateTableBody &&
   !!airportMapTableBody &&
   !!countryOptions &&
   !!ratesFileInput &&
@@ -322,7 +321,7 @@ function renderCountryOptions() {
 }
 
 function renderCountryRateTable() {
-  if (!dtaFeatureEnabled) {
+  if (!dtaFeatureEnabled || !countryRateTableBody) {
     return;
   }
 
