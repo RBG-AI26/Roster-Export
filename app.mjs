@@ -1,6 +1,6 @@
 import { parseRosterText, rosterToIcs } from "./rosterParser.mjs";
 
-const APP_VERSION = "2026-03-13d";
+const APP_VERSION = "2026-03-13f";
 
 const rosterFileInput = document.getElementById("rosterFile");
 const parseBtn = document.getElementById("parseBtn");
@@ -445,9 +445,8 @@ function renderDtaSummary(result) {
   };
 
   for (const segment of result.partA.segments) {
-    const labelCountry = segment.rateCountry || "Unknown country";
     addRow(
-      `Part A ${segment.flightNumber} ${segment.origin}/${segment.destination} @ ${labelCountry} (${segment.rateAirportCode})`,
+      `Part A ${segment.flightNumber} ${segment.origin}/${segment.destination} @ ${segment.rateAirportCode}`,
       formatTimeBasis(segment.startUtc, segment.endUtc),
       formatRate(segment.rate, segment.rateSource),
       segment.hours,
@@ -457,9 +456,8 @@ function renderDtaSummary(result) {
   addRow("Part A subtotal", "-", "-", result.partA.totalHours, result.partA.totalAmount);
 
   for (const segment of result.partB.segments) {
-    const labelCountry = segment.rateCountry || "Unknown country";
     addRow(
-      `Part B layover ${segment.slipPort} @ ${labelCountry} (${segment.rateAirportCode})`,
+      `Part B layover ${segment.slipPort} @ ${segment.rateAirportCode}`,
       formatTimeBasis(segment.startUtc, segment.endUtc),
       formatRate(segment.rate, segment.rateSource),
       segment.hours,

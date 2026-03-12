@@ -159,6 +159,32 @@ input[type="number"] {
   min-width: 170px;
 }
 
+#addAirportMapForm {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+#addAirportMapForm .rate-field {
+  flex: 0 1 auto;
+}
+
+#newAirportCode {
+  width: 170px;
+}
+
+#newAirportCountry {
+  width: 300px;
+}
+
+#newAirportRate {
+  width: 180px;
+}
+
+#addAirportMapBtn {
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
