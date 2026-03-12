@@ -1,6 +1,8 @@
 import { parseRosterText, rosterToIcs } from "./rosterParser.mjs";
 
 const APP_VERSION = "2026-03-13j";
+const LAST_ROSTER_STORAGE_KEY = "rosterExport.lastRoster.v1";
+const UI_STATE_STORAGE_KEY = "rosterExport.uiState.v1";
 
 const rosterFileInput = document.getElementById("rosterFile");
 const parseBtn = document.getElementById("parseBtn");
@@ -40,10 +42,12 @@ const dtaFeatureEnabled =
 
 let parsedRoster = null;
 let currentFileName = null;
+let lastRosterText = "";
 let dtaPatterns = [];
 let dtaCountryRates = {};
 let airportCountryMap = {};
 let airportRateOverrides = {};
+let pendingRestoredPatternId = "";
 
 let dtaModuleReady = false;
 let calculateDtaForPattern = () => null;
@@ -89,6 +93,127 @@ function setDtaStatus(message) {
     return;
   }
   dtaStatusEl.textContent = message;
+}
+
+function getAppStorage() {
+  try {
+    return globalThis.localStorage || null;
+  } catch {
+    return null;
+  }
+}
+
+function loadJsonState(key) {
+  const storage = getAppStorage();
+  if (!storage) {
+    return null;
+  }
+
+  try {
+    const raw = storage.getItem(key);
+    if (!raw) {
+      return null;
+    }
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveJsonState(key, value) {
+  const storage = getAppStorage();
+  if (!storage) {
+    return;
+  }
+
+  try {
+    storage.setItem(key, JSON.stringify(value));
+  } catch {
+    // Ignore quota/storage errors and continue with in-memory state.
+  }
+}
+
+function saveUiState() {
+  const payload = {
+    selectedPatternId: dtaFeatureEnabled ? String(patternSelect.value || "") : "",
+    airportCode: dtaFeatureEnabled ? String(newAirportCodeInput.value || "") : "",
+    airportCountry: dtaFeatureEnabled ? String(newAirportCountryInput.value || "") : "",
+    airportRate: dtaFeatureEnabled ? String(newAirportRateInput.value || "") : "",
+  };
+  saveJsonState(UI_STATE_STORAGE_KEY, payload);
+}
+
+function restoreUiState() {
+  if (!dtaFeatureEnabled) {
+    return null;
+  }
+
+  const state = loadJsonState(UI_STATE_STORAGE_KEY);
+  if (!state) {
+    return null;
+  }
+
+  if (typeof state.airportCode === "string") {
+    newAirportCodeInput.value = state.airportCode;
+  }
+  if (typeof state.airportCountry === "string") {
+    newAirportCountryInput.value = state.airportCountry;
+  }
+  if (typeof state.airportRate === "string") {
+    newAirportRateInput.value = state.airportRate;
+  }
+  if (typeof state.selectedPatternId === "string") {
+    pendingRestoredPatternId = state.selectedPatternId;
+  }
+
+  return state;
+}
+
+function saveLastRosterState() {
+  if (!parsedRoster || !lastRosterText) {
+    return;
+  }
+
+  saveJsonState(LAST_ROSTER_STORAGE_KEY, {
+    fileName: currentFileName || "roster.txt",
+    rosterText: lastRosterText,
+  });
+}
+
+function restoreLastRosterState() {
+  const state = loadJsonState(LAST_ROSTER_STORAGE_KEY);
+  if (!state?.rosterText || typeof state.rosterText !== "string") {
+    return false;
+  }
+
+  try {
+    parsedRoster = parseRosterText(state.rosterText);
+    currentFileName = String(state.fileName || "roster.txt");
+    lastRosterText = state.rosterText;
+  } catch {
+    return false;
+  }
+
+  renderPreview(parsedRoster.events);
+  if (parsedRoster.events.length === 0) {
+    resetPreview();
+    downloadBtn.disabled = true;
+    shareBtn.disabled = true;
+    openBtn.disabled = true;
+    return false;
+  }
+
+  downloadBtn.disabled = false;
+  shareBtn.disabled = false;
+  openBtn.disabled = false;
+  setStatus(
+    withAirdropHint(
+      `Restored BP${parsedRoster.bidPeriod}: ${parsedRoster.counts.flights} flights + ${parsedRoster.counts.patterns} patterns + ${parsedRoster.counts.training} SIM/training + ${parsedRoster.counts.dayMarkers} A/X days + ${(parsedRoster.counts.leaveDays || 0)} AL days = ${parsedRoster.counts.total} total events.`
+    )
+  );
+
+  return true;
 }
 
 async function initDtaModule() {
