@@ -81,7 +81,7 @@
           </table>
         </div>
 
-        <h3>DTA Rates By Country</h3>
+        <h3>Update DTA Rates</h3>
         <p>
           Hourly DTA is meal + incidental. If a country is not listed, Cost Group 1 default ($5.00 + $1.25 = $6.25/hr)
           is used.
@@ -97,9 +97,7 @@
           <button id="downloadRatesBtn" type="button">Download Current Table</button>
         </div>
 
-        <p>Rates table display hidden by request. Imported rates are still saved and used for calculations.</p>
-
-        <h3>Airport To Country Mapping</h3>
+        <h3>Airport/Country/Rate</h3>
         <p>
           Enter an airport code to auto-fill known country/rate. If unknown, fields stay blank so you can add and save
           both values for future reference.
@@ -127,7 +125,7 @@
     <script>
       (async () => {
         try {
-          await import("./app.mjs?v=20260313f");
+          await import("./app.mjs?v=20260313h");
         } catch (error) {
           console.error("Failed to load app module", error);
           const statusEl = document.getElementById("status");
