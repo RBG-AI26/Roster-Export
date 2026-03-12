@@ -1,6 +1,6 @@
 import { parseRosterText, rosterToIcs } from "./rosterParser.mjs";
 
-const APP_VERSION = "2026-03-13j";
+const APP_VERSION = "2026-03-13k";
 const LAST_ROSTER_STORAGE_KEY = "rosterExport.lastRoster.v1";
 const UI_STATE_STORAGE_KEY = "rosterExport.uiState.v1";
 
@@ -48,6 +48,7 @@ let dtaCountryRates = {};
 let airportCountryMap = {};
 let airportRateOverrides = {};
 let pendingRestoredPatternId = "";
+let uiStateWasRestored = false;
 
 let dtaModuleReady = false;
 let calculateDtaForPattern = () => null;
@@ -154,6 +155,8 @@ function restoreUiState() {
     return null;
   }
 
+  uiStateWasRestored = true;
+
   if (typeof state.airportCode === "string") {
     newAirportCodeInput.value = state.airportCode;
   }
@@ -171,7 +174,7 @@ function restoreUiState() {
 }
 
 function saveLastRosterState() {
-  if (!parsedRoster || !lastRosterText) {
+  if (!parsedRoster || parsedRoster.events.length === 0 || !lastRosterText) {
     return;
   }
 
@@ -197,6 +200,9 @@ function restoreLastRosterState() {
 
   renderPreview(parsedRoster.events);
   if (parsedRoster.events.length === 0) {
+    parsedRoster = null;
+    currentFileName = null;
+    lastRosterText = "";
     resetPreview();
     downloadBtn.disabled = true;
     shareBtn.disabled = true;
@@ -245,8 +251,17 @@ async function initDtaModule() {
     dtaModuleReady = true;
     renderCountryOptions();
     renderCountryRateTable();
-    suggestAirportDetailsForCode();
-    setDtaStatus("Parse a roster, then select a pattern.");
+    const hasRestoredManualAirportValues =
+      uiStateWasRestored &&
+      (String(newAirportCountryInput.value || "").trim() !== "" || String(newAirportRateInput.value || "").trim() !== "");
+    if (!hasRestoredManualAirportValues) {
+      suggestAirportDetailsForCode();
+    }
+    if (parsedRoster) {
+      refreshDtaForCurrentRoster(true);
+    } else {
+      setDtaStatus("Parse a roster, then select a pattern.");
+    }
   } catch (error) {
     console.error("Failed to load DTA module", error);
     dtaModuleReady = false;
@@ -535,6 +550,34 @@ function populatePatternSelect(patterns) {
   setDtaStatus("Select a pattern code and click Check DTA.");
 }
 
+function refreshDtaForCurrentRoster(restoreSelection = false) {
+  if (!dtaFeatureEnabled || !dtaModuleReady || !parsedRoster) {
+    return;
+  }
+
+  dtaPatterns = getDtaPatterns(parsedRoster);
+  populatePatternSelect(dtaPatterns);
+
+  if (!dtaPatterns.length) {
+    saveUiState();
+    return;
+  }
+
+  if (restoreSelection && pendingRestoredPatternId) {
+    const restoredPattern = dtaPatterns.find((pattern) => pattern.id === pendingRestoredPatternId);
+    if (restoredPattern) {
+      patternSelect.value = restoredPattern.id;
+      pendingRestoredPatternId = "";
+      checkSelectedPatternDta();
+      return;
+    }
+    pendingRestoredPatternId = "";
+  }
+
+  resetDtaSummary("Select a pattern and click Check DTA.");
+  saveUiState();
+}
+
 function renderDtaSummary(result) {
   if (!dtaFeatureEnabled) {
     return;
@@ -618,6 +661,7 @@ function checkSelectedPatternDta() {
   const selectedPattern = getSelectedPattern();
   if (!selectedPattern) {
     setDtaStatus("Select a pattern code to check DTA.");
+    saveUiState();
     return;
   }
 
@@ -633,6 +677,7 @@ function checkSelectedPatternDta() {
       newAirportCodeInput.value = result.missingAirportCodes[0];
       suggestAirportDetailsForCode();
     }
+    saveUiState();
     return;
   }
 
@@ -648,6 +693,7 @@ function checkSelectedPatternDta() {
       result.grandTotal
     )}.${fallbackNote}`
   );
+  saveUiState();
 }
 
 function parseCsvLine(line) {
@@ -888,6 +934,7 @@ function suggestAirportDetailsForCode() {
   if (!/^[A-Z]{3}$/.test(airportCode)) {
     newAirportCountryInput.value = "";
     newAirportRateInput.value = "";
+    saveUiState();
     return;
   }
 
@@ -895,10 +942,12 @@ function suggestAirportDetailsForCode() {
   newAirportCountryInput.value = details.country || "";
   if (details.rate == null) {
     newAirportRateInput.value = "";
+    saveUiState();
     return;
   }
 
   newAirportRateInput.value = Number(details.rate).toFixed(2);
+  saveUiState();
 }
 
 function addOrUpdateAirportMapping(event) {
@@ -941,6 +990,7 @@ function addOrUpdateAirportMapping(event) {
   newAirportRateInput.value = Number(hourlyRate).toFixed(2);
 
   setDtaStatus(`Saved ${airportCode}: ${country} at $${Number(hourlyRate).toFixed(2)}/hr for future reference.`);
+  saveUiState();
 
   if (patternSelect.value) {
     checkSelectedPatternDta();
@@ -985,13 +1035,13 @@ async function parseSelectedFile() {
 
     const text = await readRosterFileText(file);
     parsedRoster = parseRosterText(text);
+    lastRosterText = text;
+    pendingRestoredPatternId = "";
 
     renderPreview(parsedRoster.events);
 
     if (dtaFeatureEnabled && dtaModuleReady) {
-      dtaPatterns = getDtaPatterns(parsedRoster);
-      populatePatternSelect(dtaPatterns);
-      resetDtaSummary("Select a pattern and click Check DTA.");
+      refreshDtaForCurrentRoster();
     }
 
     if (parsedRoster.events.length === 0) {
@@ -1007,6 +1057,7 @@ async function parseSelectedFile() {
         resetDtaPatternSelect("No patterns found in roster");
         setDtaStatus(dtaModuleReady ? "No patterns available to calculate DTA." : "DTA module unavailable.");
       }
+      saveUiState();
       return;
     }
 
@@ -1019,6 +1070,8 @@ async function parseSelectedFile() {
     downloadBtn.disabled = false;
     shareBtn.disabled = false;
     openBtn.disabled = false;
+    saveLastRosterState();
+    saveUiState();
   } catch (error) {
     console.error(error);
     if (isPdfFile(file)) {
@@ -1133,9 +1186,12 @@ openBtn.addEventListener("click", openIcsInBrowser);
 
 if (dtaFeatureEnabled) {
   checkDtaBtn.addEventListener("click", checkSelectedPatternDta);
+  patternSelect.addEventListener("change", saveUiState);
   importRatesBtn.addEventListener("click", importCountryRatesFromFile);
   downloadRatesBtn.addEventListener("click", downloadCountryRateTable);
   newAirportCodeInput.addEventListener("input", suggestAirportDetailsForCode);
+  newAirportCountryInput.addEventListener("input", saveUiState);
+  newAirportRateInput.addEventListener("input", saveUiState);
   addAirportMapForm.addEventListener("submit", addOrUpdateAirportMapping);
 }
 
@@ -1156,7 +1212,14 @@ rosterFileInput.addEventListener("change", () => {
 });
 
 resetPreview();
-setStatus(`Ready (v${APP_VERSION}). Choose a roster file, then click "Parse roster".`);
+if (dtaFeatureEnabled) {
+  restoreUiState();
+}
+
+const restoredRoster = restoreLastRosterState();
+if (!restoredRoster) {
+  setStatus(`Ready (v${APP_VERSION}). Choose a roster file, then click "Parse roster".`);
+}
 
 if (dtaFeatureEnabled) {
   resetDtaPatternSelect("Parse a roster first");
