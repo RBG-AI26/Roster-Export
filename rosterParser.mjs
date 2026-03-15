@@ -232,14 +232,41 @@ function parseFlightLine(line) {
   }
 
   const flightNumberMatch = line.match(/^\s*([A-Z]{2,3}\d{2,4})\b/);
-  const sectorMatch = line.match(/\b([A-Z]{3})\/([A-Z]{3})\b/);
+  const sectorMatch =
+    line.match(/\bPAX\s*([A-Z]{3})\/([A-Z]{3})\b/i) ||
+    line.match(/\bPAX([A-Z]{3})\/([A-Z]{3})\b/i) ||
+    line.match(/\b([A-Z]{3})\s*PAX\/([A-Z]{3})\b/i) ||
+    line.match(/\b([A-Z]{3})PAX\/([A-Z]{3})\b/i) ||
+    line.match(/\b([A-Z]{3})\/PAX\s*([A-Z]{3})\b/i) ||
+    line.match(/\b([A-Z]{3})\/PAX([A-Z]{3})\b/i) ||
+    line.match(/\b([A-Z]{3})\/([A-Z]{3})\b/);
   if (!flightNumberMatch || !sectorMatch) {
     return null;
   }
 
   const flightNumber = flightNumberMatch[1];
-  const origin = sectorMatch[1];
-  const destination = sectorMatch[2];
+  let origin = sectorMatch[1];
+  let destination = sectorMatch[2];
+  const sectorText = String(sectorMatch[0] || "");
+  let isPax = /PAX/i.test(sectorText);
+
+  // Handle "AAA/PAXBBB" style where destination is captured in group 2.
+  if (!isPax && /\/PAX/i.test(sectorText)) {
+    isPax = true;
+  }
+  // Handle "AAAPAX/BBB" style where origin can include trailing PAX before slash.
+  if (/PAX\//i.test(sectorText) && /PAX$/i.test(origin)) {
+    origin = origin.replace(/PAX$/i, "");
+    isPax = true;
+  }
+  if (/^PAX/i.test(origin)) {
+    origin = origin.replace(/^PAX/i, "");
+    isPax = true;
+  }
+  if (/^PAX/i.test(destination)) {
+    destination = destination.replace(/^PAX/i, "");
+    isPax = true;
+  }
 
   const rest = line.slice(sectorMatch.index + sectorMatch[0].length);
   const tokens = rest.trim().split(/\s+/).filter(Boolean);
@@ -294,6 +321,7 @@ function parseFlightLine(line) {
     flightNumber,
     origin,
     destination,
+    isPax,
     reportLocal,
     depDay,
     depLocal,
@@ -613,7 +641,8 @@ function buildFlightEvents(tripOccurrences, patternMap, bidPeriod) {
 
       const depLocalTitle = /^\d{4}$/.test(flight.depLocal || "") ? flight.depLocal : "----";
       const arrLocalTitle = /^\d{4}$/.test(flight.arrLocal || "") ? flight.arrLocal : "----";
-      const summary = `${flight.flightNumber} ${flight.origin}/${flight.destination} ${depLocalTitle} ${arrLocalTitle}`;
+      const routeTitle = `${flight.isPax ? "PAX " : ""}${flight.origin}/${flight.destination}`;
+      const summary = `${flight.flightNumber} ${routeTitle} ${depLocalTitle} ${arrLocalTitle}`;
       events.push({
         eventType: "flight",
         uid: `${bidPeriod}-${trip.patternCode}-${isoDate(trip.startDate)}-${flight.flightNumber}-${i}`,
@@ -623,6 +652,7 @@ function buildFlightEvents(tripOccurrences, patternMap, bidPeriod) {
         flightNumber: flight.flightNumber,
         origin: flight.origin,
         destination: flight.destination,
+        isPax: Boolean(flight.isPax),
         reportLocal: flight.reportLocal,
         depLocal: flight.depLocal,
         depUtc: flight.depUtc,
@@ -639,7 +669,7 @@ function buildFlightEvents(tripOccurrences, patternMap, bidPeriod) {
         summary,
         previewType: "FLIGHT",
         previewCode: flight.flightNumber,
-        previewInfo: `${flight.origin}/${flight.destination} (${trip.patternCode})`,
+        previewInfo: `${flight.isPax ? "PAX " : ""}${flight.origin}/${flight.destination} (${trip.patternCode})`,
         previewStart: depDateTimeUtc.toISOString().replace(".000Z", "Z"),
         previewEnd: arrDateTimeUtc.toISOString().replace(".000Z", "Z"),
       });
@@ -675,7 +705,7 @@ function buildPatternEvents(tripOccurrences, flightEvents, bidPeriod) {
         ? ["No sector details parsed for this pattern occurrence."]
         : sectors.map(
             (sector) =>
-              `${sector.flightNumber} ${sector.origin}/${sector.destination} | ` +
+              `${sector.flightNumber} ${sector.isPax ? "PAX " : ""}${sector.origin}/${sector.destination} | ` +
               `Sign on ${sector.reportLocal || "N/A"} | ` +
               `Dep ${sector.depDay} ${sector.depLocal} (${sector.depUtc} UTC) | ` +
               `Arr ${sector.arrDay} ${sector.arrLocal} (${sector.arrUtc} UTC)`
@@ -928,7 +958,7 @@ export function rosterToIcs(parsedRoster, sourceFileName = "roster.txt", options
         `Trip: ${event.patternCode}`,
         `Trip Start Date: ${event.tripStartIso}`,
         `Flight: ${event.flightNumber}`,
-        `Route: ${event.origin}/${event.destination}`,
+        `Route: ${event.isPax ? "PAX " : ""}${event.origin}/${event.destination}`,
         `Report Local: ${event.reportLocal || "N/A"}`,
         `Departure Local: ${event.depDay} ${event.depLocal}`,
         `Departure UTC: ${event.depUtc}`,
