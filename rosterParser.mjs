@@ -901,6 +901,19 @@ function buildLeaveDayEvents(scheduleRows, bidPeriod) {
   return events;
 }
 
+function isSamePatternOccurrence(a, b) {
+  if (!a || !b) {
+    return false;
+  }
+
+  return (
+    String(a.patternCode || "") !== "" &&
+    String(a.patternCode || "") === String(b.patternCode || "") &&
+    String(a.tripStartIso || "") !== "" &&
+    String(a.tripStartIso || "") === String(b.tripStartIso || "")
+  );
+}
+
 export function parseRosterText(text) {
   const lines = text.split(/\r?\n/);
   const headerDate = parseHeaderDate(text);
@@ -916,9 +929,18 @@ export function parseRosterText(text) {
   const trainingEvents = buildTrainingEvents(scheduleRows, bidPeriod);
   const dayMarkerEvents = buildAXDayEvents(scheduleRows, bidPeriod);
   const leaveEvents = buildLeaveDayEvents(scheduleRows, bidPeriod);
-  const events = [...flightEvents, ...patternEvents, ...trainingEvents, ...dayMarkerEvents, ...leaveEvents].sort(
-    (a, b) => a.startSort - b.startSort || a.uid.localeCompare(b.uid)
-  );
+  const events = [...flightEvents, ...patternEvents, ...trainingEvents, ...dayMarkerEvents, ...leaveEvents].sort((a, b) => {
+    if (isSamePatternOccurrence(a, b)) {
+      if (a.eventType === "pattern" && b.eventType === "flight") {
+        return -1;
+      }
+      if (a.eventType === "flight" && b.eventType === "pattern") {
+        return 1;
+      }
+    }
+
+    return a.startSort - b.startSort || a.uid.localeCompare(b.uid);
+  });
 
   return {
     bidPeriod,
