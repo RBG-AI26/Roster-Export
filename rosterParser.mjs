@@ -834,32 +834,35 @@ function buildAXDayEvents(scheduleRows, bidPeriod) {
   return events;
 }
 
-function buildALDayEvents(scheduleRows, bidPeriod) {
+function buildLeaveDayEvents(scheduleRows, bidPeriod) {
   const events = [];
 
   for (const row of scheduleRows) {
-    if (row.dutyCode !== "AL") {
+    if (row.dutyCode !== "AL" && row.dutyCode !== "GL") {
       continue;
     }
 
     const nextDay = addDays(row.date, 1);
+    const isGoldenLeave = row.dutyCode === "GL";
+    const title = isGoldenLeave ? "GL" : "AL";
+    const leaveLabel = isGoldenLeave ? "Golden Leave" : "Annual Leave";
     events.push({
       eventType: "leave_day",
       timeKind: "all_day",
-      uid: `${bidPeriod}-${row.iso}-AL-day`,
+      uid: `${bidPeriod}-${row.iso}-${row.dutyCode}-day`,
       bidPeriod,
       category: "LEAVE",
       dutyCode: row.dutyCode,
-      title: "AL",
-      summary: "AL",
+      title,
+      summary: title,
       detail: row.detail,
       dateIso: row.iso,
       dtStartDate: ymdForIcs(row.date),
       dtEndDate: ymdForIcs(nextDay),
       startSort: parseLocalPseudoDateTime(row.date, "0000").getTime(),
       previewType: "LEAVE",
-      previewCode: "AL",
-      previewInfo: "Annual Leave",
+      previewCode: title,
+      previewInfo: leaveLabel,
       previewStart: `${row.iso} all day`,
       previewEnd: `${isoDate(nextDay)} all day`,
     });
@@ -882,7 +885,7 @@ export function parseRosterText(text) {
   const patternEvents = buildPatternEvents(tripOccurrences, flightEvents, bidPeriod);
   const trainingEvents = buildTrainingEvents(scheduleRows, bidPeriod);
   const dayMarkerEvents = buildAXDayEvents(scheduleRows, bidPeriod);
-  const leaveEvents = buildALDayEvents(scheduleRows, bidPeriod);
+  const leaveEvents = buildLeaveDayEvents(scheduleRows, bidPeriod);
   const events = [...flightEvents, ...patternEvents, ...trainingEvents, ...dayMarkerEvents, ...leaveEvents].sort(
     (a, b) => a.startSort - b.startSort || a.uid.localeCompare(b.uid)
   );
