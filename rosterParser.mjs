@@ -905,8 +905,9 @@ export function parseRosterText(text) {
   };
 }
 
-export function rosterToIcs(parsedRoster, sourceFileName = "roster.txt") {
+export function rosterToIcs(parsedRoster, sourceFileName = "roster.txt", options = {}) {
   const now = formatUtcForIcs(new Date());
+  const cancelledEvents = Array.isArray(options?.cancelledEvents) ? options.cancelledEvents : [];
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
@@ -986,6 +987,49 @@ export function rosterToIcs(parsedRoster, sourceFileName = "roster.txt") {
       lines.push("TRANSP:TRANSPARENT");
     }
 
+    lines.push("END:VEVENT");
+  }
+
+  for (const event of cancelledEvents) {
+    if (!event?.uid) {
+      continue;
+    }
+
+    lines.push("BEGIN:VEVENT");
+    lines.push(foldIcsLine(`UID:${escapeIcsText(event.uid)}@roster-export-ical`));
+    lines.push(`DTSTAMP:${now}`);
+
+    if (event.timeKind === "all_day" && /^\d{8}$/.test(event.dtStartDate || "") && /^\d{8}$/.test(event.dtEndDate || "")) {
+      lines.push(`DTSTART;VALUE=DATE:${event.dtStartDate}`);
+      lines.push(`DTEND;VALUE=DATE:${event.dtEndDate}`);
+    } else if (
+      event.timeKind === "floating" &&
+      /^\d{8}T\d{6}$/.test(event.dtStartLocal || "") &&
+      /^\d{8}T\d{6}$/.test(event.dtEndLocal || "")
+    ) {
+      lines.push(`DTSTART:${event.dtStartLocal}`);
+      lines.push(`DTEND:${event.dtEndLocal}`);
+    } else {
+      const dtStartUtc = new Date(event.dtStartUtc || "");
+      const dtEndUtc = new Date(event.dtEndUtc || "");
+      if (!Number.isNaN(dtStartUtc.getTime()) && !Number.isNaN(dtEndUtc.getTime())) {
+        lines.push(`DTSTART:${formatUtcForIcs(dtStartUtc)}`);
+        lines.push(`DTEND:${formatUtcForIcs(dtEndUtc)}`);
+      }
+    }
+
+    const cancelledSummary = event.summary ? `${event.summary} (Cancelled)` : "Cancelled roster event";
+    const description = [
+      "Removed because it is not present in the latest roster upload.",
+      `Original Type: ${event.eventType || "N/A"}`,
+      `Source File: ${sourceFileName}`,
+    ].join("\n");
+
+    lines.push(foldIcsLine(`SUMMARY:${escapeIcsText(cancelledSummary)}`));
+    lines.push(foldIcsLine(`DESCRIPTION:${escapeIcsText(description)}`));
+    lines.push("STATUS:CANCELLED");
+    lines.push("SEQUENCE:1");
+    lines.push("TRANSP:TRANSPARENT");
     lines.push("END:VEVENT");
   }
 

@@ -1,9 +1,10 @@
 import { parseRosterText, rosterToIcs } from "./rosterParser.mjs";
 
-const APP_VERSION = "2026-03-15b";
-const SERVICE_WORKER_URL = "./sw.js?v=20260315b";
+const APP_VERSION = "2026-03-15c";
+const SERVICE_WORKER_URL = "./sw.js?v=20260315c";
 const LAST_ROSTER_STORAGE_KEY = "rosterExport.lastRoster.v1";
 const UI_STATE_STORAGE_KEY = "rosterExport.uiState.v1";
+const EXPORT_SNAPSHOT_STORAGE_KEY = "rosterExport.lastExportSnapshot.v1";
 
 const rosterFileInput = document.getElementById("rosterFile");
 const parseBtn = document.getElementById("parseBtn");
@@ -212,6 +213,68 @@ function saveLastRosterState() {
   });
 }
 
+function serialiseEventForSnapshot(event) {
+  if (!event?.uid) {
+    return null;
+  }
+
+  return {
+    uid: String(event.uid),
+    eventType: String(event.eventType || ""),
+    timeKind: String(event.timeKind || ""),
+    summary: String(event.summary || ""),
+    dtStartUtc: event.dtStartUtc instanceof Date ? event.dtStartUtc.toISOString() : "",
+    dtEndUtc: event.dtEndUtc instanceof Date ? event.dtEndUtc.toISOString() : "",
+    dtStartDate: String(event.dtStartDate || ""),
+    dtEndDate: String(event.dtEndDate || ""),
+    dtStartLocal: String(event.dtStartLocal || ""),
+    dtEndLocal: String(event.dtEndLocal || ""),
+  };
+}
+
+function buildExportSnapshotFromRoster(roster) {
+  if (!roster || !Array.isArray(roster.events)) {
+    return null;
+  }
+
+  return {
+    bidPeriod: String(roster.bidPeriod || ""),
+    savedAtUtc: new Date().toISOString(),
+    events: roster.events.map(serialiseEventForSnapshot).filter(Boolean),
+  };
+}
+
+function loadExportSnapshot() {
+  const snapshot = loadJsonState(EXPORT_SNAPSHOT_STORAGE_KEY);
+  if (!snapshot || typeof snapshot !== "object" || !Array.isArray(snapshot.events)) {
+    return null;
+  }
+  return snapshot;
+}
+
+function saveExportSnapshot(snapshot) {
+  if (!snapshot) {
+    return;
+  }
+  saveJsonState(EXPORT_SNAPSHOT_STORAGE_KEY, snapshot);
+}
+
+function getCancelledEventsForRoster(roster) {
+  const previousSnapshot = loadExportSnapshot();
+  if (!previousSnapshot || String(previousSnapshot.bidPeriod || "") !== String(roster.bidPeriod || "")) {
+    return [];
+  }
+
+  const currentUids = new Set(
+    roster.events.map((event) => String(event?.uid || "")).filter((uid) => uid.length > 0)
+  );
+
+  return previousSnapshot.events.filter((event) => {
+    const uid = String(event?.uid || "");
+    return uid.length > 0 && !currentUids.has(uid);
+  });
+}
+
 function restoreLastRosterState() {
   const state = loadJsonState(LAST_ROSTER_STORAGE_KEY);
   if (!state?.rosterText || typeof state.rosterText !== "string") {
@@ -307,10 +370,12 @@ function buildExportPayload() {
     return null;
   }
 
-  const content = rosterToIcs(parsedRoster, currentFileName || "roster.txt");
+  const cancelledEvents = getCancelledEventsForRoster(parsedRoster);
+  const content = rosterToIcs(parsedRoster, currentFileName || "roster.txt", { cancelledEvents });
   const fileName = `BP${parsedRoster.bidPeriod}_events.ics`;
   const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
-  return { content, fileName, blob };
+  saveExportSnapshot(buildExportSnapshotFromRoster(parsedRoster));
+  return { content, fileName, blob, cancelledCount: cancelledEvents.length };
 }
 
 function blobToDataUrl(blob) {
@@ -1146,7 +1211,9 @@ function downloadIcs() {
   link.remove();
 
   setTimeout(() => URL.revokeObjectURL(url), 0);
-  setStatus(withAirdropHint(`Downloaded ${payload.fileName}`));
+  const cancellationSuffix =
+    payload.cancelledCount > 0 ? ` including ${payload.cancelledCount} removed event cancellation(s)` : "";
+  setStatus(withAirdropHint(`Downloaded ${payload.fileName}${cancellationSuffix}`));
 }
 
 async function openIcsInBrowser() {
