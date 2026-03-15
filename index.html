@@ -4,9 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Roster Export iCal</title>
-    <link rel="icon" type="image/svg+xml" href="./calendar-icon.svg?v=20260315a" />
-    <link rel="shortcut icon" href="./calendar-icon.svg?v=20260315a" />
-    <link rel="apple-touch-icon" href="./calendar-icon.svg?v=20260315a" />
+    <meta name="theme-color" content="#00695c" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Roster iCal" />
+    <link rel="manifest" href="./manifest.webmanifest?v=20260315b" />
+    <link rel="icon" type="image/svg+xml" href="./calendar-icon.svg?v=20260315b" />
+    <link rel="shortcut icon" href="./calendar-icon.svg?v=20260315b" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./calendar-icon-180.png?v=20260315b" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -128,7 +133,7 @@
     <script>
       (async () => {
         try {
-          await import("./app.mjs?v=20260313k");
+          await import("./app.mjs?v=20260315b");
         } catch (error) {
           console.error("Failed to load app module", error);
           const statusEl = document.getElementById("status");

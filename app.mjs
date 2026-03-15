@@ -1,6 +1,7 @@
 import { parseRosterText, rosterToIcs } from "./rosterParser.mjs";
 
-const APP_VERSION = "2026-03-13k";
+const APP_VERSION = "2026-03-15b";
+const SERVICE_WORKER_URL = "./sw.js?v=20260315b";
 const LAST_ROSTER_STORAGE_KEY = "rosterExport.lastRoster.v1";
 const UI_STATE_STORAGE_KEY = "rosterExport.uiState.v1";
 
@@ -94,6 +95,33 @@ function setDtaStatus(message) {
     return;
   }
   dtaStatusEl.textContent = message;
+}
+
+function canRegisterServiceWorker() {
+  if (!("serviceWorker" in navigator)) {
+    return false;
+  }
+
+  if (window.isSecureContext) {
+    return true;
+  }
+
+  const host = window.location.hostname;
+  return host === "localhost" || host === "127.0.0.1";
+}
+
+function registerServiceWorker() {
+  if (!canRegisterServiceWorker()) {
+    return;
+  }
+
+  window.addEventListener("load", async () => {
+    try {
+      await navigator.serviceWorker.register(SERVICE_WORKER_URL, { scope: "./" });
+    } catch (error) {
+      console.error("Service worker registration failed", error);
+    }
+  });
 }
 
 function getAppStorage() {
@@ -1211,6 +1239,7 @@ rosterFileInput.addEventListener("change", () => {
   setStatus('File selected. Click "Parse roster".');
 });
 
+registerServiceWorker();
 resetPreview();
 if (dtaFeatureEnabled) {
   restoreUiState();
