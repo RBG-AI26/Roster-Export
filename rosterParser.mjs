@@ -611,7 +611,9 @@ function buildFlightEvents(tripOccurrences, patternMap, bidPeriod) {
       const arrDateTimeUtc = arrInference.utc;
       const reportStartUtc = deriveReportStartUtc(depLocalDate, flight.depLocal, flight.reportLocal, depDateTimeUtc);
 
-      const summary = `${flight.flightNumber} ${flight.origin}->${flight.destination} (${trip.patternCode})`;
+      const depLocalTitle = /^\d{4}$/.test(flight.depLocal || "") ? flight.depLocal : "----";
+      const arrLocalTitle = /^\d{4}$/.test(flight.arrLocal || "") ? flight.arrLocal : "----";
+      const summary = `${flight.flightNumber} ${flight.origin}/${flight.destination} ${depLocalTitle} ${arrLocalTitle}`;
       events.push({
         eventType: "flight",
         uid: `${bidPeriod}-${trip.patternCode}-${isoDate(trip.startDate)}-${flight.flightNumber}-${i}`,
@@ -679,7 +681,7 @@ function buildPatternEvents(tripOccurrences, flightEvents, bidPeriod) {
               `Arr ${sector.arrDay} ${sector.arrLocal} (${sector.arrUtc} UTC)`
           );
 
-    const summary = `${occurrence.patternCode}`;
+    const summary = `Pattern ${occurrence.patternCode}`;
     const nextDay = addDays(occurrence.endDate, 1);
     events.push({
       eventType: "pattern",
