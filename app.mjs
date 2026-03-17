@@ -1,7 +1,7 @@
 import { parseRosterText, rosterToIcs } from "./rosterParser.mjs";
 
-const APP_VERSION = "2026-03-15c";
-const SERVICE_WORKER_URL = "./sw.js?v=20260315c";
+const APP_VERSION = "2026-03-17a";
+const SERVICE_WORKER_URL = "./sw.js?v=20260317a";
 const LAST_ROSTER_STORAGE_KEY = "rosterExport.lastRoster.v1";
 const UI_STATE_STORAGE_KEY = "rosterExport.uiState.v1";
 const EXPORT_SNAPSHOT_STORAGE_KEY = "rosterExport.lastExportSnapshot.v1";
@@ -18,7 +18,6 @@ const patternSelect = document.getElementById("patternSelect");
 const checkDtaBtn = document.getElementById("checkDtaBtn");
 const dtaStatusEl = document.getElementById("dtaStatus");
 const dtaSummaryBody = document.getElementById("dtaSummaryBody");
-const countryRateTableBody = document.getElementById("countryRateTableBody");
 const countryOptions = document.getElementById("countryOptions");
 const ratesFileInput = document.getElementById("ratesFile");
 const importRatesBtn = document.getElementById("importRatesBtn");
@@ -244,24 +243,61 @@ function buildExportSnapshotFromRoster(roster) {
   };
 }
 
-function loadExportSnapshot() {
-  const snapshot = loadJsonState(EXPORT_SNAPSHOT_STORAGE_KEY);
-  if (!snapshot || typeof snapshot !== "object" || !Array.isArray(snapshot.events)) {
-    return null;
+function normaliseExportSnapshotStore(rawState) {
+  if (!rawState || typeof rawState !== "object") {
+    return {};
   }
-  return snapshot;
+
+  if (Array.isArray(rawState.events) && typeof rawState.bidPeriod === "string") {
+    return {
+      [rawState.bidPeriod]: rawState,
+    };
+  }
+
+  const snapshots = rawState.snapshots;
+  if (!snapshots || typeof snapshots !== "object") {
+    return {};
+  }
+
+  const byBidPeriod = {};
+  for (const [bidPeriod, snapshot] of Object.entries(snapshots)) {
+    if (!snapshot || typeof snapshot !== "object" || !Array.isArray(snapshot.events)) {
+      continue;
+    }
+    byBidPeriod[String(bidPeriod)] = snapshot;
+  }
+
+  return byBidPeriod;
 }
 
-function saveExportSnapshot(snapshot) {
-  if (!snapshot) {
+function loadExportSnapshots() {
+  return normaliseExportSnapshotStore(loadJsonState(EXPORT_SNAPSHOT_STORAGE_KEY));
+}
+
+function saveExportSnapshots(snapshots) {
+  saveJsonState(EXPORT_SNAPSHOT_STORAGE_KEY, {
+    snapshots,
+  });
+}
+
+function loadExportSnapshotForBidPeriod(bidPeriod) {
+  const snapshots = loadExportSnapshots();
+  return snapshots[String(bidPeriod || "")] || null;
+}
+
+function saveExportSnapshotForBidPeriod(snapshot) {
+  if (!snapshot?.bidPeriod) {
     return;
   }
-  saveJsonState(EXPORT_SNAPSHOT_STORAGE_KEY, snapshot);
+
+  const snapshots = loadExportSnapshots();
+  snapshots[String(snapshot.bidPeriod)] = snapshot;
+  saveExportSnapshots(snapshots);
 }
 
 function getCancelledEventsForRoster(roster) {
-  const previousSnapshot = loadExportSnapshot();
-  if (!previousSnapshot || String(previousSnapshot.bidPeriod || "") !== String(roster.bidPeriod || "")) {
+  const previousSnapshot = loadExportSnapshotForBidPeriod(roster?.bidPeriod);
+  if (!previousSnapshot) {
     return [];
   }
 
@@ -341,7 +377,6 @@ async function initDtaModule() {
 
     dtaModuleReady = true;
     renderCountryOptions();
-    renderCountryRateTable();
     const hasRestoredManualAirportValues =
       uiStateWasRestored &&
       (String(newAirportCountryInput.value || "").trim() !== "" || String(newAirportRateInput.value || "").trim() !== "");
@@ -370,12 +405,12 @@ function buildExportPayload() {
     return null;
   }
 
+  const snapshot = buildExportSnapshotFromRoster(parsedRoster);
   const cancelledEvents = getCancelledEventsForRoster(parsedRoster);
   const content = rosterToIcs(parsedRoster, currentFileName || "roster.txt", { cancelledEvents });
   const fileName = `BP${parsedRoster.bidPeriod}_events.ics`;
   const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
-  saveExportSnapshot(buildExportSnapshotFromRoster(parsedRoster));
-  return { content, fileName, blob, cancelledCount: cancelledEvents.length };
+  return { content, fileName, blob, cancelledCount: cancelledEvents.length, snapshot };
 }
 
 function blobToDataUrl(blob) {
@@ -561,43 +596,6 @@ function renderCountryOptions() {
     const option = document.createElement("option");
     option.value = country;
     countryOptions.appendChild(option);
-  }
-}
-
-function renderCountryRateTable() {
-  if (!dtaFeatureEnabled || !countryRateTableBody) {
-    return;
-  }
-
-  countryRateTableBody.innerHTML = "";
-  const rows = getCountryRateRows(dtaCountryRates);
-
-  if (rows.length === 0) {
-    const row = document.createElement("tr");
-    const cell = document.createElement("td");
-    cell.colSpan = 3;
-    cell.textContent = "No country rates configured.";
-    row.appendChild(cell);
-    countryRateTableBody.appendChild(row);
-    return;
-  }
-
-  for (const details of rows) {
-    const row = document.createElement("tr");
-
-    const countryCell = document.createElement("td");
-    countryCell.textContent = details.country;
-
-    const groupCell = document.createElement("td");
-    groupCell.textContent = details.costGroup || "-";
-
-    const hourlyCell = document.createElement("td");
-    hourlyCell.textContent = `$${Number(details.hourlyRate).toFixed(2)}/hr`;
-
-    row.appendChild(countryCell);
-    row.appendChild(groupCell);
-    row.appendChild(hourlyCell);
-    countryRateTableBody.appendChild(row);
   }
 }
 
@@ -961,7 +959,6 @@ async function importCountryRatesFromFile() {
     saveAirportCountryMap(airportCountryMap, null, dtaCountryRates);
 
     renderCountryOptions();
-    renderCountryRateTable();
     suggestAirportDetailsForCode();
 
     setDtaStatus(
@@ -1100,16 +1097,23 @@ function renderPreview(events) {
 
   for (const event of events) {
     const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${event.previewType}</td>
-      <td>${event.previewCode}</td>
-      <td>${event.previewInfo}</td>
-      <td>${event.previewStart}</td>
-      <td>${event.previewEnd}</td>
-    `;
-
+    for (const value of [
+      event.previewType,
+      event.previewCode,
+      event.previewInfo,
+      event.previewStart,
+      event.previewEnd,
+    ]) {
+      const cell = document.createElement("td");
+      cell.textContent = String(value ?? "");
+      row.appendChild(cell);
+    }
     eventsBody.appendChild(row);
   }
+}
+
+function persistSuccessfulExport(snapshot) {
+  saveExportSnapshotForBidPeriod(snapshot);
 }
 
 async function parseSelectedFile() {
@@ -1211,6 +1215,7 @@ function downloadIcs() {
   link.remove();
 
   setTimeout(() => URL.revokeObjectURL(url), 0);
+  persistSuccessfulExport(payload.snapshot);
   const cancellationSuffix =
     payload.cancelledCount > 0 ? ` including ${payload.cancelledCount} removed event cancellation(s)` : "";
   setStatus(withAirdropHint(`Downloaded ${payload.fileName}${cancellationSuffix}`));
@@ -1229,6 +1234,7 @@ async function openIcsInBrowser() {
     if (!opened) {
       window.location.href = dataUrl;
     }
+    persistSuccessfulExport(payload.snapshot);
     setStatus("Opened .ics file. On iPad tap Share, then Calendar or Save to Files.");
   } catch (error) {
     console.error(error);
@@ -1259,6 +1265,7 @@ async function shareForIpad() {
           files: [file],
         });
 
+        persistSuccessfulExport(payload.snapshot);
         setStatus(withAirdropHint("Shared .ics file. On iPad choose Calendar or Save to Files."));
         return;
       }
