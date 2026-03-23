@@ -36,23 +36,13 @@ Then open:
 3. Optional: in **DTA Checker**, select a pattern code and click **Check DTA**.
 4. If prompted for an unknown airport code, add/update its country mapping (saved for future use).
 5. Optional: import an updated rates table (`.xlsx`/`.csv`) or download the current table.
-6. Click **Download .ics**, **Export to iPad**, or **Open .ics**.
-7. Import the `.ics` file into Apple Calendar.
-
-## iPad export flow
-1. Open the app in Safari (on iPad or iPhone).
-2. Parse your roster.
-3. Tap **Export to iPad**.
-4. In the share sheet, choose:
-- **Calendar** to import directly, or
-- **Save to Files** and then open the `.ics` file in Files.
-5. If share is blocked by Safari, tap **Open .ics** and use the iPad share button from the opened file.
+6. Click **Download .ics** if you want a one-off file export, or use the subscribed calendar workflow below for ongoing updates.
 
 ## Notes
 - Flight events use UTC times from the roster data.
 - SIM/training events are exported as local-time events when start/end times are present.
 - Description fields include bid period, duty/flight details, and source filename.
-- Sample outputs generated from your provided file are included as `BP374_flights.ics` and `BP374_events.ics`.
+- Supported non-flying duty codes include `A`, `X`, `AL`, `GL`, `LSL`, `SL`, and `SR` (Standby).
 
 ## Cloudflare Worker subscription feed
 
@@ -83,3 +73,18 @@ This app can now publish a stable subscribed calendar feed instead of relying on
 
 ### Why this fixes updates
 Manual `.ics` imports merge events and do not reliably remove deleted duties. The subscribed feed becomes the source of truth, so removed duties such as a dropped pattern are removed from the feed on the next refresh.
+
+### Privacy note
+Treat published subscription links as private URLs. Anyone with the full `webcal://` or `https://` link can read that roster feed. Do not post or share those links outside the people and devices that should see your roster.
+
+
+## Multi-user browser model
+
+This deployed app can be used by multiple people without accounts.
+
+- Each person opens the app in their own browser.
+- Parsing still happens in the browser.
+- On first publish, that browser creates its own private subscribed calendar feed.
+- The browser stores the private write token locally so future publishes update the same feed.
+- If browser storage is cleared, that person must create a new calendar and subscribe to the new link.
+- If several people use the same browser/device, click **Start New Calendar** before the next person sets up their feed.

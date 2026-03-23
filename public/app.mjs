@@ -10,10 +10,9 @@ const SUBSCRIBED_CALENDAR_STORAGE_KEY = "rosterExport.subscribedCalendar.v1";
 const rosterFileInput = document.getElementById("rosterFile");
 const parseBtn = document.getElementById("parseBtn");
 const downloadBtn = document.getElementById("downloadBtn");
-const shareBtn = document.getElementById("shareBtn");
-const openBtn = document.getElementById("openBtn");
 const publishBtn = document.getElementById("publishBtn");
 const copyLinkBtn = document.getElementById("copyLinkBtn");
+const resetCalendarBtn = document.getElementById("resetCalendarBtn");
 const statusEl = document.getElementById("status");
 const subscriptionStatusEl = document.getElementById("subscriptionStatus");
 const subscriptionLinkWrap = document.getElementById("subscriptionLinkWrap");
@@ -76,22 +75,6 @@ let defaultFallbackRate = { costGroup: "1", mealRate: 5, incidentalRate: 1.25, h
 
 let pdfJsModulePromise = null;
 let xlsxModulePromise = null;
-
-function isMacSafari() {
-  const ua = navigator.userAgent || "";
-  const vendor = navigator.vendor || "";
-  const isMac = /\bMacintosh\b/.test(ua);
-  const isSafari = /Safari/.test(ua) && /Apple/.test(vendor) && !/Chrome|CriOS|Edg|OPR|Firefox/.test(ua);
-  return isMac && isSafari;
-}
-
-function withAirdropHint(message) {
-  if (!isMacSafari()) {
-    return message;
-  }
-
-  return `${message} Tip: AirDrop to iPad from Finder (right-click the .ics file -> Share -> AirDrop).`;
-}
 
 function setStatus(message) {
   statusEl.textContent = message;
@@ -174,11 +157,17 @@ function clearSubscribedCalendarState() {
 
 function updateSubscribedCalendarUi() {
   const canPublish = canUseSubscribedCalendarPublishing();
+  const hasCalendar = Boolean(subscribedCalendarState?.subscriptionUrl);
+
   if (publishBtn) {
     publishBtn.disabled = !parsedRoster || !canPublish;
+    publishBtn.textContent = hasCalendar ? "Update My Calendar" : "Create My Calendar";
   }
   if (copyLinkBtn) {
     copyLinkBtn.disabled = !subscribedCalendarState?.webcalUrl && !subscribedCalendarState?.subscriptionUrl;
+  }
+  if (resetCalendarBtn) {
+    resetCalendarBtn.disabled = !hasCalendar;
   }
 
   const preferredLink = subscribedCalendarState?.webcalUrl || subscribedCalendarState?.subscriptionUrl || "";
@@ -193,19 +182,25 @@ function updateSubscribedCalendarUi() {
     return;
   }
 
-  if (subscribedCalendarState?.subscriptionUrl) {
-    const bidPeriodSuffix = subscribedCalendarState.bidPeriod ? 
-      ` for BP${subscribedCalendarState.bidPeriod}` : "";
-    setSubscriptionStatus(`Subscribed calendar ready${bidPeriodSuffix}. Re-publish whenever your roster changes.`);
+  if (hasCalendar) {
+    const bidPeriodSuffix = subscribedCalendarState.bidPeriod ? ` for BP${subscribedCalendarState.bidPeriod}` : "";
+    setSubscriptionStatus(`This browser already has a subscribed calendar${bidPeriodSuffix}. Update it with a new roster, or start a new calendar if this device is being handed to someone else.`);
     return;
   }
 
   if (parsedRoster) {
-    setSubscriptionStatus("Ready to publish a stable calendar feed for this roster.");
+    setSubscriptionStatus("Ready to create a subscribed calendar for this browser.");
     return;
   }
 
-  setSubscriptionStatus("Parse a roster, then publish a stable calendar feed.");
+  setSubscriptionStatus("Parse a roster, then create a subscribed calendar for this browser.");
+}
+
+function resetSubscribedCalendar() {
+  clearSubscribedCalendarState();
+  subscribedCalendarState = null;
+  updateSubscribedCalendarUi();
+  setSubscriptionStatus("This browser is no longer linked to a subscribed calendar. Parse a roster and create a new one for the next user.");
 }
 
 async function copyTextToClipboard(text) {
@@ -468,18 +463,12 @@ function restoreLastRosterState() {
     lastRosterText = "";
     resetPreview();
     downloadBtn.disabled = true;
-    shareBtn.disabled = true;
-    openBtn.disabled = true;
     return false;
   }
 
   downloadBtn.disabled = false;
-  shareBtn.disabled = false;
-  openBtn.disabled = false;
   setStatus(
-    withAirdropHint(
-      `Restored BP${parsedRoster.bidPeriod}: ${parsedRoster.counts.flights} flights + ${parsedRoster.counts.patterns} patterns + ${parsedRoster.counts.training} SIM/training + ${parsedRoster.counts.dayMarkers} A/X days + ${(parsedRoster.counts.leaveDays || 0)} AL days = ${parsedRoster.counts.total} total events.`
-    )
+    `Restored BP${parsedRoster.bidPeriod}: ${parsedRoster.counts.flights} flights + ${parsedRoster.counts.patterns} patterns + ${parsedRoster.counts.training} SIM/training + ${parsedRoster.counts.dayMarkers} A/X days + ${(parsedRoster.counts.leaveDays || 0)} AL days = ${parsedRoster.counts.total} total events.`
   );
 
   return true;
@@ -600,12 +589,17 @@ async function publishSubscribedCalendar() {
       throw new Error("Publish response did not include the calendar tokens.");
     }
 
+    const wasExistingCalendar = Boolean(subscribedCalendarState?.subscriptionUrl);
     subscribedCalendarState = nextState;
     saveSubscribedCalendarState(nextState);
     persistSuccessfulExport(payload.snapshot);
     updateSubscribedCalendarUi();
-    setSubscriptionStatus("Subscribed calendar published. Subscribe once, then re-publish whenever your roster changes.");
-    setStatus("Subscribed calendar updated successfully.");
+    setSubscriptionStatus(
+      wasExistingCalendar
+        ? "Subscribed calendar updated. Apple Calendar will pick up the same link on its next refresh."
+        : "Subscribed calendar created. Copy the link and subscribe to it once in Apple Calendar."
+    );
+    setStatus(wasExistingCalendar ? "Subscribed calendar updated successfully." : "Subscribed calendar created successfully.");
   } catch (error) {
     console.error(error);
     if (String(error?.message || "").includes("write token")) {
@@ -633,15 +627,6 @@ async function copySubscriptionLink() {
     console.error(error);
     setSubscriptionStatus("Could not copy the subscription link automatically.");
   }
-}
-
-function blobToDataUrl(blob) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = () => reject(new Error("Failed to convert calendar file."));
-    reader.readAsDataURL(blob);
-  });
 }
 
 function isPdfFile(file) {
@@ -1370,8 +1355,6 @@ async function parseSelectedFile() {
         setStatus("No supported events found. Check the roster layout or file type.");
       }
       downloadBtn.disabled = true;
-      shareBtn.disabled = true;
-      openBtn.disabled = true;
       if (dtaFeatureEnabled) {
         resetDtaPatternSelect("No patterns found in roster");
         setDtaStatus(dtaModuleReady ? "No patterns available to calculate DTA." : "DTA module unavailable.");
@@ -1382,14 +1365,10 @@ async function parseSelectedFile() {
     }
 
     setStatus(
-      withAirdropHint(
-        `Parsed BP${parsedRoster.bidPeriod}: ${parsedRoster.counts.flights} flights + ${parsedRoster.counts.patterns} patterns + ${parsedRoster.counts.training} SIM/training + ${parsedRoster.counts.dayMarkers} A/X days + ${(parsedRoster.counts.leaveDays || 0)} AL days = ${parsedRoster.counts.total} total events.`
-      )
+      `Parsed BP${parsedRoster.bidPeriod}: ${parsedRoster.counts.flights} flights + ${parsedRoster.counts.patterns} patterns + ${parsedRoster.counts.training} SIM/training + ${parsedRoster.counts.dayMarkers} A/X days + ${(parsedRoster.counts.leaveDays || 0)} leave days + ${(parsedRoster.counts.standby || 0)} standby duties = ${parsedRoster.counts.total} total events.`
     );
 
     downloadBtn.disabled = false;
-    shareBtn.disabled = false;
-    openBtn.disabled = false;
     saveLastRosterState();
     saveUiState();
     updateSubscribedCalendarUi();
@@ -1402,8 +1381,6 @@ async function parseSelectedFile() {
     }
 
     downloadBtn.disabled = true;
-    shareBtn.disabled = true;
-    openBtn.disabled = true;
 
     if (dtaFeatureEnabled) {
       resetDtaPatternSelect("Parse failed");
@@ -1442,78 +1419,19 @@ function downloadIcs() {
   persistSuccessfulExport(payload.snapshot);
   const cancellationSuffix =
     payload.cancelledCount > 0 ? ` including ${payload.cancelledCount} removed event cancellation(s)` : "";
-  setStatus(withAirdropHint(`Downloaded ${payload.fileName}${cancellationSuffix}`));
-}
-
-async function openIcsInBrowser() {
-  const payload = buildExportPayload();
-  if (!payload) {
-    setStatus("Parse a roster first.");
-    return;
-  }
-
-  try {
-    const dataUrl = await blobToDataUrl(payload.blob);
-    const opened = window.open(dataUrl, "_blank");
-    if (!opened) {
-      window.location.href = dataUrl;
-    }
-    persistSuccessfulExport(payload.snapshot);
-    setStatus("Opened .ics file. On iPad tap Share, then Calendar or Save to Files.");
-  } catch (error) {
-    console.error(error);
-    downloadIcs();
-  }
-}
-
-async function shareForIpad() {
-  const payload = buildExportPayload();
-  if (!payload) {
-    setStatus("Parse a roster first.");
-    return;
-  }
-
-  const shareableTypes = ["text/calendar;charset=utf-8", "text/plain;charset=utf-8"];
-
-  try {
-    if (navigator.share) {
-      for (const type of shareableTypes) {
-        const file = new File([payload.content], payload.fileName, { type });
-        if (navigator.canShare && !navigator.canShare({ files: [file] })) {
-          continue;
-        }
-
-        await navigator.share({
-          title: payload.fileName,
-          text: "Roster calendar export",
-          files: [file],
-        });
-
-        persistSuccessfulExport(payload.snapshot);
-        setStatus(withAirdropHint("Shared .ics file. On iPad choose Calendar or Save to Files."));
-        return;
-      }
-    }
-  } catch (error) {
-    if (error?.name === "AbortError") {
-      setStatus("Share cancelled.");
-      return;
-    }
-    console.error(error);
-  }
-
-  await openIcsInBrowser();
+  setStatus(`Downloaded ${payload.fileName}${cancellationSuffix}`);
 }
 
 parseBtn.addEventListener("click", parseSelectedFile);
 downloadBtn.addEventListener("click", downloadIcs);
-shareBtn.addEventListener("click", shareForIpad);
-openBtn.addEventListener("click", openIcsInBrowser);
 if (publishBtn) {
   publishBtn.addEventListener("click", publishSubscribedCalendar);
 }
 if (copyLinkBtn) {
   copyLinkBtn.addEventListener("click", copySubscriptionLink);
+}
+if (resetCalendarBtn) {
+  resetCalendarBtn.addEventListener("click", resetSubscribedCalendar);
 }
 
 if (dtaFeatureEnabled) {
@@ -1529,8 +1447,6 @@ if (dtaFeatureEnabled) {
 
 rosterFileInput.addEventListener("change", () => {
   downloadBtn.disabled = true;
-  shareBtn.disabled = true;
-  openBtn.disabled = true;
   parsedRoster = null;
 
   if (dtaFeatureEnabled) {

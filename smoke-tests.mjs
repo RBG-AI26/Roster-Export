@@ -62,6 +62,36 @@ Date Duty Detail Credit
   assert.equal(leave?.dtEndDate, "20260311");
 });
 
+
+test("SL, LSL, and SR are exported as supported duty events", () => {
+  const text = `BID PERIOD 999
+01 Apr 2026
+Date Duty Detail Credit
+01/04 W SL 1701
+02/04 T LSL 00:00
+03/04 F SR SBY 0600 1400
+`;
+
+  const parsed = parseRosterText(text);
+  const sickLeave = parsed.events.find((event) => event.dutyCode === "SL");
+  const longServiceLeave = parsed.events.find((event) => event.dutyCode === "LSL");
+  const standby = parsed.events.find((event) => event.dutyCode === "SR");
+
+  assert.equal(sickLeave?.eventType, "leave_day");
+  assert.equal(sickLeave?.summary, "Sick Leave");
+  assert.equal(sickLeave?.dtStartDate, "20260401");
+
+  assert.equal(longServiceLeave?.eventType, "leave_day");
+  assert.equal(longServiceLeave?.summary, "LSL");
+  assert.equal(longServiceLeave?.previewInfo, "Long Service Leave");
+
+  assert.equal(standby?.eventType, "standby");
+  assert.equal(standby?.timeKind, "floating");
+  assert.equal(standby?.summary, "Standby");
+  assert.equal(standby?.dtStartLocal, "20260403T060000");
+  assert.equal(standby?.dtEndLocal, "20260403T140000");
+});
+
 test("cancelled events are emitted in ICS output", () => {
   const parsedRoster = {
     bidPeriod: "999",

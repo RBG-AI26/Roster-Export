@@ -27,23 +27,23 @@
         <div class="actions">
           <button id="parseBtn" type="button">Parse roster</button>
           <button id="downloadBtn" type="button" disabled>Download .ics</button>
-          <button id="shareBtn" type="button" disabled>Export to iPad</button>
-          <button id="openBtn" type="button" disabled>Open .ics</button>
         </div>
 
         <p id="status" aria-live="polite">Choose a roster file to begin.</p>
       </section>
 
       <section class="card">
-        <h2>Subscribed Calendar</h2>
-        <p>Publish a stable calendar feed once, subscribe to it in Apple Calendar, then just re-publish to push roster changes.</p>
+        <h2>My Subscribed Calendar</h2>
+        <p>Each browser can create its own private roster calendar. No account is required. Create it once, subscribe in Apple Calendar, then update it whenever your roster changes.</p>
 
         <div class="actions">
-          <button id="publishBtn" type="button" disabled>Publish Calendar</button>
+          <button id="publishBtn" type="button" disabled>Create My Calendar</button>
           <button id="copyLinkBtn" type="button" disabled>Copy Subscription Link</button>
+          <button id="resetCalendarBtn" type="button">Start New Calendar</button>
         </div>
 
-        <p id="subscriptionStatus" aria-live="polite">Parse a roster, then publish a stable calendar feed.</p>
+        <p class="subscription-note">This browser keeps the private write token for this calendar. If you clear browser data or move to a different browser, create a new calendar and subscribe to the new link.</p>
+        <p id="subscriptionStatus" aria-live="polite">Parse a roster, then create a subscribed calendar for this browser.</p>
         <p id="subscriptionLinkWrap" class="subscription-link" hidden>
           <a id="subscriptionLink" href="" target="_blank" rel="noopener noreferrer"></a>
         </p>

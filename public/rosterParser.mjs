@@ -866,16 +866,20 @@ function buildAXDayEvents(scheduleRows, bidPeriod) {
 
 function buildLeaveDayEvents(scheduleRows, bidPeriod) {
   const events = [];
+  const leaveTypes = {
+    AL: { title: "AL", label: "Annual Leave" },
+    GL: { title: "GL", label: "Golden Leave" },
+    LSL: { title: "LSL", label: "Long Service Leave" },
+    SL: { title: "Sick Leave", label: "Sick Leave" },
+  };
 
   for (const row of scheduleRows) {
-    if (row.dutyCode !== "AL" && row.dutyCode !== "GL") {
+    const leaveType = leaveTypes[row.dutyCode];
+    if (!leaveType) {
       continue;
     }
 
     const nextDay = addDays(row.date, 1);
-    const isGoldenLeave = row.dutyCode === "GL";
-    const title = isGoldenLeave ? "GL" : "AL";
-    const leaveLabel = isGoldenLeave ? "Golden Leave" : "Annual Leave";
     events.push({
       eventType: "leave_day",
       timeKind: "all_day",
@@ -883,16 +887,83 @@ function buildLeaveDayEvents(scheduleRows, bidPeriod) {
       bidPeriod,
       category: "LEAVE",
       dutyCode: row.dutyCode,
-      title,
-      summary: title,
+      title: leaveType.title,
+      summary: leaveType.title,
       detail: row.detail,
       dateIso: row.iso,
       dtStartDate: ymdForIcs(row.date),
       dtEndDate: ymdForIcs(nextDay),
       startSort: parseLocalPseudoDateTime(row.date, "0000").getTime(),
       previewType: "LEAVE",
-      previewCode: title,
-      previewInfo: leaveLabel,
+      previewCode: row.dutyCode,
+      previewInfo: leaveType.label,
+      previewStart: `${row.iso} all day`,
+      previewEnd: `${isoDate(nextDay)} all day`,
+    });
+  }
+
+  return events;
+}
+
+function buildStandbyEvents(scheduleRows, bidPeriod) {
+  const events = [];
+
+  for (const row of scheduleRows) {
+    if (row.dutyCode !== "SR") {
+      continue;
+    }
+
+    const uidBase = `${bidPeriod}-${row.dutyCode}-${row.iso}`;
+    if (row.rept && row.end) {
+      const startLocal = parseLocalPseudoDateTime(row.date, row.rept);
+      let endDate = row.date;
+      let endLocal = parseLocalPseudoDateTime(endDate, row.end);
+      if (endLocal <= startLocal) {
+        endDate = addDays(endDate, 1);
+        endLocal = parseLocalPseudoDateTime(endDate, row.end);
+      }
+
+      events.push({
+        eventType: "standby",
+        timeKind: "floating",
+        uid: `${uidBase}-timed`,
+        bidPeriod,
+        category: "STANDBY",
+        dutyCode: row.dutyCode,
+        detail: row.detail,
+        dateIso: row.iso,
+        rept: row.rept,
+        end: row.end,
+        summary: "Standby",
+        dtStartLocal: formatFloatingForIcs(row.date, row.rept),
+        dtEndLocal: formatFloatingForIcs(endDate, row.end),
+        startSort: startLocal.getTime(),
+        previewType: "STANDBY",
+        previewCode: row.dutyCode,
+        previewInfo: row.detail || "Standby",
+        previewStart: `${row.iso} ${row.rept} (local)`,
+        previewEnd: `${isoDate(endDate)} ${row.end} (local)`,
+      });
+      continue;
+    }
+
+    const nextDay = addDays(row.date, 1);
+    events.push({
+      eventType: "standby",
+      timeKind: "all_day",
+      uid: `${uidBase}-allday`,
+      bidPeriod,
+      category: "STANDBY",
+      dutyCode: row.dutyCode,
+      detail: row.detail,
+      dateIso: row.iso,
+      summary: "Standby",
+      dtStartDate: ymdForIcs(row.date),
+      dtEndDate: ymdForIcs(nextDay),
+      startSort: parseLocalPseudoDateTime(row.date, "0000").getTime(),
+      previewType: "STANDBY",
+      previewCode: row.dutyCode,
+      previewInfo: row.detail || "Standby",
       previewStart: `${row.iso} all day`,
       previewEnd: `${isoDate(nextDay)} all day`,
     });
@@ -929,7 +1000,8 @@ export function parseRosterText(text) {
   const trainingEvents = buildTrainingEvents(scheduleRows, bidPeriod);
   const dayMarkerEvents = buildAXDayEvents(scheduleRows, bidPeriod);
   const leaveEvents = buildLeaveDayEvents(scheduleRows, bidPeriod);
-  const events = [...flightEvents, ...patternEvents, ...trainingEvents, ...dayMarkerEvents, ...leaveEvents].sort((a, b) => {
+  const standbyEvents = buildStandbyEvents(scheduleRows, bidPeriod);
+  const events = [...flightEvents, ...patternEvents, ...trainingEvents, ...dayMarkerEvents, ...leaveEvents, ...standbyEvents].sort((a, b) => {
     if (isSamePatternOccurrence(a, b)) {
       if (a.eventType === "pattern" && b.eventType === "flight") {
         return -1;
@@ -951,6 +1023,7 @@ export function parseRosterText(text) {
       training: trainingEvents.length,
       dayMarkers: dayMarkerEvents.length,
       leaveDays: leaveEvents.length,
+      standby: standbyEvents.length,
       total: events.length,
     },
     events,
