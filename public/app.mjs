@@ -1,15 +1,16 @@
 import { parseRosterText, rosterToIcs } from "./rosterParser.mjs";
 
-const APP_VERSION = "2026-03-23a";
-const SERVICE_WORKER_URL = "./sw.js?v=20260323a";
+const APP_VERSION = "2026-03-24a";
+const SERVICE_WORKER_URL = "./sw.js?v=20260324a";
 const LAST_ROSTER_STORAGE_KEY = "rosterExport.lastRoster.v1";
-const UI_STATE_STORAGE_KEY = "rosterExport.uiState.v1";
+const UI_STATE_STORAGE_KEY = "rosterExport.uiState.v2";
 const EXPORT_SNAPSHOT_STORAGE_KEY = "rosterExport.lastExportSnapshot.v1";
-const SUBSCRIBED_CALENDAR_STORAGE_KEY = "rosterExport.subscribedCalendar.v1";
+const SUBSCRIBED_CALENDAR_STORAGE_KEY = "rosterExport.subscribedCalendar.v3";
 
 const rosterFileInput = document.getElementById("rosterFile");
 const parseBtn = document.getElementById("parseBtn");
 const downloadBtn = document.getElementById("downloadBtn");
+const staffNumberInput = document.getElementById("staffNumber");
 const publishBtn = document.getElementById("publishBtn");
 const copyLinkBtn = document.getElementById("copyLinkBtn");
 const resetCalendarBtn = document.getElementById("resetCalendarBtn");
@@ -114,19 +115,26 @@ function normaliseSubscribedCalendarState(rawState) {
   }
 
   const state = {
-    calendarToken: String(rawState.calendarToken || "").trim(),
-    writeToken: String(rawState.writeToken || "").trim(),
+    staffNumber: normaliseStaffNumber(rawState.staffNumber || rawState.calendarCode || ""),
     subscriptionUrl: String(rawState.subscriptionUrl || "").trim(),
     webcalUrl: String(rawState.webcalUrl || "").trim(),
     bidPeriod: String(rawState.bidPeriod || "").trim(),
     updatedAtUtc: String(rawState.updatedAtUtc || "").trim(),
   };
 
-  if (!state.calendarToken || !state.writeToken || !state.subscriptionUrl) {
+  if (!state.staffNumber || !state.subscriptionUrl) {
     return null;
   }
 
   return state;
+}
+
+function normaliseStaffNumber(value) {
+  return String(value || "").replace(/\D+/g, "").trim();
+}
+
+function readStaffNumber() {
+  return normaliseStaffNumber(staffNumberInput?.value || "");
 }
 
 function loadSubscribedCalendarState() {
@@ -157,20 +165,25 @@ function clearSubscribedCalendarState() {
 
 function updateSubscribedCalendarUi() {
   const canPublish = canUseSubscribedCalendarPublishing();
+  const staffNumber = readStaffNumber();
   const hasCalendar = Boolean(subscribedCalendarState?.subscriptionUrl);
+  const isMatchingStaffNumber = hasCalendar && subscribedCalendarState?.staffNumber === staffNumber;
+  const rosterMatchesStaffNumber = !parsedRoster || !staffNumber || parsedRoster.staffNumber === staffNumber;
 
   if (publishBtn) {
-    publishBtn.disabled = !parsedRoster || !canPublish;
-    publishBtn.textContent = hasCalendar ? "Update My Calendar" : "Create My Calendar";
+    publishBtn.disabled = !parsedRoster || !canPublish || staffNumber.length < 4 || !rosterMatchesStaffNumber;
+    publishBtn.textContent = isMatchingStaffNumber ? "Update My Calendar" : "Create / Link My Calendar";
   }
   if (copyLinkBtn) {
-    copyLinkBtn.disabled = !subscribedCalendarState?.webcalUrl && !subscribedCalendarState?.subscriptionUrl;
+    copyLinkBtn.disabled = !isMatchingStaffNumber || !subscribedCalendarState?.subscriptionUrl;
   }
   if (resetCalendarBtn) {
-    resetCalendarBtn.disabled = !hasCalendar;
+    resetCalendarBtn.disabled = !hasCalendar && !staffNumber;
   }
 
-  const preferredLink = subscribedCalendarState?.webcalUrl || subscribedCalendarState?.subscriptionUrl || "";
+  const preferredLink = isMatchingStaffNumber
+    ? subscribedCalendarState?.webcalUrl || subscribedCalendarState?.subscriptionUrl || ""
+    : "";
   setSubscriptionLink(preferredLink);
 
   if (!subscriptionStatusEl) {
@@ -182,25 +195,39 @@ function updateSubscribedCalendarUi() {
     return;
   }
 
-  if (hasCalendar) {
+  if (staffNumber.length > 0 && staffNumber.length < 4) {
+    setSubscriptionStatus("Enter your staff number using at least 4 digits.");
+    return;
+  }
+
+  if (parsedRoster && staffNumber && !rosterMatchesStaffNumber) {
+    setSubscriptionStatus(`This roster is for staff number ${parsedRoster.staffNumber}. Enter that same staff number to publish or copy the correct subscription link.`);
+    return;
+  }
+
+  if (isMatchingStaffNumber) {
     const bidPeriodSuffix = subscribedCalendarState.bidPeriod ? ` for BP${subscribedCalendarState.bidPeriod}` : "";
-    setSubscriptionStatus(`This browser already has a subscribed calendar${bidPeriodSuffix}. Update it with a new roster, or start a new calendar if this device is being handed to someone else.`);
+    setSubscriptionStatus(`Staff number ${staffNumber} is linked to your subscribed calendar${bidPeriodSuffix}. Upload a new roster to update the same link on any device.`);
     return;
   }
 
-  if (parsedRoster) {
-    setSubscriptionStatus("Ready to create a subscribed calendar for this browser.");
+  if (staffNumber) {
+    setSubscriptionStatus(parsedRoster ? "Ready to create or link your subscribed calendar for this staff number." : "Enter your staff number, then parse a roster to create or link your calendar.");
     return;
   }
 
-  setSubscriptionStatus("Parse a roster, then create a subscribed calendar for this browser.");
+  setSubscriptionStatus("Parse a roster, enter your staff number, then create or link your subscribed calendar.");
 }
 
 function resetSubscribedCalendar() {
   clearSubscribedCalendarState();
   subscribedCalendarState = null;
+  if (staffNumberInput) {
+    staffNumberInput.value = "";
+  }
+  saveUiState();
   updateSubscribedCalendarUi();
-  setSubscriptionStatus("This browser is no longer linked to a subscribed calendar. Parse a roster and create a new one for the next user.");
+  setSubscriptionStatus("This device no longer remembers a staff number or subscribed link. Enter the same staff number again when you want to link that calendar.");
 }
 
 async function copyTextToClipboard(text) {
@@ -300,6 +327,7 @@ function saveUiState() {
     airportCode: dtaFeatureEnabled ? String(newAirportCodeInput.value || "") : "",
     airportCountry: dtaFeatureEnabled ? String(newAirportCountryInput.value || "") : "",
     airportRate: dtaFeatureEnabled ? String(newAirportRateInput.value || "") : "",
+    staffNumber: readStaffNumber(),
   };
   saveJsonState(UI_STATE_STORAGE_KEY, payload);
 }
@@ -327,6 +355,12 @@ function restoreUiState() {
   }
   if (typeof state.selectedPatternId === "string") {
     pendingRestoredPatternId = state.selectedPatternId;
+  }
+  if (staffNumberInput) {
+    const restoredStaffNumber = normaliseStaffNumber(state.staffNumber || state.calendarCode || "");
+    if (restoredStaffNumber) {
+      staffNumberInput.value = restoredStaffNumber;
+    }
   }
 
   return state;
@@ -468,7 +502,7 @@ function restoreLastRosterState() {
 
   downloadBtn.disabled = false;
   setStatus(
-    `Restored BP${parsedRoster.bidPeriod}: ${parsedRoster.counts.flights} flights + ${parsedRoster.counts.patterns} patterns + ${parsedRoster.counts.training} SIM/training + ${parsedRoster.counts.dayMarkers} A/X days + ${(parsedRoster.counts.leaveDays || 0)} AL days = ${parsedRoster.counts.total} total events.`
+    `Restored BP${parsedRoster.bidPeriod} for staff ${parsedRoster.staffNumber || "unknown"}: ${parsedRoster.counts.flights} flights + ${parsedRoster.counts.patterns} patterns + ${parsedRoster.counts.training} SIM/training + ${parsedRoster.counts.dayMarkers} A/X days + ${(parsedRoster.counts.leaveDays || 0)} leave days + ${(parsedRoster.counts.standby || 0)} standby duties = ${parsedRoster.counts.total} total events.`
   );
 
   return true;
@@ -557,16 +591,24 @@ async function publishSubscribedCalendar() {
   setSubscriptionStatus("Publishing subscribed calendar...");
 
   try {
+    const staffNumber = readStaffNumber();
+    if (staffNumber.length < 4) {
+      throw new Error("Enter your staff number using at least 4 digits.");
+    }
+    if (!parsedRoster.staffNumber) {
+      throw new Error("This roster does not include a staff number, so it cannot be linked to a subscribed calendar.");
+    }
+    if (parsedRoster.staffNumber !== staffNumber) {
+      throw new Error(`This roster belongs to staff number ${parsedRoster.staffNumber}. Enter that same staff number to publish this calendar.`);
+    }
+
     const requestBody = {
       bidPeriod: String(parsedRoster.bidPeriod || ""),
       fileName: payload.fileName,
       icsContent: payload.content,
+      staffNumber,
+      parsedStaffNumber: parsedRoster.staffNumber,
     };
-
-    if (subscribedCalendarState?.calendarToken && subscribedCalendarState?.writeToken) {
-      requestBody.calendarToken = subscribedCalendarState.calendarToken;
-      requestBody.writeToken = subscribedCalendarState.writeToken;
-    }
 
     const response = await fetch("./api/subscribed-calendar", {
       method: "POST",
@@ -584,12 +626,13 @@ async function publishSubscribedCalendar() {
       throw new Error(String(data?.error || "Could not publish subscribed calendar."));
     }
 
-    const nextState = normaliseSubscribedCalendarState(data);
+    const nextState = normaliseSubscribedCalendarState({ ...data, staffNumber: readStaffNumber() });
     if (!nextState) {
-      throw new Error("Publish response did not include the calendar tokens.");
+      throw new Error("Publish response did not include the calendar subscription link.");
     }
 
-    const wasExistingCalendar = Boolean(subscribedCalendarState?.subscriptionUrl);
+    const wasExistingCalendar =
+      Boolean(subscribedCalendarState?.subscriptionUrl) && subscribedCalendarState?.staffNumber === nextState.staffNumber;
     subscribedCalendarState = nextState;
     saveSubscribedCalendarState(nextState);
     persistSuccessfulExport(payload.snapshot);
@@ -602,7 +645,7 @@ async function publishSubscribedCalendar() {
     setStatus(wasExistingCalendar ? "Subscribed calendar updated successfully." : "Subscribed calendar created successfully.");
   } catch (error) {
     console.error(error);
-    if (String(error?.message || "").includes("write token")) {
+    if (String(error?.message || "").toLowerCase().includes("staff number")) {
       clearSubscribedCalendarState();
       subscribedCalendarState = null;
       updateSubscribedCalendarUi();
@@ -614,9 +657,11 @@ async function publishSubscribedCalendar() {
 }
 
 async function copySubscriptionLink() {
-  const link = subscribedCalendarState?.webcalUrl || subscribedCalendarState?.subscriptionUrl || "";
+  const staffNumber = readStaffNumber();
+  const isMatchingStaffNumber = subscribedCalendarState?.staffNumber === staffNumber;
+  const link = isMatchingStaffNumber ? subscribedCalendarState?.webcalUrl || subscribedCalendarState?.subscriptionUrl || "" : "";
   if (!link) {
-    setSubscriptionStatus("Publish a subscribed calendar first.");
+    setSubscriptionStatus("Publish a subscribed calendar for this staff number first.");
     return;
   }
 
@@ -1365,7 +1410,7 @@ async function parseSelectedFile() {
     }
 
     setStatus(
-      `Parsed BP${parsedRoster.bidPeriod}: ${parsedRoster.counts.flights} flights + ${parsedRoster.counts.patterns} patterns + ${parsedRoster.counts.training} SIM/training + ${parsedRoster.counts.dayMarkers} A/X days + ${(parsedRoster.counts.leaveDays || 0)} leave days + ${(parsedRoster.counts.standby || 0)} standby duties = ${parsedRoster.counts.total} total events.`
+      `Parsed BP${parsedRoster.bidPeriod} for staff ${parsedRoster.staffNumber || "unknown"}: ${parsedRoster.counts.flights} flights + ${parsedRoster.counts.patterns} patterns + ${parsedRoster.counts.training} SIM/training + ${parsedRoster.counts.dayMarkers} A/X days + ${(parsedRoster.counts.leaveDays || 0)} leave days + ${(parsedRoster.counts.standby || 0)} standby duties = ${parsedRoster.counts.total} total events.`
     );
 
     downloadBtn.disabled = false;
@@ -1432,6 +1477,21 @@ if (copyLinkBtn) {
 }
 if (resetCalendarBtn) {
   resetCalendarBtn.addEventListener("click", resetSubscribedCalendar);
+}
+if (staffNumberInput) {
+  staffNumberInput.addEventListener("input", () => {
+    saveUiState();
+    updateSubscribedCalendarUi();
+  });
+
+  staffNumberInput.addEventListener("blur", () => {
+    const normalised = readStaffNumber();
+    if (normalised) {
+      staffNumberInput.value = normalised;
+    }
+    saveUiState();
+    updateSubscribedCalendarUi();
+  });
 }
 
 if (dtaFeatureEnabled) {

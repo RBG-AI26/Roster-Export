@@ -46,6 +46,20 @@ QF33 PAXSYD/PER MO 1530 0730 MO 1720 0920 04:50
   assert.equal(flight?.summary, "QF33 PAX SYD/PER 1530 1720");
 });
 
+test("staff number is parsed from the roster header", () => {
+  const text = `ARMS crew
+Name: TEST   USER                                 Staff No: 504004
+BID PERIOD 999
+10 Mar 2026
+Date Duty Detail Credit
+10/03 T GL Golden Leave 00:00
+`;
+
+  const parsed = parseRosterText(text);
+
+  assert.equal(parsed.staffNumber, "504004");
+});
+
 test("golden leave is created as an all-day leave event", () => {
   const text = `BID PERIOD 999
 10 Mar 2026

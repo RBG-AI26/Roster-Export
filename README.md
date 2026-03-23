@@ -69,7 +69,7 @@ This app can now publish a stable subscribed calendar feed instead of relying on
 3. Click **Publish Calendar**.
 4. Click **Copy Subscription Link**.
 5. In Apple Calendar, add a new calendar subscription using that link.
-6. On later roster changes, parse the new roster and click **Publish Calendar** again. The subscribed calendar URL stays the same.
+6. On later roster changes from any device, enter the same staff number, parse the new roster, and click **Create / Link My Calendar** or **Update My Calendar**. The subscribed calendar URL stays the same.
 
 ### Why this fixes updates
 Manual `.ics` imports merge events and do not reliably remove deleted duties. The subscribed feed becomes the source of truth, so removed duties such as a dropped pattern are removed from the feed on the next refresh.
@@ -82,9 +82,10 @@ Treat published subscription links as private URLs. Anyone with the full `webcal
 
 This deployed app can be used by multiple people without accounts.
 
-- Each person opens the app in their own browser.
+- Each person enters their staff number and uses the same staff number on every device.
 - Parsing still happens in the browser.
-- On first publish, that browser creates its own private subscribed calendar feed.
-- The browser stores the private write token locally so future publishes update the same feed.
-- If browser storage is cleared, that person must create a new calendar and subscribe to the new link.
-- If several people use the same browser/device, click **Start New Calendar** before the next person sets up their feed.
+- On first publish, that staff number creates one subscribed calendar feed.
+- On later publishes from iPhone, iPad, or Mac, entering the same staff number updates the same feed and returns the same subscription link.
+- The parsed roster must contain that same staff number before the app will publish, which helps catch mismatches.
+- If several people use the same browser/device, click **Clear This Device** before the next person enters their staff number.
+- Staff number only is convenient, but it is not secret. Anyone who knows a person's staff number could still update that calendar feed.

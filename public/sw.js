@@ -1,4 +1,4 @@
-const CACHE_VERSION = "20260323a";
+const CACHE_VERSION = "20260324a";
 const STATIC_CACHE = `roster-export-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `roster-export-runtime-${CACHE_VERSION}`;
 

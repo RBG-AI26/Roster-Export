@@ -1,4 +1,5 @@
 const CALENDAR_KEY_PREFIX = "calendar:";
+const STAFF_NUMBER_PREFIX = "staff-number:";
 const TOKEN_BYTES = 18;
 
 function jsonResponse(data, init = {}) {
@@ -25,8 +26,8 @@ function normalisePublishRequest(body) {
   const icsContent = String(body.icsContent || "");
   const bidPeriod = String(body.bidPeriod || "").trim();
   const fileName = String(body.fileName || "BP_events.ics").trim() || "BP_events.ics";
-  const calendarToken = String(body.calendarToken || "").trim().toLowerCase();
-  const writeToken = String(body.writeToken || "").trim().toLowerCase();
+  const staffNumber = String(body.staffNumber || "").replace(/\D+/g, "").trim();
+  const parsedStaffNumber = String(body.parsedStaffNumber || "").replace(/\D+/g, "").trim();
 
   if (!icsContent.includes("BEGIN:VCALENDAR") || !icsContent.includes("END:VCALENDAR")) {
     throw new Error("ICS payload is missing VCALENDAR content.");
@@ -40,7 +41,21 @@ function normalisePublishRequest(body) {
     throw new Error("Bid period is required.");
   }
 
-  return { icsContent, bidPeriod, fileName, calendarToken, writeToken };
+  if (staffNumber.length < 4) {
+    throw new Error("Staff number must include at least 4 digits.");
+  }
+
+  if (parsedStaffNumber && parsedStaffNumber !== staffNumber) {
+    throw new Error("Parsed roster staff number does not match the entered staff number.");
+  }
+
+  return { icsContent, bidPeriod, fileName, staffNumber };
+}
+
+async function hashStaffNumber(staffNumber) {
+  const data = new TextEncoder().encode(staffNumber);
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
 function makeSubscriptionUrls(requestUrl, calendarToken) {
@@ -51,23 +66,15 @@ function makeSubscriptionUrls(requestUrl, calendarToken) {
 
 async function handlePublish(request, env) {
   const body = await request.json().catch(() => null);
-  const { icsContent, bidPeriod, fileName, calendarToken, writeToken } = normalisePublishRequest(body);
+  const { icsContent, bidPeriod, fileName, staffNumber } = normalisePublishRequest(body);
 
-  let nextCalendarToken = calendarToken;
-  let nextWriteToken = writeToken;
-  let existing = null;
+  const staffNumberHash = await hashStaffNumber(staffNumber);
+  const mappingKey = `${STAFF_NUMBER_PREFIX}${staffNumberHash}`;
+  const mappingRecord = await env.ROSTER_FEEDS.get(mappingKey, "json");
 
-  if (nextCalendarToken) {
-    existing = await env.ROSTER_FEEDS.get(`${CALENDAR_KEY_PREFIX}${nextCalendarToken}`, "json");
-  }
-
-  if (existing) {
-    if (!nextWriteToken || nextWriteToken !== String(existing.writeToken || "")) {
-      return jsonResponse({ error: "Saved write token does not match this published calendar." }, { status: 403 });
-    }
-  } else {
-    nextCalendarToken = generateToken();
-    nextWriteToken = generateToken();
+  let calendarToken = String(mappingRecord?.calendarToken || "").trim().toLowerCase();
+  if (!calendarToken) {
+    calendarToken = generateToken();
   }
 
   const updatedAtUtc = new Date().toISOString();
@@ -75,16 +82,17 @@ async function handlePublish(request, env) {
     bidPeriod,
     fileName,
     updatedAtUtc,
-    writeToken: nextWriteToken,
     icsContent,
   };
 
-  await env.ROSTER_FEEDS.put(`${CALENDAR_KEY_PREFIX}${nextCalendarToken}`, JSON.stringify(feedRecord));
-  const urls = makeSubscriptionUrls(request.url, nextCalendarToken);
+  await env.ROSTER_FEEDS.put(`${CALENDAR_KEY_PREFIX}${calendarToken}`, JSON.stringify(feedRecord));
+  await env.ROSTER_FEEDS.put(
+    mappingKey,
+    JSON.stringify({ calendarToken, updatedAtUtc, bidPeriod })
+  );
+  const urls = makeSubscriptionUrls(request.url, calendarToken);
 
   return jsonResponse({
-    calendarToken: nextCalendarToken,
-    writeToken: nextWriteToken,
     bidPeriod,
     updatedAtUtc,
     ...urls,

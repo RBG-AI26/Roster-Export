@@ -8,10 +8,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Roster iCal" />
-    <link rel="manifest" href="./manifest.webmanifest?v=20260323a" />
-    <link rel="icon" type="image/svg+xml" href="./calendar-icon.svg?v=20260323a" />
-    <link rel="shortcut icon" href="./calendar-icon.svg?v=20260323a" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./calendar-icon-180.png?v=20260323a" />
+    <link rel="manifest" href="./manifest.webmanifest?v=20260324a" />
+    <link rel="icon" type="image/svg+xml" href="./calendar-icon.svg?v=20260324a" />
+    <link rel="shortcut icon" href="./calendar-icon.svg?v=20260324a" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./calendar-icon-180.png?v=20260324a" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -34,16 +34,25 @@
 
       <section class="card">
         <h2>My Subscribed Calendar</h2>
-        <p>Each browser can create its own private roster calendar. No account is required. Create it once, subscribe in Apple Calendar, then update it whenever your roster changes.</p>
+
+        <label for="staffNumber" class="field-label">Staff Number</label>
+        <input
+          id="staffNumber"
+          type="text"
+          inputmode="numeric"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Enter your staff number"
+        />
 
         <div class="actions">
           <button id="publishBtn" type="button" disabled>Create My Calendar</button>
           <button id="copyLinkBtn" type="button" disabled>Copy Subscription Link</button>
-          <button id="resetCalendarBtn" type="button">Start New Calendar</button>
+          <button id="resetCalendarBtn" type="button">Clear This Device</button>
         </div>
 
-        <p class="subscription-note">This browser keeps the private write token for this calendar. If you clear browser data or move to a different browser, create a new calendar and subscribe to the new link.</p>
-        <p id="subscriptionStatus" aria-live="polite">Parse a roster, then create a subscribed calendar for this browser.</p>
+        <p class="subscription-note">Enter the same staff number on every device. The roster must parse to that same staff number before it can update the subscribed calendar.</p>
+        <p id="subscriptionStatus" aria-live="polite">Parse a roster, enter your staff number, then create your subscribed calendar.</p>
         <p id="subscriptionLinkWrap" class="subscription-link" hidden>
           <a id="subscriptionLink" href="" target="_blank" rel="noopener noreferrer"></a>
         </p>
@@ -148,7 +157,7 @@
     <script>
       (async () => {
         try {
-          await import("./app.mjs?v=20260323a");
+          await import("./app.mjs?v=20260324a");
         } catch (error) {
           console.error("Failed to load app module", error);
           const statusEl = document.getElementById("status");

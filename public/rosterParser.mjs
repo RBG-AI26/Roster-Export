@@ -30,6 +30,11 @@ function parseHeaderDate(text) {
   return new Date(Date.UTC(year, month, day));
 }
 
+function parseStaffNumber(text) {
+  const match = String(text || "").match(/\bStaff\s*No:\s*(\d{4,})\b/i);
+  return match ? match[1] : "";
+}
+
 function normaliseDate(day, month, headerDate) {
   const headerYear = headerDate.getUTCFullYear();
   let candidate = new Date(Date.UTC(headerYear, month - 1, day));
@@ -990,6 +995,7 @@ export function parseRosterText(text) {
   const headerDate = parseHeaderDate(text);
   const bpMatch = text.match(/BID PERIOD\s+(\d+)/);
   const bidPeriod = bpMatch ? bpMatch[1] : "Unknown";
+  const staffNumber = parseStaffNumber(text);
 
   const patternMap = parsePatternBlocks(lines);
   const scheduleRows = parseScheduleRows(lines, headerDate);
@@ -1016,6 +1022,7 @@ export function parseRosterText(text) {
 
   return {
     bidPeriod,
+    staffNumber,
     generatedAtUtc: new Date(),
     counts: {
       flights: flightEvents.length,
