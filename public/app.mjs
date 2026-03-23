@@ -1,17 +1,23 @@
 import { parseRosterText, rosterToIcs } from "./rosterParser.mjs";
 
-const APP_VERSION = "2026-03-17a";
-const SERVICE_WORKER_URL = "./sw.js?v=20260317a";
+const APP_VERSION = "2026-03-23a";
+const SERVICE_WORKER_URL = "./sw.js?v=20260323a";
 const LAST_ROSTER_STORAGE_KEY = "rosterExport.lastRoster.v1";
 const UI_STATE_STORAGE_KEY = "rosterExport.uiState.v1";
 const EXPORT_SNAPSHOT_STORAGE_KEY = "rosterExport.lastExportSnapshot.v1";
+const SUBSCRIBED_CALENDAR_STORAGE_KEY = "rosterExport.subscribedCalendar.v1";
 
 const rosterFileInput = document.getElementById("rosterFile");
 const parseBtn = document.getElementById("parseBtn");
 const downloadBtn = document.getElementById("downloadBtn");
 const shareBtn = document.getElementById("shareBtn");
 const openBtn = document.getElementById("openBtn");
+const publishBtn = document.getElementById("publishBtn");
+const copyLinkBtn = document.getElementById("copyLinkBtn");
 const statusEl = document.getElementById("status");
+const subscriptionStatusEl = document.getElementById("subscriptionStatus");
+const subscriptionLinkWrap = document.getElementById("subscriptionLinkWrap");
+const subscriptionLinkEl = document.getElementById("subscriptionLink");
 const eventsBody = document.getElementById("eventsBody");
 
 const patternSelect = document.getElementById("patternSelect");
@@ -50,6 +56,7 @@ let airportCountryMap = {};
 let airportRateOverrides = {};
 let pendingRestoredPatternId = "";
 let uiStateWasRestored = false;
+let subscribedCalendarState = null;
 
 let dtaModuleReady = false;
 let calculateDtaForPattern = () => null;
@@ -88,6 +95,135 @@ function withAirdropHint(message) {
 
 function setStatus(message) {
   statusEl.textContent = message;
+}
+
+function setSubscriptionStatus(message) {
+  if (subscriptionStatusEl) {
+    subscriptionStatusEl.textContent = message;
+  }
+}
+
+function setSubscriptionLink(url) {
+  if (!subscriptionLinkWrap || !subscriptionLinkEl) {
+    return;
+  }
+
+  if (!url) {
+    subscriptionLinkWrap.hidden = true;
+    subscriptionLinkEl.removeAttribute("href");
+    subscriptionLinkEl.textContent = "";
+    return;
+  }
+
+  subscriptionLinkWrap.hidden = false;
+  subscriptionLinkEl.href = url;
+  subscriptionLinkEl.textContent = url;
+}
+
+function canUseSubscribedCalendarPublishing() {
+  const host = window.location.hostname;
+  return window.isSecureContext || host === "localhost" || host === "127.0.0.1";
+}
+
+function normaliseSubscribedCalendarState(rawState) {
+  if (!rawState || typeof rawState !== "object") {
+    return null;
+  }
+
+  const state = {
+    calendarToken: String(rawState.calendarToken || "").trim(),
+    writeToken: String(rawState.writeToken || "").trim(),
+    subscriptionUrl: String(rawState.subscriptionUrl || "").trim(),
+    webcalUrl: String(rawState.webcalUrl || "").trim(),
+    bidPeriod: String(rawState.bidPeriod || "").trim(),
+    updatedAtUtc: String(rawState.updatedAtUtc || "").trim(),
+  };
+
+  if (!state.calendarToken || !state.writeToken || !state.subscriptionUrl) {
+    return null;
+  }
+
+  return state;
+}
+
+function loadSubscribedCalendarState() {
+  return normaliseSubscribedCalendarState(loadJsonState(SUBSCRIBED_CALENDAR_STORAGE_KEY));
+}
+
+function saveSubscribedCalendarState(state) {
+  const normalised = normaliseSubscribedCalendarState(state);
+  if (!normalised) {
+    return;
+  }
+
+  saveJsonState(SUBSCRIBED_CALENDAR_STORAGE_KEY, normalised);
+}
+
+function clearSubscribedCalendarState() {
+  const storage = getAppStorage();
+  if (!storage) {
+    return;
+  }
+
+  try {
+    storage.removeItem(SUBSCRIBED_CALENDAR_STORAGE_KEY);
+  } catch {
+    // Ignore storage failures and continue.
+  }
+}
+
+function updateSubscribedCalendarUi() {
+  const canPublish = canUseSubscribedCalendarPublishing();
+  if (publishBtn) {
+    publishBtn.disabled = !parsedRoster || !canPublish;
+  }
+  if (copyLinkBtn) {
+    copyLinkBtn.disabled = !subscribedCalendarState?.webcalUrl && !subscribedCalendarState?.subscriptionUrl;
+  }
+
+  const preferredLink = subscribedCalendarState?.webcalUrl || subscribedCalendarState?.subscriptionUrl || "";
+  setSubscriptionLink(preferredLink);
+
+  if (!subscriptionStatusEl) {
+    return;
+  }
+
+  if (!canPublish) {
+    setSubscriptionStatus("Subscribed calendar publishing is available when the app is served from the Cloudflare Worker over HTTPS.");
+    return;
+  }
+
+  if (subscribedCalendarState?.subscriptionUrl) {
+    const bidPeriodSuffix = subscribedCalendarState.bidPeriod ? 
+      ` for BP${subscribedCalendarState.bidPeriod}` : "";
+    setSubscriptionStatus(`Subscribed calendar ready${bidPeriodSuffix}. Re-publish whenever your roster changes.`);
+    return;
+  }
+
+  if (parsedRoster) {
+    setSubscriptionStatus("Ready to publish a stable calendar feed for this roster.");
+    return;
+  }
+
+  setSubscriptionStatus("Parse a roster, then publish a stable calendar feed.");
+}
+
+async function copyTextToClipboard(text) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.setAttribute("readonly", "readonly");
+  textArea.style.position = "fixed";
+  textArea.style.opacity = "0";
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  document.execCommand("copy");
+  textArea.remove();
 }
 
 function setDtaStatus(message) {
@@ -400,17 +536,103 @@ async function initDtaModule() {
   }
 }
 
-function buildExportPayload() {
+function buildExportPayload(options = {}) {
   if (!parsedRoster) {
     return null;
   }
 
+  const includeCancelledEvents = options.includeCancelledEvents !== false;
   const snapshot = buildExportSnapshotFromRoster(parsedRoster);
-  const cancelledEvents = getCancelledEventsForRoster(parsedRoster);
+  const cancelledEvents = includeCancelledEvents ? getCancelledEventsForRoster(parsedRoster) : [];
   const content = rosterToIcs(parsedRoster, currentFileName || "roster.txt", { cancelledEvents });
   const fileName = `BP${parsedRoster.bidPeriod}_events.ics`;
   const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
   return { content, fileName, blob, cancelledCount: cancelledEvents.length, snapshot };
+}
+
+async function publishSubscribedCalendar() {
+  if (!canUseSubscribedCalendarPublishing()) {
+    setSubscriptionStatus("Subscribed calendar publishing is available when the app is served from the Cloudflare Worker over HTTPS.");
+    return;
+  }
+
+  const payload = buildExportPayload({ includeCancelledEvents: false });
+  if (!payload || !parsedRoster) {
+    setSubscriptionStatus("Parse a roster first.");
+    return;
+  }
+
+  if (publishBtn) {
+    publishBtn.disabled = true;
+  }
+  setSubscriptionStatus("Publishing subscribed calendar...");
+
+  try {
+    const requestBody = {
+      bidPeriod: String(parsedRoster.bidPeriod || ""),
+      fileName: payload.fileName,
+      icsContent: payload.content,
+    };
+
+    if (subscribedCalendarState?.calendarToken && subscribedCalendarState?.writeToken) {
+      requestBody.calendarToken = subscribedCalendarState.calendarToken;
+      requestBody.writeToken = subscribedCalendarState.writeToken;
+    }
+
+    const response = await fetch("./api/subscribed-calendar", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    const data = await response.json().catch(() => null);
+    if (!response.ok || !data) {
+      if (response.status === 404) {
+        throw new Error("Publish API not found. Deploy this app through the Cloudflare Worker first.");
+      }
+      throw new Error(String(data?.error || "Could not publish subscribed calendar."));
+    }
+
+    const nextState = normaliseSubscribedCalendarState(data);
+    if (!nextState) {
+      throw new Error("Publish response did not include the calendar tokens.");
+    }
+
+    subscribedCalendarState = nextState;
+    saveSubscribedCalendarState(nextState);
+    persistSuccessfulExport(payload.snapshot);
+    updateSubscribedCalendarUi();
+    setSubscriptionStatus("Subscribed calendar published. Subscribe once, then re-publish whenever your roster changes.");
+    setStatus("Subscribed calendar updated successfully.");
+  } catch (error) {
+    console.error(error);
+    if (String(error?.message || "").includes("write token")) {
+      clearSubscribedCalendarState();
+      subscribedCalendarState = null;
+      updateSubscribedCalendarUi();
+    }
+    setSubscriptionStatus(error?.message || "Could not publish subscribed calendar.");
+  } finally {
+    updateSubscribedCalendarUi();
+  }
+}
+
+async function copySubscriptionLink() {
+  const link = subscribedCalendarState?.webcalUrl || subscribedCalendarState?.subscriptionUrl || "";
+  if (!link) {
+    setSubscriptionStatus("Publish a subscribed calendar first.");
+    return;
+  }
+
+  try {
+    await copyTextToClipboard(link);
+    setSubscriptionStatus("Subscription link copied. Add it in Calendar as a subscribed calendar.");
+  } catch (error) {
+    console.error(error);
+    setSubscriptionStatus("Could not copy the subscription link automatically.");
+  }
 }
 
 function blobToDataUrl(blob) {
@@ -1155,6 +1377,7 @@ async function parseSelectedFile() {
         setDtaStatus(dtaModuleReady ? "No patterns available to calculate DTA." : "DTA module unavailable.");
       }
       saveUiState();
+      updateSubscribedCalendarUi();
       return;
     }
 
@@ -1169,6 +1392,7 @@ async function parseSelectedFile() {
     openBtn.disabled = false;
     saveLastRosterState();
     saveUiState();
+    updateSubscribedCalendarUi();
   } catch (error) {
     console.error(error);
     if (isPdfFile(file)) {
@@ -1285,6 +1509,12 @@ parseBtn.addEventListener("click", parseSelectedFile);
 downloadBtn.addEventListener("click", downloadIcs);
 shareBtn.addEventListener("click", shareForIpad);
 openBtn.addEventListener("click", openIcsInBrowser);
+if (publishBtn) {
+  publishBtn.addEventListener("click", publishSubscribedCalendar);
+}
+if (copyLinkBtn) {
+  copyLinkBtn.addEventListener("click", copySubscriptionLink);
+}
 
 if (dtaFeatureEnabled) {
   checkDtaBtn.addEventListener("click", checkSelectedPatternDta);
@@ -1311,10 +1541,12 @@ rosterFileInput.addEventListener("change", () => {
   }
 
   setStatus('File selected. Click "Parse roster".');
+  updateSubscribedCalendarUi();
 });
 
 registerServiceWorker();
 resetPreview();
+subscribedCalendarState = loadSubscribedCalendarState();
 if (dtaFeatureEnabled) {
   restoreUiState();
 }
@@ -1323,6 +1555,8 @@ const restoredRoster = restoreLastRosterState();
 if (!restoredRoster) {
   setStatus(`Ready (v${APP_VERSION}). Choose a roster file, then click "Parse roster".`);
 }
+
+updateSubscribedCalendarUi();
 
 if (dtaFeatureEnabled) {
   resetDtaPatternSelect("Parse a roster first");

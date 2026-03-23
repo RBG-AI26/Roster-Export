@@ -22,6 +22,7 @@ Upload your `webCisRoster_*.txt` or roster `.pdf` file, parse trips/flights plus
 From the project folder:
 
 ```bash
+cd public
 python3 -m http.server 8000
 ```
 
@@ -52,3 +53,33 @@ Then open:
 - SIM/training events are exported as local-time events when start/end times are present.
 - Description fields include bid period, duty/flight details, and source filename.
 - Sample outputs generated from your provided file are included as `BP374_flights.ics` and `BP374_events.ics`.
+
+## Cloudflare Worker subscription feed
+
+This app can now publish a stable subscribed calendar feed instead of relying on repeated manual `.ics` imports.
+
+### What you need
+- A Cloudflare account
+- Wrangler installed: `npm install -g wrangler`
+- One KV namespace for published roster feeds
+
+### Configure
+1. Create KV namespaces:
+   - `wrangler kv namespace create ROSTER_FEEDS`
+   - `wrangler kv namespace create ROSTER_FEEDS --preview`
+2. Copy the returned IDs into [wrangler.jsonc](/Users/russellgillson/Documents/MyApps/Roster Export iCal/wrangler.jsonc).
+3. Deploy with:
+   - `wrangler deploy`
+4. For local Worker testing, run:
+   - `wrangler dev`
+
+### Publish and subscribe
+1. Open the deployed app.
+2. Parse your roster.
+3. Click **Publish Calendar**.
+4. Click **Copy Subscription Link**.
+5. In Apple Calendar, add a new calendar subscription using that link.
+6. On later roster changes, parse the new roster and click **Publish Calendar** again. The subscribed calendar URL stays the same.
+
+### Why this fixes updates
+Manual `.ics` imports merge events and do not reliably remove deleted duties. The subscribed feed becomes the source of truth, so removed duties such as a dropped pattern are removed from the feed on the next refresh.

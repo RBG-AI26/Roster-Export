@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 
-import { parseRosterText, rosterToIcs } from "./rosterParser.mjs";
+import { parseRosterText, rosterToIcs } from "./public/rosterParser.mjs";
 
 function test(name, fn) {
   try {

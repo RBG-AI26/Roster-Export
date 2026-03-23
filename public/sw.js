@@ -1,4 +1,4 @@
-const CACHE_VERSION = "20260317a";
+const CACHE_VERSION = "20260323a";
 const STATIC_CACHE = `roster-export-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `roster-export-runtime-${CACHE_VERSION}`;
 
@@ -6,14 +6,14 @@ const CORE_ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
-  "./app.mjs?v=20260317a",
+  "./app.mjs?v=20260323a",
   "./rosterParser.mjs",
   "./dta.mjs",
-  "./manifest.webmanifest?v=20260317a",
+  "./manifest.webmanifest?v=20260323a",
   "./calendar-icon.svg",
-  "./calendar-icon.svg?v=20260317a",
+  "./calendar-icon.svg?v=20260323a",
   "./calendar-icon-180.png",
-  "./calendar-icon-180.png?v=20260317a",
+  "./calendar-icon-180.png?v=20260323a",
   "./calendar-icon-192.png",
   "./calendar-icon-512.png",
 ];

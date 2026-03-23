@@ -8,10 +8,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Roster iCal" />
-    <link rel="manifest" href="./manifest.webmanifest?v=20260317a" />
-    <link rel="icon" type="image/svg+xml" href="./calendar-icon.svg?v=20260317a" />
-    <link rel="shortcut icon" href="./calendar-icon.svg?v=20260317a" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./calendar-icon-180.png?v=20260317a" />
+    <link rel="manifest" href="./manifest.webmanifest?v=20260323a" />
+    <link rel="icon" type="image/svg+xml" href="./calendar-icon.svg?v=20260323a" />
+    <link rel="shortcut icon" href="./calendar-icon.svg?v=20260323a" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./calendar-icon-180.png?v=20260323a" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -32,6 +32,21 @@
         </div>
 
         <p id="status" aria-live="polite">Choose a roster file to begin.</p>
+      </section>
+
+      <section class="card">
+        <h2>Subscribed Calendar</h2>
+        <p>Publish a stable calendar feed once, subscribe to it in Apple Calendar, then just re-publish to push roster changes.</p>
+
+        <div class="actions">
+          <button id="publishBtn" type="button" disabled>Publish Calendar</button>
+          <button id="copyLinkBtn" type="button" disabled>Copy Subscription Link</button>
+        </div>
+
+        <p id="subscriptionStatus" aria-live="polite">Parse a roster, then publish a stable calendar feed.</p>
+        <p id="subscriptionLinkWrap" class="subscription-link" hidden>
+          <a id="subscriptionLink" href="" target="_blank" rel="noopener noreferrer"></a>
+        </p>
       </section>
 
       <section class="card">
@@ -133,7 +148,7 @@
     <script>
       (async () => {
         try {
-          await import("./app.mjs?v=20260317a");
+          await import("./app.mjs?v=20260323a");
         } catch (error) {
           console.error("Failed to load app module", error);
           const statusEl = document.getElementById("status");

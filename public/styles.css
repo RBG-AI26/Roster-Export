@@ -86,6 +86,20 @@ button:disabled {
   color: var(--muted);
 }
 
+#subscriptionStatus {
+  margin-top: 0.8rem;
+  color: var(--muted);
+}
+
+.subscription-link {
+  margin-top: 0.55rem;
+}
+
+.subscription-link a {
+  color: var(--accent);
+  word-break: break-all;
+}
+
 .table-wrap {
   overflow-x: auto;
 }
