@@ -46,6 +46,20 @@ header p {
   box-shadow: 0 8px 16px rgba(32, 51, 43, 0.06);
 }
 
+.top-card {
+  position: relative;
+  padding-top: 2.25rem;
+}
+
+.build-version {
+  position: absolute;
+  top: 0.85rem;
+  right: 1rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
 .field-label {
   display: block;
   font-weight: 600;
@@ -236,6 +250,14 @@ th {
 }
 
 @media (max-width: 640px) {
+  .top-card {
+    padding-top: 2.6rem;
+  }
+
+  .build-version {
+    right: 0.85rem;
+  }
+
   .actions {
     flex-direction: column;
   }

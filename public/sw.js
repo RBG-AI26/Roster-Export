@@ -1,4 +1,4 @@
-const CACHE_VERSION = "20260324c";
+const CACHE_VERSION = "20260324d";
 const STATIC_CACHE = `roster-export-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `roster-export-runtime-${CACHE_VERSION}`;
 
@@ -6,8 +6,8 @@ const CORE_ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
-  "./app.mjs?v=20260324c",
-  "./rosterParser.mjs?v=20260324c",
+  "./app.mjs?v=20260324d",
+  "./rosterParser.mjs?v=20260324d",
   "./dta.mjs",
   "./manifest.webmanifest?v=20260323a",
   "./calendar-icon.svg",

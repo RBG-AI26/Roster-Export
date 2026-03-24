@@ -1,7 +1,7 @@
-import { parseRosterText, rosterToIcs } from "./rosterParser.mjs?v=20260324c";
+import { parseRosterText, rosterToIcs } from "./rosterParser.mjs?v=20260324d";
 
-const APP_VERSION = "2026-03-24c";
-const SERVICE_WORKER_URL = "./sw.js?v=20260324c";
+const APP_VERSION = "2026-03-24d";
+const SERVICE_WORKER_URL = "./sw.js?v=20260324d";
 const LAST_ROSTER_STORAGE_KEY = "rosterExport.lastRoster.v1";
 const UI_STATE_STORAGE_KEY = "rosterExport.uiState.v2";
 const EXPORT_SNAPSHOT_STORAGE_KEY = "rosterExport.lastExportSnapshot.v1";
@@ -15,6 +15,7 @@ const publishBtn = document.getElementById("publishBtn");
 const copyLinkBtn = document.getElementById("copyLinkBtn");
 const resetCalendarBtn = document.getElementById("resetCalendarBtn");
 const statusEl = document.getElementById("status");
+const buildVersionEl = document.getElementById("buildVersion");
 const subscriptionStatusEl = document.getElementById("subscriptionStatus");
 const subscriptionLinkWrap = document.getElementById("subscriptionLinkWrap");
 const subscriptionLinkEl = document.getElementById("subscriptionLink");
@@ -76,6 +77,10 @@ let defaultFallbackRate = { costGroup: "1", mealRate: 5, incidentalRate: 1.25, h
 
 let pdfJsModulePromise = null;
 let xlsxModulePromise = null;
+
+if (buildVersionEl) {
+  buildVersionEl.textContent = `Build ${APP_VERSION}`;
+}
 
 function setStatus(message) {
   statusEl.textContent = message;
@@ -206,8 +211,7 @@ function updateSubscribedCalendarUi() {
   }
 
   if (isMatchingStaffNumber) {
-    const bidPeriodSuffix = subscribedCalendarState.bidPeriod ? ` for BP${subscribedCalendarState.bidPeriod}` : "";
-    setSubscriptionStatus(`Staff number ${staffNumber} is linked to your subscribed calendar${bidPeriodSuffix}. Upload a new roster to update the same link on any device.`);
+    setSubscriptionStatus("Your subscribed calendar is linked on this device.");
     return;
   }
 

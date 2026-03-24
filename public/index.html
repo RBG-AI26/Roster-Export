@@ -8,10 +8,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Roster iCal" />
-    <link rel="manifest" href="./manifest.webmanifest?v=20260324a" />
-    <link rel="icon" type="image/svg+xml" href="./calendar-icon.svg?v=20260324a" />
-    <link rel="shortcut icon" href="./calendar-icon.svg?v=20260324a" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./calendar-icon-180.png?v=20260324a" />
+    <link rel="manifest" href="./manifest.webmanifest?v=20260324d" />
+    <link rel="icon" type="image/svg+xml" href="./calendar-icon.svg?v=20260324d" />
+    <link rel="shortcut icon" href="./calendar-icon.svg?v=20260324d" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./calendar-icon-180.png?v=20260324d" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -20,7 +20,8 @@
         <h1>Roster to iCal Export</h1>
       </header>
 
-      <section class="card">
+      <section class="card top-card">
+        <div id="buildVersion" class="build-version" aria-label="App build version"></div>
         <label for="rosterFile" class="field-label">Roster file</label>
         <input id="rosterFile" type="file" accept=".txt,.pdf,text/plain,application/pdf" />
 
@@ -51,7 +52,7 @@
           <button id="resetCalendarBtn" type="button">Clear This Device</button>
         </div>
 
-        <p class="subscription-note">Enter the same staff number on every device. The roster must parse to that same staff number before it can update the subscribed calendar.</p>
+        <p class="subscription-note">Enter your staff number.</p>
         <p id="subscriptionStatus" aria-live="polite">Parse a roster, enter your staff number, then create your subscribed calendar.</p>
         <p id="subscriptionLinkWrap" class="subscription-link" hidden>
           <a id="subscriptionLink" href="" target="_blank" rel="noopener noreferrer"></a>
@@ -157,7 +158,7 @@
     <script>
       (async () => {
         try {
-          await import("./app.mjs?v=20260324a");
+          await import("./app.mjs?v=20260324d");
         } catch (error) {
           console.error("Failed to load app module", error);
           const statusEl = document.getElementById("status");
