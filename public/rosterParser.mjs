@@ -775,6 +775,12 @@ function parseEpaLocation(row) {
   return EPA_LOCATION_CODES[match[1]] || "";
 }
 
+function parseEpaLocationCode(row) {
+  const haystack = `${row.dutyCode || ""} ${row.detail || ""}`.toUpperCase();
+  const match = haystack.match(/\bEPA([A-Z]{2})\b/);
+  return match ? match[1] : "";
+}
+
 function parseSimExercise(row) {
   const haystack = `${row.dutyCode || ""} ${row.detail || ""}`.toUpperCase();
   const match = haystack.match(/\bSIM([A-Z0-9]{4})\b/) || haystack.match(/\bSIM\s+([A-Z0-9]{4})\b/);
@@ -782,17 +788,17 @@ function parseSimExercise(row) {
 }
 
 function buildTrainingLabel(row) {
-  const epaLocation = parseEpaLocation(row);
+  const epaLocationCode = parseEpaLocationCode(row);
   const simExercise = parseSimExercise(row);
   const dutyCodeUpper = String(row.dutyCode || "").toUpperCase();
   const detailUpper = String(row.detail || "").toUpperCase();
 
   if (dutyCodeUpper.includes("EPA") || detailUpper.includes("EPA")) {
-    return epaLocation ? `Emergency Procedures - ${epaLocation}` : "Emergency Procedures";
+    return epaLocationCode ? `EPs-${epaLocationCode}` : "EPs";
   }
 
   if (dutyCodeUpper.includes("SIM") || detailUpper.includes("SIM")) {
-    return simExercise ? `Simulator Exercise ${simExercise}` : [row.dutyCode, row.detail].filter(Boolean).join(" ") || "Simulator";
+    return simExercise ? `Ex ${simExercise}` : [row.dutyCode, row.detail].filter(Boolean).join(" ") || "Simulator";
   }
 
   return [row.dutyCode, row.detail].filter(Boolean).join(" ");
@@ -809,7 +815,8 @@ function buildTrainingEvents(scheduleRows, bidPeriod) {
 
     const label = buildTrainingLabel(row);
     const location = parseEpaLocation(row);
-    const summary = `${category}: ${label}`;
+    const isEmergencyProcedures = String(row.dutyCode || "").toUpperCase().includes("EPA") || String(row.detail || "").toUpperCase().includes("EPA");
+    const summary = isEmergencyProcedures ? label : `${category}: ${label}`;
     const uidBase = `${bidPeriod}-${row.dutyCode}-${row.iso}`;
 
     if (row.rept && row.end) {

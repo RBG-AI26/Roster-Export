@@ -103,9 +103,9 @@ Date Duty Detail Credit
   const training = parsed.events.find((event) => event.eventType === "training");
   const ics = rosterToIcs(parsed, "bp372.txt");
 
-  assert.equal(training?.summary, "TRAINING: Emergency Procedures - Sydney");
+  assert.equal(training?.summary, "EPs-SY");
   assert.equal(training?.previewCode, "EPASY");
-  assert.equal(training?.previewInfo, "Emergency Procedures - Sydney");
+  assert.equal(training?.previewInfo, "EPs-SY");
   assert.match(ics, /LOCATION:Sydney/);
 });
 
@@ -137,9 +137,9 @@ Date Duty Detail Credit
   const ics = rosterToIcs(parsed, "bp372.txt");
 
   assert.equal(sim?.category, "SIM");
-  assert.equal(sim?.summary, "SIM: Simulator Exercise AB12");
-  assert.equal(sim?.previewInfo, "Simulator Exercise AB12");
-  assert.match(ics, /SUMMARY:SIM: Simulator Exercise AB12/);
+  assert.equal(sim?.summary, "SIM: Ex AB12");
+  assert.equal(sim?.previewInfo, "Ex AB12");
+  assert.match(ics, /SUMMARY:SIM: Ex AB12/);
 });
 
 
