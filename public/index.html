@@ -8,10 +8,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Roster iCal" />
-    <link rel="manifest" href="./manifest.webmanifest?v=20260324d" />
-    <link rel="icon" type="image/svg+xml" href="./calendar-icon.svg?v=20260324d" />
-    <link rel="shortcut icon" href="./calendar-icon.svg?v=20260324d" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./calendar-icon-180.png?v=20260324d" />
+    <link rel="manifest" href="./manifest.webmanifest?v=20260324e" />
+    <link rel="icon" type="image/svg+xml" href="./calendar-icon.svg?v=20260324e" />
+    <link rel="shortcut icon" href="./calendar-icon.svg?v=20260324e" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./calendar-icon-180.png?v=20260324e" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -57,6 +57,72 @@
         <p id="subscriptionLinkWrap" class="subscription-link" hidden>
           <a id="subscriptionLink" href="" target="_blank" rel="noopener noreferrer"></a>
         </p>
+      </section>
+
+      <section class="card">
+        <h2>Admin</h2>
+        <p>Manage approved staff and review automatic email intake activity.</p>
+
+        <div class="admin-auth-row">
+          <input id="adminPassword" type="password" placeholder="Enter admin password" />
+          <button id="adminUnlockBtn" type="button">Unlock Admin</button>
+          <button id="adminRefreshBtn" type="button">Refresh</button>
+        </div>
+
+        <p id="adminStatus" aria-live="polite">Enter the admin password to manage approved staff.</p>
+
+        <div id="adminPanel" class="admin-panel" hidden>
+          <h3>Approved Staff</h3>
+          <p>Add or update approved staff numbers and the email address that should receive subscription links.</p>
+
+          <form id="adminStaffForm" class="admin-grid">
+            <input id="adminStaffNumber" type="text" inputmode="numeric" placeholder="Staff number" />
+            <input id="adminStaffName" type="text" placeholder="Name (optional)" />
+            <input id="adminStaffEmail" type="email" placeholder="Email address" />
+            <label class="admin-checkbox"><input id="adminStaffActive" type="checkbox" checked /> Active</label>
+            <button id="adminStaffSaveBtn" type="submit">Add / Update Staff</button>
+          </form>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Staff</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Active</th>
+                  <th>Latest BP</th>
+                  <th>Subscription</th>
+                </tr>
+              </thead>
+              <tbody id="adminStaffBody">
+                <tr>
+                  <td colspan="6">No approved staff loaded yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Email Intake Review</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>When</th>
+                  <th>Type</th>
+                  <th>Staff</th>
+                  <th>File</th>
+                  <th>Message</th>
+                </tr>
+              </thead>
+              <tbody id="adminLogsBody">
+                <tr>
+                  <td colspan="5">No intake activity loaded yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </section>
 
       <section class="card">
@@ -158,7 +224,7 @@
     <script>
       (async () => {
         try {
-          await import("./app.mjs?v=20260324d");
+          await import("./app.mjs?v=20260324e");
         } catch (error) {
           console.error("Failed to load app module", error);
           const statusEl = document.getElementById("status");

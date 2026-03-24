@@ -120,6 +120,35 @@ button:disabled {
   font-size: 0.95rem;
 }
 
+.admin-auth-row,
+.admin-grid {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.admin-auth-row input,
+.admin-grid input {
+  flex: 1 1 180px;
+}
+
+.admin-panel {
+  margin-top: 1rem;
+}
+
+.admin-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.admin-checkbox input {
+  width: auto;
+}
+
 .table-wrap {
   overflow-x: auto;
 }

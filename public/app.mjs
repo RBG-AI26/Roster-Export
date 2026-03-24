@@ -1,11 +1,12 @@
-import { parseRosterText, rosterToIcs } from "./rosterParser.mjs?v=20260324d";
+import { parseRosterText, rosterToIcs } from "./rosterParser.mjs?v=20260324e";
 
-const APP_VERSION = "2026-03-24d";
-const SERVICE_WORKER_URL = "./sw.js?v=20260324d";
+const APP_VERSION = "2026-03-24e";
+const SERVICE_WORKER_URL = "./sw.js?v=20260324e";
 const LAST_ROSTER_STORAGE_KEY = "rosterExport.lastRoster.v1";
 const UI_STATE_STORAGE_KEY = "rosterExport.uiState.v2";
 const EXPORT_SNAPSHOT_STORAGE_KEY = "rosterExport.lastExportSnapshot.v1";
 const SUBSCRIBED_CALENDAR_STORAGE_KEY = "rosterExport.subscribedCalendar.v3";
+const ADMIN_PASSWORD_SESSION_KEY = "rosterExport.adminPassword.v1";
 
 const rosterFileInput = document.getElementById("rosterFile");
 const parseBtn = document.getElementById("parseBtn");
@@ -20,6 +21,18 @@ const subscriptionStatusEl = document.getElementById("subscriptionStatus");
 const subscriptionLinkWrap = document.getElementById("subscriptionLinkWrap");
 const subscriptionLinkEl = document.getElementById("subscriptionLink");
 const eventsBody = document.getElementById("eventsBody");
+const adminPasswordInput = document.getElementById("adminPassword");
+const adminUnlockBtn = document.getElementById("adminUnlockBtn");
+const adminRefreshBtn = document.getElementById("adminRefreshBtn");
+const adminStatusEl = document.getElementById("adminStatus");
+const adminPanel = document.getElementById("adminPanel");
+const adminStaffForm = document.getElementById("adminStaffForm");
+const adminStaffNumberInput = document.getElementById("adminStaffNumber");
+const adminStaffNameInput = document.getElementById("adminStaffName");
+const adminStaffEmailInput = document.getElementById("adminStaffEmail");
+const adminStaffActiveInput = document.getElementById("adminStaffActive");
+const adminStaffBody = document.getElementById("adminStaffBody");
+const adminLogsBody = document.getElementById("adminLogsBody");
 
 const patternSelect = document.getElementById("patternSelect");
 const checkDtaBtn = document.getElementById("checkDtaBtn");
@@ -58,6 +71,7 @@ let airportRateOverrides = {};
 let pendingRestoredPatternId = "";
 let uiStateWasRestored = false;
 let subscribedCalendarState = null;
+let adminPassword = "";
 
 let dtaModuleReady = false;
 let calculateDtaForPattern = () => null;
@@ -107,6 +121,258 @@ function setSubscriptionLink(url) {
   subscriptionLinkWrap.hidden = false;
   subscriptionLinkEl.href = url;
   subscriptionLinkEl.textContent = url;
+}
+
+function getSessionStorage() {
+  try {
+    return globalThis.sessionStorage || null;
+  } catch {
+    return null;
+  }
+}
+
+function loadAdminPassword() {
+  const storage = getSessionStorage();
+  if (!storage) {
+    return "";
+  }
+
+  try {
+    return String(storage.getItem(ADMIN_PASSWORD_SESSION_KEY) || "");
+  } catch {
+    return "";
+  }
+}
+
+function saveAdminPassword(value) {
+  const storage = getSessionStorage();
+  if (!storage) {
+    return;
+  }
+
+  try {
+    storage.setItem(ADMIN_PASSWORD_SESSION_KEY, String(value || ""));
+  } catch {
+    // Ignore storage failures.
+  }
+}
+
+function clearAdminPassword() {
+  adminPassword = "";
+  const storage = getSessionStorage();
+  if (storage) {
+    try {
+      storage.removeItem(ADMIN_PASSWORD_SESSION_KEY);
+    } catch {
+      // Ignore storage failures.
+    }
+  }
+  if (adminPasswordInput) {
+    adminPasswordInput.value = "";
+  }
+}
+
+function setAdminStatus(message) {
+  if (adminStatusEl) {
+    adminStatusEl.textContent = message;
+  }
+}
+
+function renderAdminStaff(staff = []) {
+  if (!adminStaffBody) {
+    return;
+  }
+
+  adminStaffBody.innerHTML = "";
+  if (!staff.length) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = 6;
+    cell.textContent = "No approved staff yet.";
+    row.appendChild(cell);
+    adminStaffBody.appendChild(row);
+    return;
+  }
+
+  for (const entry of staff) {
+    const row = document.createElement("tr");
+    const values = [
+      entry.staffNumber,
+      entry.name || "",
+      entry.email || "",
+      entry.active ? "Yes" : "No",
+      entry.latestBidPeriod ? `BP${entry.latestBidPeriod}` : "",
+    ];
+
+    for (const value of values) {
+      const cell = document.createElement("td");
+      cell.textContent = String(value || "");
+      row.appendChild(cell);
+    }
+
+    const linkCell = document.createElement("td");
+    if (entry.subscriptionUrl) {
+      const link = document.createElement("a");
+      link.href = entry.subscriptionUrl;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "Open";
+      linkCell.appendChild(link);
+    } else {
+      linkCell.textContent = "";
+    }
+    row.appendChild(linkCell);
+    adminStaffBody.appendChild(row);
+  }
+}
+
+function renderAdminLogs(logs = []) {
+  if (!adminLogsBody) {
+    return;
+  }
+
+  adminLogsBody.innerHTML = "";
+  if (!logs.length) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+    cell.colSpan = 5;
+    cell.textContent = "No intake activity logged yet.";
+    row.appendChild(cell);
+    adminLogsBody.appendChild(row);
+    return;
+  }
+
+  for (const entry of logs) {
+    const row = document.createElement("tr");
+    const values = [
+      entry.createdAtUtc || "",
+      entry.type || "",
+      entry.staffNumber || "",
+      entry.fileName || "",
+      entry.message || "",
+    ];
+
+    for (const value of values) {
+      const cell = document.createElement("td");
+      cell.textContent = String(value || "");
+      row.appendChild(cell);
+    }
+    adminLogsBody.appendChild(row);
+  }
+}
+
+function updateAdminUi() {
+  if (adminPanel) {
+    adminPanel.hidden = !adminPassword;
+  }
+  if (adminRefreshBtn) {
+    adminRefreshBtn.disabled = !adminPassword;
+  }
+}
+
+async function adminApiFetch(path, options = {}) {
+  if (!adminPassword) {
+    throw new Error("Enter the admin password first.");
+  }
+
+  const headers = {
+    ...(options.headers || {}),
+    "x-admin-password": adminPassword,
+  };
+  if (options.body) {
+    headers["content-type"] = "application/json";
+  }
+
+  const response = await fetch(path, {
+    ...options,
+    headers,
+  });
+
+  const data = await response.json().catch(() => null);
+  if (!response.ok) {
+    if (response.status === 401) {
+      clearAdminPassword();
+      updateAdminUi();
+    }
+    throw new Error(String(data?.error || "Admin request failed."));
+  }
+  return data;
+}
+
+async function refreshAdminData() {
+  if (!adminPassword) {
+    updateAdminUi();
+    setAdminStatus("Enter the admin password to manage approved staff.");
+    return;
+  }
+
+  updateAdminUi();
+  setAdminStatus("Loading admin data...");
+
+  try {
+    const [staffData, logData] = await Promise.all([
+      adminApiFetch("./api/admin/staff"),
+      adminApiFetch("./api/admin/logs"),
+    ]);
+    renderAdminStaff(staffData.staff || []);
+    renderAdminLogs(logData.logs || []);
+    setAdminStatus("Admin data loaded.");
+  } catch (error) {
+    console.error(error);
+    setAdminStatus(error?.message || "Could not load admin data.");
+  }
+}
+
+async function unlockAdmin() {
+  const nextPassword = String(adminPasswordInput?.value || "").trim();
+  if (!nextPassword) {
+    setAdminStatus("Enter the admin password.");
+    return;
+  }
+
+  adminPassword = nextPassword;
+  saveAdminPassword(adminPassword);
+  await refreshAdminData();
+}
+
+async function saveApprovedStaffEntry(event) {
+  event.preventDefault();
+
+  const payload = {
+    staffNumber: normaliseStaffNumber(adminStaffNumberInput?.value || ""),
+    name: String(adminStaffNameInput?.value || "").trim(),
+    email: String(adminStaffEmailInput?.value || "").trim(),
+    active: Boolean(adminStaffActiveInput?.checked),
+  };
+
+  if (payload.staffNumber.length < 4) {
+    setAdminStatus("Staff number must include at least 4 digits.");
+    return;
+  }
+  if (!payload.email) {
+    setAdminStatus("Enter the approved recipient email address.");
+    return;
+  }
+
+  setAdminStatus(`Saving approved staff ${payload.staffNumber}...`);
+
+  try {
+    await adminApiFetch("./api/admin/staff", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+    if (adminStaffForm) {
+      adminStaffForm.reset();
+    }
+    if (adminStaffActiveInput) {
+      adminStaffActiveInput.checked = true;
+    }
+    await refreshAdminData();
+    setAdminStatus(`Saved approved staff ${payload.staffNumber}.`);
+  } catch (error) {
+    console.error(error);
+    setAdminStatus(error?.message || "Could not save approved staff.");
+  }
 }
 
 function canUseSubscribedCalendarPublishing() {
@@ -1482,6 +1748,15 @@ if (copyLinkBtn) {
 if (resetCalendarBtn) {
   resetCalendarBtn.addEventListener("click", resetSubscribedCalendar);
 }
+if (adminUnlockBtn) {
+  adminUnlockBtn.addEventListener("click", unlockAdmin);
+}
+if (adminRefreshBtn) {
+  adminRefreshBtn.addEventListener("click", refreshAdminData);
+}
+if (adminStaffForm) {
+  adminStaffForm.addEventListener("submit", saveApprovedStaffEntry);
+}
 if (staffNumberInput) {
   staffNumberInput.addEventListener("input", () => {
     saveUiState();
@@ -1527,6 +1802,10 @@ rosterFileInput.addEventListener("change", () => {
 registerServiceWorker();
 resetPreview();
 subscribedCalendarState = loadSubscribedCalendarState();
+adminPassword = loadAdminPassword();
+if (adminPasswordInput && adminPassword) {
+  adminPasswordInput.value = adminPassword;
+}
 if (dtaFeatureEnabled) {
   restoreUiState();
 }
@@ -1537,6 +1816,10 @@ if (!restoredRoster) {
 }
 
 updateSubscribedCalendarUi();
+updateAdminUi();
+if (adminPassword) {
+  refreshAdminData();
+}
 
 if (dtaFeatureEnabled) {
   resetDtaPatternSelect("Parse a roster first");
