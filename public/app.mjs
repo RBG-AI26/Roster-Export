@@ -1,13 +1,15 @@
-import { parseRosterText, rosterToIcs } from "./rosterParser.mjs?v=20260324f";
+import { parseRosterText, rosterToIcs } from "./rosterParser.mjs?v=20260324g";
 
-const APP_VERSION = "2026-03-24f";
-const SERVICE_WORKER_URL = "./sw.js?v=20260324f";
+const APP_VERSION = "2026-03-24g";
+const SERVICE_WORKER_URL = "./sw.js?v=20260324g";
 const LAST_ROSTER_STORAGE_KEY = "rosterExport.lastRoster.v1";
 const UI_STATE_STORAGE_KEY = "rosterExport.uiState.v2";
 const EXPORT_SNAPSHOT_STORAGE_KEY = "rosterExport.lastExportSnapshot.v1";
 const SUBSCRIBED_CALENDAR_STORAGE_KEY = "rosterExport.subscribedCalendar.v3";
 const ADMIN_PASSWORD_SESSION_KEY = "rosterExport.adminPassword.v1";
+const ADMIN_SESSION_EXPIRES_KEY = "rosterExport.adminPasswordExpires.v1";
 const SECTION_STATE_STORAGE_KEY = "rosterExport.sectionState.v1";
+const ADMIN_SESSION_TIMEOUT_MS = 15 * 60 * 1000;
 
 const rosterFileInput = document.getElementById("rosterFile");
 const parseBtn = document.getElementById("parseBtn");
@@ -26,6 +28,7 @@ const toggleAdminSectionBtn = document.getElementById("toggleAdminSectionBtn");
 const adminSectionContent = document.getElementById("adminSectionContent");
 const adminPasswordInput = document.getElementById("adminPassword");
 const adminUnlockBtn = document.getElementById("adminUnlockBtn");
+const adminLockBtn = document.getElementById("adminLockBtn");
 const adminRefreshBtn = document.getElementById("adminRefreshBtn");
 const adminStatusEl = document.getElementById("adminStatus");
 const adminPanel = document.getElementById("adminPanel");
@@ -79,6 +82,7 @@ let pendingRestoredPatternId = "";
 let uiStateWasRestored = false;
 let subscribedCalendarState = null;
 let adminPassword = "";
+let adminAutoLockTimer = null;
 
 let dtaModuleReady = false;
 let calculateDtaForPattern = () => null;
@@ -145,6 +149,13 @@ function loadAdminPassword() {
   }
 
   try {
+    const expiresAtRaw = String(storage.getItem(ADMIN_SESSION_EXPIRES_KEY) || "");
+    const expiresAt = Number(expiresAtRaw);
+    if (!expiresAt || Number.isNaN(expiresAt) || Date.now() >= expiresAt) {
+      storage.removeItem(ADMIN_PASSWORD_SESSION_KEY);
+      storage.removeItem(ADMIN_SESSION_EXPIRES_KEY);
+      return "";
+    }
     return String(storage.getItem(ADMIN_PASSWORD_SESSION_KEY) || "");
   } catch {
     return "";
@@ -159,17 +170,27 @@ function saveAdminPassword(value) {
 
   try {
     storage.setItem(ADMIN_PASSWORD_SESSION_KEY, String(value || ""));
+    storage.setItem(ADMIN_SESSION_EXPIRES_KEY, String(Date.now() + ADMIN_SESSION_TIMEOUT_MS));
   } catch {
     // Ignore storage failures.
   }
 }
 
+function stopAdminAutoLockTimer() {
+  if (adminAutoLockTimer) {
+    clearTimeout(adminAutoLockTimer);
+    adminAutoLockTimer = null;
+  }
+}
+
 function clearAdminPassword() {
   adminPassword = "";
+  stopAdminAutoLockTimer();
   const storage = getSessionStorage();
   if (storage) {
     try {
       storage.removeItem(ADMIN_PASSWORD_SESSION_KEY);
+      storage.removeItem(ADMIN_SESSION_EXPIRES_KEY);
     } catch {
       // Ignore storage failures.
     }
@@ -177,6 +198,27 @@ function clearAdminPassword() {
   if (adminPasswordInput) {
     adminPasswordInput.value = "";
   }
+}
+
+function lockAdmin(message = "Admin locked.") {
+  clearAdminPassword();
+  updateAdminUi();
+  renderAdminStaff([]);
+  renderAdminLogs([]);
+  setAdminStatus(message);
+}
+
+function refreshAdminSession() {
+  if (!adminPassword) {
+    stopAdminAutoLockTimer();
+    return;
+  }
+
+  saveAdminPassword(adminPassword);
+  stopAdminAutoLockTimer();
+  adminAutoLockTimer = setTimeout(() => {
+    lockAdmin("Admin locked after 15 minutes of inactivity.");
+  }, ADMIN_SESSION_TIMEOUT_MS);
 }
 
 function setAdminStatus(message) {
@@ -272,6 +314,9 @@ function updateAdminUi() {
   if (adminPanel) {
     adminPanel.hidden = !adminPassword;
   }
+  if (adminLockBtn) {
+    adminLockBtn.disabled = !adminPassword;
+  }
   if (adminRefreshBtn) {
     adminRefreshBtn.disabled = !adminPassword;
   }
@@ -281,6 +326,8 @@ async function adminApiFetch(path, options = {}) {
   if (!adminPassword) {
     throw new Error("Enter the admin password first.");
   }
+
+  refreshAdminSession();
 
   const headers = {
     ...(options.headers || {}),
@@ -298,8 +345,7 @@ async function adminApiFetch(path, options = {}) {
   const data = await response.json().catch(() => null);
   if (!response.ok) {
     if (response.status === 401) {
-      clearAdminPassword();
-      updateAdminUi();
+      lockAdmin("Admin session expired or password was rejected.");
     }
     throw new Error(String(data?.error || "Admin request failed."));
   }
@@ -338,7 +384,7 @@ async function unlockAdmin() {
   }
 
   adminPassword = nextPassword;
-  saveAdminPassword(adminPassword);
+  refreshAdminSession();
   await refreshAdminData();
 }
 
@@ -1796,6 +1842,9 @@ if (resetCalendarBtn) {
 if (adminUnlockBtn) {
   adminUnlockBtn.addEventListener("click", unlockAdmin);
 }
+if (adminLockBtn) {
+  adminLockBtn.addEventListener("click", () => lockAdmin("Admin locked."));
+}
 if (adminRefreshBtn) {
   adminRefreshBtn.addEventListener("click", refreshAdminData);
 }
@@ -1804,6 +1853,15 @@ if (toggleAdminSectionBtn) {
 }
 if (adminStaffForm) {
   adminStaffForm.addEventListener("submit", saveApprovedStaffEntry);
+}
+if (adminSectionContent) {
+  ["click", "input", "keydown"].forEach((eventName) => {
+    adminSectionContent.addEventListener(eventName, () => {
+      if (adminPassword) {
+        refreshAdminSession();
+      }
+    });
+  });
 }
 if (toggleEventsPreviewBtn) {
   toggleEventsPreviewBtn.addEventListener("click", () => toggleSection("events", toggleEventsPreviewBtn, eventsPreviewContent));
@@ -1873,6 +1931,7 @@ if (!restoredRoster) {
 updateSubscribedCalendarUi();
 updateAdminUi();
 if (adminPassword) {
+  refreshAdminSession();
   refreshAdminData();
 }
 
