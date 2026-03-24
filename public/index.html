@@ -8,10 +8,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Roster iCal" />
-    <link rel="manifest" href="./manifest.webmanifest?v=20260324e" />
-    <link rel="icon" type="image/svg+xml" href="./calendar-icon.svg?v=20260324e" />
-    <link rel="shortcut icon" href="./calendar-icon.svg?v=20260324e" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./calendar-icon-180.png?v=20260324e" />
+    <link rel="manifest" href="./manifest.webmanifest?v=20260324f" />
+    <link rel="icon" type="image/svg+xml" href="./calendar-icon.svg?v=20260324f" />
+    <link rel="shortcut icon" href="./calendar-icon.svg?v=20260324f" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./calendar-icon-180.png?v=20260324f" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -60,7 +60,11 @@
       </section>
 
       <section class="card">
-        <h2>Admin</h2>
+        <div class="section-header">
+          <h2>Admin</h2>
+          <button id="toggleAdminSectionBtn" type="button" class="toggle-btn" aria-expanded="true" aria-controls="adminSectionContent">Collapse</button>
+        </div>
+        <div id="adminSectionContent" class="collapsible-content">
         <p>Manage approved staff and review automatic email intake activity.</p>
 
         <div class="admin-auth-row">
@@ -123,10 +127,15 @@
             </table>
           </div>
         </div>
+        </div>
       </section>
 
       <section class="card">
-        <h2>Events preview</h2>
+        <div class="section-header">
+          <h2>Events preview</h2>
+          <button id="toggleEventsPreviewBtn" type="button" class="toggle-btn" aria-expanded="true" aria-controls="eventsPreviewContent">Collapse</button>
+        </div>
+        <div id="eventsPreviewContent" class="collapsible-content">
         <div class="table-wrap">
           <table>
             <thead>
@@ -145,10 +154,15 @@
             </tbody>
           </table>
         </div>
+        </div>
       </section>
 
       <section class="card">
-        <h2>DTA Checker</h2>
+        <div class="section-header">
+          <h2>DTA Checker</h2>
+          <button id="toggleDtaSectionBtn" type="button" class="toggle-btn" aria-expanded="true" aria-controls="dtaSectionContent">Collapse</button>
+        </div>
+        <div id="dtaSectionContent" class="collapsible-content">
         <p>Select a roster pattern and calculate DTA using Part A + Part B rules.</p>
 
         <div class="dta-controls">
@@ -218,13 +232,14 @@
           </div>
           <button id="addAirportMapBtn" type="submit">Add / Update</button>
         </form>
+        </div>
       </section>
     </main>
 
     <script>
       (async () => {
         try {
-          await import("./app.mjs?v=20260324e");
+          await import("./app.mjs?v=20260324f");
         } catch (error) {
           console.error("Failed to load app module", error);
           const statusEl = document.getElementById("status");

@@ -60,6 +60,22 @@ header p {
   letter-spacing: 0.04em;
 }
 
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.toggle-btn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+}
+
+.collapsible-content[hidden] {
+  display: none;
+}
+
 .field-label {
   display: block;
   font-weight: 600;
@@ -279,6 +295,11 @@ th {
 }
 
 @media (max-width: 640px) {
+  .section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
   .top-card {
     padding-top: 2.6rem;
   }

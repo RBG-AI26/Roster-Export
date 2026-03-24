@@ -1,12 +1,13 @@
-import { parseRosterText, rosterToIcs } from "./rosterParser.mjs?v=20260324e";
+import { parseRosterText, rosterToIcs } from "./rosterParser.mjs?v=20260324f";
 
-const APP_VERSION = "2026-03-24e";
-const SERVICE_WORKER_URL = "./sw.js?v=20260324e";
+const APP_VERSION = "2026-03-24f";
+const SERVICE_WORKER_URL = "./sw.js?v=20260324f";
 const LAST_ROSTER_STORAGE_KEY = "rosterExport.lastRoster.v1";
 const UI_STATE_STORAGE_KEY = "rosterExport.uiState.v2";
 const EXPORT_SNAPSHOT_STORAGE_KEY = "rosterExport.lastExportSnapshot.v1";
 const SUBSCRIBED_CALENDAR_STORAGE_KEY = "rosterExport.subscribedCalendar.v3";
 const ADMIN_PASSWORD_SESSION_KEY = "rosterExport.adminPassword.v1";
+const SECTION_STATE_STORAGE_KEY = "rosterExport.sectionState.v1";
 
 const rosterFileInput = document.getElementById("rosterFile");
 const parseBtn = document.getElementById("parseBtn");
@@ -21,6 +22,8 @@ const subscriptionStatusEl = document.getElementById("subscriptionStatus");
 const subscriptionLinkWrap = document.getElementById("subscriptionLinkWrap");
 const subscriptionLinkEl = document.getElementById("subscriptionLink");
 const eventsBody = document.getElementById("eventsBody");
+const toggleAdminSectionBtn = document.getElementById("toggleAdminSectionBtn");
+const adminSectionContent = document.getElementById("adminSectionContent");
 const adminPasswordInput = document.getElementById("adminPassword");
 const adminUnlockBtn = document.getElementById("adminUnlockBtn");
 const adminRefreshBtn = document.getElementById("adminRefreshBtn");
@@ -33,6 +36,8 @@ const adminStaffEmailInput = document.getElementById("adminStaffEmail");
 const adminStaffActiveInput = document.getElementById("adminStaffActive");
 const adminStaffBody = document.getElementById("adminStaffBody");
 const adminLogsBody = document.getElementById("adminLogsBody");
+const toggleEventsPreviewBtn = document.getElementById("toggleEventsPreviewBtn");
+const eventsPreviewContent = document.getElementById("eventsPreviewContent");
 
 const patternSelect = document.getElementById("patternSelect");
 const checkDtaBtn = document.getElementById("checkDtaBtn");
@@ -46,6 +51,8 @@ const addAirportMapForm = document.getElementById("addAirportMapForm");
 const newAirportCodeInput = document.getElementById("newAirportCode");
 const newAirportCountryInput = document.getElementById("newAirportCountry");
 const newAirportRateInput = document.getElementById("newAirportRate");
+const toggleDtaSectionBtn = document.getElementById("toggleDtaSectionBtn");
+const dtaSectionContent = document.getElementById("dtaSectionContent");
 
 const dtaFeatureEnabled =
   !!patternSelect &&
@@ -589,6 +596,44 @@ function saveJsonState(key, value) {
   } catch {
     // Ignore quota/storage errors and continue with in-memory state.
   }
+}
+
+function loadSectionState() {
+  return loadJsonState(SECTION_STATE_STORAGE_KEY) || {};
+}
+
+function saveSectionState(state) {
+  saveJsonState(SECTION_STATE_STORAGE_KEY, state || {});
+}
+
+function setSectionCollapsed(buttonEl, contentEl, collapsed) {
+  if (!buttonEl || !contentEl) {
+    return;
+  }
+
+  const isCollapsed = Boolean(collapsed);
+  contentEl.hidden = isCollapsed;
+  buttonEl.setAttribute("aria-expanded", String(!isCollapsed));
+  buttonEl.textContent = isCollapsed ? "Expand" : "Collapse";
+}
+
+function applySavedSectionState() {
+  const state = loadSectionState();
+  setSectionCollapsed(toggleAdminSectionBtn, adminSectionContent, state.admin === true);
+  setSectionCollapsed(toggleEventsPreviewBtn, eventsPreviewContent, state.events === true);
+  setSectionCollapsed(toggleDtaSectionBtn, dtaSectionContent, state.dta === true);
+}
+
+function toggleSection(sectionKey, buttonEl, contentEl) {
+  if (!buttonEl || !contentEl) {
+    return;
+  }
+
+  const state = loadSectionState();
+  const nextCollapsed = !contentEl.hidden;
+  state[sectionKey] = nextCollapsed;
+  saveSectionState(state);
+  setSectionCollapsed(buttonEl, contentEl, nextCollapsed);
 }
 
 function saveUiState() {
@@ -1754,8 +1799,17 @@ if (adminUnlockBtn) {
 if (adminRefreshBtn) {
   adminRefreshBtn.addEventListener("click", refreshAdminData);
 }
+if (toggleAdminSectionBtn) {
+  toggleAdminSectionBtn.addEventListener("click", () => toggleSection("admin", toggleAdminSectionBtn, adminSectionContent));
+}
 if (adminStaffForm) {
   adminStaffForm.addEventListener("submit", saveApprovedStaffEntry);
+}
+if (toggleEventsPreviewBtn) {
+  toggleEventsPreviewBtn.addEventListener("click", () => toggleSection("events", toggleEventsPreviewBtn, eventsPreviewContent));
+}
+if (toggleDtaSectionBtn) {
+  toggleDtaSectionBtn.addEventListener("click", () => toggleSection("dta", toggleDtaSectionBtn, dtaSectionContent));
 }
 if (staffNumberInput) {
   staffNumberInput.addEventListener("input", () => {
@@ -1801,6 +1855,7 @@ rosterFileInput.addEventListener("change", () => {
 
 registerServiceWorker();
 resetPreview();
+applySavedSectionState();
 subscribedCalendarState = loadSubscribedCalendarState();
 adminPassword = loadAdminPassword();
 if (adminPasswordInput && adminPassword) {
