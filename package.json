@@ -1,0 +1,12 @@
+{
+  "name": "roster-export-ical",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "test": "node smoke-tests.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "4.76.0"
+  }
+}
