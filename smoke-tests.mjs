@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 
 import { parseRosterText, rosterToIcs } from "./public/rosterParser.mjs";
+import { buildCombinedCalendarIcs, normaliseFeedRecord } from "./worker.mjs";
 
 function test(name, fn) {
   try {
@@ -76,6 +77,71 @@ Date Duty Detail Credit
   assert.equal(leave?.dtEndDate, "20260311");
 });
 
+test("high priority leave is created as an all-day leave event", () => {
+  const text = `BID PERIOD 999
+10 Mar 2026
+Date Duty Detail Credit
+10/03 T HL High Priority Leave 00:00
+`;
+
+  const parsed = parseRosterText(text);
+  const leave = parsed.events.find((event) => event.dutyCode === "HL");
+
+  assert.equal(leave?.eventType, "leave_day");
+  assert.equal(leave?.summary, "HL");
+  assert.equal(leave?.previewInfo, "High Priority Leave");
+});
+
+test("EPA duties are recognised as emergency procedures with location", () => {
+  const text = `BID PERIOD 999
+23 Dec 2026
+Date Duty Detail Credit
+23/12 T EPASY 0800 1200 04:00
+`;
+
+  const parsed = parseRosterText(text);
+  const training = parsed.events.find((event) => event.eventType === "training");
+  const ics = rosterToIcs(parsed, "bp372.txt");
+
+  assert.equal(training?.summary, "TRAINING: Emergency Procedures - Sydney");
+  assert.equal(training?.previewCode, "EPASY");
+  assert.equal(training?.previewInfo, "Emergency Procedures - Sydney");
+  assert.match(ics, /LOCATION:Sydney/);
+});
+
+test("RX duties are treated as X-style all-day days off", () => {
+  const text = `BID PERIOD 999
+23 Dec 2026
+Date Duty Detail Credit
+23/12 T RX 00:00
+24/12 F A 00:00
+`;
+
+  const parsed = parseRosterText(text);
+  const rxDay = parsed.events.find((event) => event.dutyCode === "RX");
+
+  assert.equal(rxDay?.eventType, "day_marker");
+  assert.equal(rxDay?.summary, "Last RX Day");
+  assert.equal(rxDay?.timeKind, "all_day");
+});
+
+test("SIM duties include the simulator exercise in the label", () => {
+  const text = `BID PERIOD 999
+23 Dec 2026
+Date Duty Detail Credit
+23/12 T SIMAB12 0800 1200 04:00
+`;
+
+  const parsed = parseRosterText(text);
+  const sim = parsed.events.find((event) => event.eventType === "training");
+  const ics = rosterToIcs(parsed, "bp372.txt");
+
+  assert.equal(sim?.category, "SIM");
+  assert.equal(sim?.summary, "SIM: Simulator Exercise AB12");
+  assert.equal(sim?.previewInfo, "Simulator Exercise AB12");
+  assert.match(ics, /SUMMARY:SIM: Simulator Exercise AB12/);
+});
+
 
 test("SL, LSL, and SR are exported as supported duty events", () => {
   const text = `BID PERIOD 999
@@ -140,4 +206,42 @@ test("cancelled events are emitted in ICS output", () => {
   assert.match(ics, /UID:uid-old@roster-export-ical/);
   assert.match(ics, /STATUS:CANCELLED/);
   assert.match(ics, /SUMMARY:QF33 SYD\/PER 1530 1720 \(Cancelled\)/);
+});
+
+test("legacy single-bp feed records are normalised", () => {
+  const legacyRecord = {
+    bidPeriod: "373",
+    fileName: "BP373_events.ics",
+    updatedAtUtc: "2026-03-24T00:00:00.000Z",
+    icsContent: "BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\nUID:bp373-1@roster-export-ical\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+  };
+
+  const normalised = normaliseFeedRecord(legacyRecord);
+
+  assert.deepEqual(Object.keys(normalised.calendarsByBidPeriod), ["373"]);
+  assert.equal(normalised.calendarsByBidPeriod["373"].fileName, "BP373_events.ics");
+});
+
+test("combined subscribed calendar preserves events across bid periods", () => {
+  const combined = buildCombinedCalendarIcs({
+    updatedAtUtc: "2026-03-24T00:00:00.000Z",
+    calendarsByBidPeriod: {
+      "373": {
+        bidPeriod: "373",
+        fileName: "BP373_events.ics",
+        updatedAtUtc: "2026-03-23T00:00:00.000Z",
+        icsContent: "BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\nUID:bp373-1@roster-export-ical\r\nSUMMARY:BP373 Event\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+      },
+      "374": {
+        bidPeriod: "374",
+        fileName: "BP374_events.ics",
+        updatedAtUtc: "2026-03-24T00:00:00.000Z",
+        icsContent: "BEGIN:VCALENDAR\r\nBEGIN:VEVENT\r\nUID:bp374-1@roster-export-ical\r\nSUMMARY:BP374 Event\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n",
+      },
+    },
+  });
+
+  assert.match(combined, /UID:bp373-1@roster-export-ical/);
+  assert.match(combined, /UID:bp374-1@roster-export-ical/);
+  assert.match(combined, /X-WR-CALNAME:Roster Export iCal/);
 });

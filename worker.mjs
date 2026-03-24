@@ -1,6 +1,7 @@
 const CALENDAR_KEY_PREFIX = "calendar:";
 const STAFF_NUMBER_PREFIX = "staff-number:";
 const TOKEN_BYTES = 18;
+const COMBINED_CALENDAR_NAME = "Roster Export iCal";
 
 function jsonResponse(data, init = {}) {
   const headers = new Headers(init.headers || {});
@@ -64,6 +65,93 @@ function makeSubscriptionUrls(requestUrl, calendarToken) {
   return { subscriptionUrl: httpsUrl, webcalUrl };
 }
 
+function normaliseBidPeriod(value) {
+  return String(value || "").trim();
+}
+
+export function normaliseFeedRecord(record) {
+  if (!record || typeof record !== "object") {
+    return { calendarsByBidPeriod: {}, updatedAtUtc: "" };
+  }
+
+  const calendarsByBidPeriod = {};
+  const rawCalendars = record.calendarsByBidPeriod;
+  if (rawCalendars && typeof rawCalendars === "object") {
+    for (const [rawBidPeriod, entry] of Object.entries(rawCalendars)) {
+      const bidPeriod = normaliseBidPeriod(rawBidPeriod || entry?.bidPeriod);
+      const icsContent = String(entry?.icsContent || "");
+      if (!bidPeriod || !icsContent) {
+        continue;
+      }
+      calendarsByBidPeriod[bidPeriod] = {
+        bidPeriod,
+        fileName: String(entry?.fileName || `BP${bidPeriod}_events.ics`).trim() || `BP${bidPeriod}_events.ics`,
+        updatedAtUtc: String(entry?.updatedAtUtc || record.updatedAtUtc || "").trim(),
+        icsContent,
+      };
+    }
+  }
+
+  if (Object.keys(calendarsByBidPeriod).length === 0) {
+    const bidPeriod = normaliseBidPeriod(record.bidPeriod);
+    const icsContent = String(record.icsContent || "");
+    if (bidPeriod && icsContent) {
+      calendarsByBidPeriod[bidPeriod] = {
+        bidPeriod,
+        fileName: String(record.fileName || `BP${bidPeriod}_events.ics`).trim() || `BP${bidPeriod}_events.ics`,
+        updatedAtUtc: String(record.updatedAtUtc || "").trim(),
+        icsContent,
+      };
+    }
+  }
+
+  return {
+    calendarsByBidPeriod,
+    updatedAtUtc: String(record.updatedAtUtc || "").trim(),
+  };
+}
+
+function extractIcsEventBlocks(icsContent) {
+  const content = String(icsContent || "");
+  const matches = content.match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g);
+  return matches ? matches.map((block) => block.trim()) : [];
+}
+
+function escapeIcsText(value) {
+  return String(value || "")
+    .replace(/\\/g, "\\\\")
+    .replace(/\r?\n/g, "\\n")
+    .replace(/,/g, "\\,")
+    .replace(/;/g, "\\;");
+}
+
+export function buildCombinedCalendarIcs(feedRecord) {
+  const normalised = normaliseFeedRecord(feedRecord);
+  const calendarEntries = Object.values(normalised.calendarsByBidPeriod).sort((left, right) =>
+    left.bidPeriod.localeCompare(right.bidPeriod, undefined, { numeric: true })
+  );
+
+  if (calendarEntries.length === 0) {
+    return "";
+  }
+
+  const combinedLines = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Roster Export iCal//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    `X-WR-CALNAME:${escapeIcsText(COMBINED_CALENDAR_NAME)}`,
+  ];
+
+  for (const entry of calendarEntries) {
+    combinedLines.push(...extractIcsEventBlocks(entry.icsContent));
+  }
+
+  combinedLines.push("END:VCALENDAR");
+  return `${combinedLines.join("\r\n")}\r\n`;
+}
+
 async function handlePublish(request, env) {
   const body = await request.json().catch(() => null);
   const { icsContent, bidPeriod, fileName, staffNumber } = normalisePublishRequest(body);
@@ -78,14 +166,18 @@ async function handlePublish(request, env) {
   }
 
   const updatedAtUtc = new Date().toISOString();
-  const feedRecord = {
+  const existingFeedRecord = normaliseFeedRecord(
+    await env.ROSTER_FEEDS.get(`${CALENDAR_KEY_PREFIX}${calendarToken}`, "json")
+  );
+  existingFeedRecord.calendarsByBidPeriod[bidPeriod] = {
     bidPeriod,
     fileName,
     updatedAtUtc,
     icsContent,
   };
+  existingFeedRecord.updatedAtUtc = updatedAtUtc;
 
-  await env.ROSTER_FEEDS.put(`${CALENDAR_KEY_PREFIX}${calendarToken}`, JSON.stringify(feedRecord));
+  await env.ROSTER_FEEDS.put(`${CALENDAR_KEY_PREFIX}${calendarToken}`, JSON.stringify(existingFeedRecord));
   await env.ROSTER_FEEDS.put(
     mappingKey,
     JSON.stringify({ calendarToken, updatedAtUtc, bidPeriod })
@@ -101,7 +193,8 @@ async function handlePublish(request, env) {
 
 async function handleCalendarRequest(request, env, calendarToken) {
   const record = await env.ROSTER_FEEDS.get(`${CALENDAR_KEY_PREFIX}${calendarToken}`, "json");
-  if (!record || typeof record.icsContent !== "string") {
+  const icsContent = buildCombinedCalendarIcs(record);
+  if (!icsContent) {
     return new Response("Calendar feed not found.", {
       status: 404,
       headers: {
@@ -111,11 +204,11 @@ async function handleCalendarRequest(request, env, calendarToken) {
     });
   }
 
-  return new Response(record.icsContent, {
+  return new Response(icsContent, {
     headers: {
       "content-type": "text/calendar; charset=utf-8",
       "cache-control": "no-store",
-      "content-disposition": `inline; filename="${String(record.fileName || `BP${record.bidPeriod || ""}_events.ics`).replace(/"/g, "")}"`,
+      "content-disposition": 'inline; filename="Roster_events.ics"',
     },
   });
 }

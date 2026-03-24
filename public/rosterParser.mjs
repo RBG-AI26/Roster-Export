@@ -13,6 +13,12 @@ const MONTHS = {
   Nov: 10,
   Dec: 11,
 };
+const EPA_LOCATION_CODES = {
+  SY: "Sydney",
+  ML: "Melbourne",
+  BN: "Brisbane",
+  PH: "Perth",
+};
 
 function parseHeaderDate(text) {
   const match = text.match(/\b(\d{2})\s+([A-Za-z]{3})\s+(\d{4})\b/);
@@ -748,11 +754,48 @@ function identifyTrainingCategory(row) {
     return "SIM";
   }
 
+  if (haystack.includes("EPA")) {
+    return "TRAINING";
+  }
+
   if (haystack.includes("TRAIN") || haystack.includes("TRG")) {
     return "TRAINING";
   }
 
   return null;
+}
+
+function parseEpaLocation(row) {
+  const haystack = `${row.dutyCode || ""} ${row.detail || ""}`.toUpperCase();
+  const match = haystack.match(/\bEPA([A-Z]{2})\b/);
+  if (!match) {
+    return "";
+  }
+
+  return EPA_LOCATION_CODES[match[1]] || "";
+}
+
+function parseSimExercise(row) {
+  const haystack = `${row.dutyCode || ""} ${row.detail || ""}`.toUpperCase();
+  const match = haystack.match(/\bSIM([A-Z0-9]{4})\b/) || haystack.match(/\bSIM\s+([A-Z0-9]{4})\b/);
+  return match ? match[1] : "";
+}
+
+function buildTrainingLabel(row) {
+  const epaLocation = parseEpaLocation(row);
+  const simExercise = parseSimExercise(row);
+  const dutyCodeUpper = String(row.dutyCode || "").toUpperCase();
+  const detailUpper = String(row.detail || "").toUpperCase();
+
+  if (dutyCodeUpper.includes("EPA") || detailUpper.includes("EPA")) {
+    return epaLocation ? `Emergency Procedures - ${epaLocation}` : "Emergency Procedures";
+  }
+
+  if (dutyCodeUpper.includes("SIM") || detailUpper.includes("SIM")) {
+    return simExercise ? `Simulator Exercise ${simExercise}` : [row.dutyCode, row.detail].filter(Boolean).join(" ") || "Simulator";
+  }
+
+  return [row.dutyCode, row.detail].filter(Boolean).join(" ");
 }
 
 function buildTrainingEvents(scheduleRows, bidPeriod) {
@@ -764,7 +807,8 @@ function buildTrainingEvents(scheduleRows, bidPeriod) {
       continue;
     }
 
-    const label = [row.dutyCode, row.detail].filter(Boolean).join(" ");
+    const label = buildTrainingLabel(row);
+    const location = parseEpaLocation(row);
     const summary = `${category}: ${label}`;
     const uidBase = `${bidPeriod}-${row.dutyCode}-${row.iso}`;
 
@@ -785,6 +829,7 @@ function buildTrainingEvents(scheduleRows, bidPeriod) {
         category,
         dutyCode: row.dutyCode,
         detail: row.detail,
+        location,
         dateIso: row.iso,
         rept: row.rept,
         end: row.end,
@@ -794,7 +839,7 @@ function buildTrainingEvents(scheduleRows, bidPeriod) {
         startSort: startLocal.getTime(),
         previewType: category,
         previewCode: row.dutyCode,
-        previewInfo: row.detail || "Roster duty",
+        previewInfo: label || row.detail || "Roster duty",
         previewStart: `${row.iso} ${row.rept} (local)`,
         previewEnd: `${isoDate(endDate)} ${row.end} (local)`,
       });
@@ -810,6 +855,7 @@ function buildTrainingEvents(scheduleRows, bidPeriod) {
       category,
       dutyCode: row.dutyCode,
       detail: row.detail,
+      location,
       dateIso: row.iso,
       summary,
       dtStartDate: ymdForIcs(row.date),
@@ -817,7 +863,7 @@ function buildTrainingEvents(scheduleRows, bidPeriod) {
       startSort: parseLocalPseudoDateTime(row.date, "0000").getTime(),
       previewType: category,
       previewCode: row.dutyCode,
-      previewInfo: row.detail || "Roster duty",
+      previewInfo: label || row.detail || "Roster duty",
       previewStart: `${row.iso} all day`,
       previewEnd: `${isoDate(nextDay)} all day`,
     });
@@ -829,18 +875,19 @@ function buildTrainingEvents(scheduleRows, bidPeriod) {
 function buildAXDayEvents(scheduleRows, bidPeriod) {
   const events = [];
   const dutyByIsoDate = new Map(scheduleRows.map((row) => [row.iso, row.dutyCode]));
+  const isXLikeDuty = (dutyCode) => dutyCode === "X" || dutyCode === "RX";
 
   for (const row of scheduleRows) {
-    if (row.dutyCode !== "A" && row.dutyCode !== "X") {
+    if (row.dutyCode !== "A" && !isXLikeDuty(row.dutyCode)) {
       continue;
     }
 
     let title = "A Day";
-    if (row.dutyCode === "X") {
+    if (isXLikeDuty(row.dutyCode)) {
       const nextIso = isoDate(addDays(row.date, 1));
       const nextDuty = dutyByIsoDate.get(nextIso);
-      const isLastXDay = nextDuty != null && nextDuty !== "X";
-      title = isLastXDay ? "Last X Day" : "X Day";
+      const isLastXDay = nextDuty != null && !isXLikeDuty(nextDuty);
+      title = row.dutyCode === "RX" ? (isLastXDay ? "Last RX Day" : "RX Day") : (isLastXDay ? "Last X Day" : "X Day");
     }
 
     const nextDay = addDays(row.date, 1);
@@ -874,6 +921,7 @@ function buildLeaveDayEvents(scheduleRows, bidPeriod) {
   const leaveTypes = {
     AL: { title: "AL", label: "Annual Leave" },
     GL: { title: "GL", label: "Golden Leave" },
+    HL: { title: "HL", label: "High Priority Leave" },
     LSL: { title: "LSL", label: "Long Service Leave" },
     SL: { title: "Sick Leave", label: "Sick Leave" },
   };
@@ -1103,7 +1151,7 @@ export function rosterToIcs(parsedRoster, sourceFileName = "roster.txt", options
 
       lines.push(foldIcsLine(`SUMMARY:${escapeIcsText(event.summary)}`));
       lines.push(foldIcsLine(`DESCRIPTION:${escapeIcsText(description)}`));
-      lines.push(foldIcsLine(`LOCATION:${escapeIcsText(event.category === "SIM" ? "Simulator" : "Training")}`));
+      lines.push(foldIcsLine(`LOCATION:${escapeIcsText(event.location || (event.category === "SIM" ? "Simulator" : "Training"))}`));
     } else {
       const description = [
         `Bid Period: ${event.bidPeriod}`,
