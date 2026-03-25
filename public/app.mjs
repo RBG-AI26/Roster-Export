@@ -1,7 +1,7 @@
-import { parseRosterText, rosterToIcs } from "./rosterParser.mjs?v=20260324g";
+import { parseRosterText, rosterToIcs } from "./shared/roster-parser.mjs?v=20260325a";
 
-const APP_VERSION = "2026-03-24g";
-const SERVICE_WORKER_URL = "./sw.js?v=20260324g";
+const APP_VERSION = "2026-03-25c";
+const SERVICE_WORKER_URL = "./sw.js?v=20260325c";
 const LAST_ROSTER_STORAGE_KEY = "rosterExport.lastRoster.v1";
 const UI_STATE_STORAGE_KEY = "rosterExport.uiState.v2";
 const EXPORT_SNAPSHOT_STORAGE_KEY = "rosterExport.lastExportSnapshot.v1";
@@ -966,9 +966,11 @@ async function publishSubscribedCalendar() {
     const requestBody = {
       bidPeriod: String(parsedRoster.bidPeriod || ""),
       fileName: payload.fileName,
+      rosterFileName: currentFileName || "roster.txt",
       icsContent: payload.content,
       staffNumber,
       parsedStaffNumber: parsedRoster.staffNumber,
+      parsedRoster,
     };
 
     const response = await fetch("./api/subscribed-calendar", {

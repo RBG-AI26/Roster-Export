@@ -1,9 +1,11 @@
-import { parseRosterText, rosterToIcs } from "./public/rosterParser.mjs";
+import { parseRosterText, rosterToIcs } from "./public/shared/roster-parser.mjs";
 
 const CALENDAR_KEY_PREFIX = "calendar:";
 const STAFF_NUMBER_PREFIX = "staff-number:";
 const APPROVED_STAFF_PREFIX = "approved-staff:";
 const INGEST_LOG_PREFIX = "ingest-log:";
+const PARSED_ROSTER_PREFIX = "parsed-roster:";
+const PARSED_ROSTER_LATEST_PREFIX = "parsed-roster-latest:";
 const TOKEN_BYTES = 18;
 const COMBINED_CALENDAR_NAME = "Roster Export iCal";
 const MAX_LOGS = 100;
@@ -44,6 +46,26 @@ function normaliseEmail(value) {
   return String(value || "").trim().toLowerCase();
 }
 
+function serialiseForStorage(value) {
+  if (value instanceof Date) {
+    return value.toISOString();
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((entry) => serialiseForStorage(entry));
+  }
+
+  if (value && typeof value === "object") {
+    const output = {};
+    for (const [key, entry] of Object.entries(value)) {
+      output[key] = serialiseForStorage(entry);
+    }
+    return output;
+  }
+
+  return value;
+}
+
 function escapeIcsText(value) {
   return String(value || "")
     .replace(/\\/g, "\\\\")
@@ -78,8 +100,13 @@ function normalisePublishRequest(body) {
   const icsContent = String(body.icsContent || "");
   const bidPeriod = normaliseBidPeriod(body.bidPeriod || "");
   const fileName = String(body.fileName || "BP_events.ics").trim() || "BP_events.ics";
+  const rosterFileName = String(body.rosterFileName || "").trim();
   const staffNumber = normaliseStaffNumber(body.staffNumber || "");
   const parsedStaffNumber = normaliseStaffNumber(body.parsedStaffNumber || "");
+  const parsedRoster =
+    body.parsedRoster && typeof body.parsedRoster === "object" && !Array.isArray(body.parsedRoster)
+      ? body.parsedRoster
+      : null;
 
   if (!icsContent.includes("BEGIN:VCALENDAR") || !icsContent.includes("END:VCALENDAR")) {
     throw new Error("ICS payload is missing VCALENDAR content.");
@@ -101,7 +128,18 @@ function normalisePublishRequest(body) {
     throw new Error("Parsed roster staff number does not match the entered staff number.");
   }
 
-  return { icsContent, bidPeriod, fileName, staffNumber };
+  if (parsedRoster) {
+    const rosterBidPeriod = normaliseBidPeriod(parsedRoster.bidPeriod || "");
+    const rosterStaffNumber = normaliseStaffNumber(parsedRoster.staffNumber || "");
+    if (rosterBidPeriod && rosterBidPeriod !== bidPeriod) {
+      throw new Error("Parsed roster bid period does not match the publish bid period.");
+    }
+    if (rosterStaffNumber && rosterStaffNumber !== staffNumber) {
+      throw new Error("Parsed roster staff number does not match the entered staff number.");
+    }
+  }
+
+  return { icsContent, bidPeriod, fileName, rosterFileName, staffNumber, parsedRoster };
 }
 
 function normaliseApprovedStaffRecord(rawRecord, staffNumberOverride = "") {
@@ -122,6 +160,31 @@ function normaliseApprovedStaffRecord(rawRecord, staffNumberOverride = "") {
     active: rawRecord.active !== false,
     createdAtUtc: String(rawRecord.createdAtUtc || "").trim(),
     updatedAtUtc: String(rawRecord.updatedAtUtc || "").trim(),
+  };
+}
+
+function normaliseParsedRosterRecord(rawRecord, staffNumberOverride = "", bidPeriodOverride = "") {
+  if (!rawRecord || typeof rawRecord !== "object") {
+    return null;
+  }
+
+  const staffNumber = normaliseStaffNumber(staffNumberOverride || rawRecord.staffNumber || rawRecord.parsedRoster?.staffNumber || "");
+  const bidPeriod = normaliseBidPeriod(bidPeriodOverride || rawRecord.bidPeriod || rawRecord.parsedRoster?.bidPeriod || "");
+  const parsedRoster = rawRecord.parsedRoster && typeof rawRecord.parsedRoster === "object" ? rawRecord.parsedRoster : null;
+
+  if (staffNumber.length < 4 || !bidPeriod || !parsedRoster) {
+    return null;
+  }
+
+  return {
+    staffNumber,
+    bidPeriod,
+    fileName: String(rawRecord.fileName || "").trim(),
+    source: String(rawRecord.source || "").trim(),
+    senderEmail: normaliseEmail(rawRecord.senderEmail || ""),
+    messageId: String(rawRecord.messageId || "").trim(),
+    storedAtUtc: String(rawRecord.storedAtUtc || "").trim(),
+    parsedRoster,
   };
 }
 
@@ -242,6 +305,57 @@ async function getApprovedStaff(env, staffNumber) {
     await env.ROSTER_FEEDS.get(`${APPROVED_STAFF_PREFIX}${normaliseStaffNumber(staffNumber)}`, "json"),
     staffNumber
   );
+}
+
+async function saveParsedRosterRecord({ env, parsedRoster, fileName = "", source = "", senderEmail = "", messageId = "" }) {
+  const record = normaliseParsedRosterRecord({
+    parsedRoster: serialiseForStorage(parsedRoster),
+    fileName,
+    source,
+    senderEmail,
+    messageId,
+    storedAtUtc: nowIso(),
+  });
+
+  if (!record) {
+    throw new Error("Parsed roster record is missing required staff number, bid period, or parsed roster content.");
+  }
+
+  await env.ROSTER_FEEDS.put(
+    `${PARSED_ROSTER_PREFIX}${record.staffNumber}:${record.bidPeriod}`,
+    JSON.stringify(record)
+  );
+  await env.ROSTER_FEEDS.put(
+    `${PARSED_ROSTER_LATEST_PREFIX}${record.staffNumber}`,
+    JSON.stringify({
+      staffNumber: record.staffNumber,
+      bidPeriod: record.bidPeriod,
+      fileName: record.fileName,
+      source: record.source,
+      storedAtUtc: record.storedAtUtc,
+    })
+  );
+
+  return record;
+}
+
+async function getParsedRosterRecord(env, staffNumber, bidPeriod) {
+  return normaliseParsedRosterRecord(
+    await env.ROSTER_FEEDS.get(`${PARSED_ROSTER_PREFIX}${normaliseStaffNumber(staffNumber)}:${normaliseBidPeriod(bidPeriod)}`, "json"),
+    staffNumber,
+    bidPeriod
+  );
+}
+
+async function getLatestParsedRosterRecord(env, staffNumber) {
+  const latest = await env.ROSTER_FEEDS.get(`${PARSED_ROSTER_LATEST_PREFIX}${normaliseStaffNumber(staffNumber)}`, "json");
+  const latestStaffNumber = normaliseStaffNumber(latest?.staffNumber || staffNumber);
+  const latestBidPeriod = normaliseBidPeriod(latest?.bidPeriod || "");
+  if (!latestStaffNumber || !latestBidPeriod) {
+    return null;
+  }
+
+  return getParsedRosterRecord(env, latestStaffNumber, latestBidPeriod);
 }
 
 async function listApprovedStaff(env, requestUrl) {
@@ -375,9 +489,29 @@ async function updateCalendarFeedForStaff({ env, requestUrl, staffNumber, bidPer
 
 async function handlePublish(request, env) {
   const body = await request.json().catch(() => null);
-  const { icsContent, bidPeriod, fileName, staffNumber } = normalisePublishRequest(body);
+  const { icsContent, bidPeriod, fileName, rosterFileName, staffNumber, parsedRoster } = normalisePublishRequest(body);
 
-  return jsonResponse(await updateCalendarFeedForStaff({ env, requestUrl: request.url, staffNumber, bidPeriod, fileName, icsContent }));
+  const publishResult = await updateCalendarFeedForStaff({
+    env,
+    requestUrl: request.url,
+    staffNumber,
+    bidPeriod,
+    fileName,
+    icsContent,
+  });
+
+  let parsedRosterStoredAtUtc = "";
+  if (parsedRoster) {
+    const stored = await saveParsedRosterRecord({
+      env,
+      parsedRoster,
+      fileName: rosterFileName || fileName,
+      source: "manual",
+    });
+    parsedRosterStoredAtUtc = stored.storedAtUtc;
+  }
+
+  return jsonResponse({ ...publishResult, parsedRosterStoredAtUtc });
 }
 
 async function handleCalendarRequest(request, env, calendarToken) {
@@ -437,6 +571,32 @@ async function handleAdminUpsertStaff(request, env) {
 async function handleAdminListLogs(request, env) {
   requireAdminPassword(request, env);
   return jsonResponse({ logs: await listIngestLogs(env) });
+}
+
+async function handleAdminGetLatestParsedRoster(request, env) {
+  requireAdminPassword(request, env);
+  const url = new URL(request.url);
+  const staffNumber = normaliseStaffNumber(url.searchParams.get("staffNumber") || "");
+  if (staffNumber.length < 4) {
+    throw new Error("Staff number must include at least 4 digits.");
+  }
+
+  const record = await getLatestParsedRosterRecord(env, staffNumber);
+  if (!record) {
+    return errorResponse("Parsed roster not found.", 404);
+  }
+
+  return jsonResponse({ roster: record });
+}
+
+async function handleAdminGetParsedRosterByBidPeriod(request, env, staffNumber, bidPeriod) {
+  requireAdminPassword(request, env);
+  const record = await getParsedRosterRecord(env, staffNumber, bidPeriod);
+  if (!record) {
+    return errorResponse("Parsed roster not found.", 404);
+  }
+
+  return jsonResponse({ roster: record });
 }
 
 function buildSubscriptionEmail(record, publishResult) {
@@ -519,6 +679,15 @@ async function processEmailAttachment({ env, request, ingestRequest, attachment 
     return { ok: false, issue, alertEmail: buildAlertEmail(env, issue) };
   }
 
+  const parsedRosterRecord = await saveParsedRosterRecord({
+    env,
+    parsedRoster,
+    fileName: attachment.fileName,
+    source: "gmail",
+    senderEmail: ingestRequest.senderEmail,
+    messageId: ingestRequest.messageId,
+  });
+
   const icsContent = rosterToIcs(parsedRoster, attachment.fileName);
   const publishResult = await updateCalendarFeedForStaff({
     env,
@@ -547,6 +716,7 @@ async function processEmailAttachment({ env, request, ingestRequest, attachment 
     bidPeriod,
     fileName: attachment.fileName,
     parsedEventCount: Array.isArray(parsedRoster.events) ? parsedRoster.events.length : 0,
+    parsedRosterStoredAtUtc: parsedRosterRecord.storedAtUtc,
     publishResult,
     approvedStaff,
     notificationEmail: publishResult.isNewCalendar ? buildSubscriptionEmail(approvedStaff, publishResult) : null,
@@ -594,6 +764,7 @@ async function handleEmailIngest(request, env) {
       bidPeriod: result.bidPeriod,
       fileName: result.fileName,
       eventCount: result.parsedEventCount,
+      parsedRosterStoredAtUtc: result.parsedRosterStoredAtUtc,
       recipientEmail: result.approvedStaff?.email || "",
       recipientName: result.approvedStaff?.name || "",
       ...result.publishResult,
@@ -638,6 +809,28 @@ export default {
       if (url.pathname === "/api/admin/logs") {
         if (request.method === "GET") {
           return await handleAdminListLogs(request, env);
+        }
+
+        return errorResponse("Method not allowed.", 405);
+      }
+
+      if (url.pathname === "/api/admin/rosters/latest") {
+        if (request.method === "GET") {
+          return await handleAdminGetLatestParsedRoster(request, env);
+        }
+
+        return errorResponse("Method not allowed.", 405);
+      }
+
+      const parsedRosterMatch = url.pathname.match(/^\/api\/admin\/rosters\/(\d{4,})\/([^/]+)$/);
+      if (parsedRosterMatch) {
+        if (request.method === "GET") {
+          return await handleAdminGetParsedRosterByBidPeriod(
+            request,
+            env,
+            parsedRosterMatch[1],
+            decodeURIComponent(parsedRosterMatch[2])
+          );
         }
 
         return errorResponse("Method not allowed.", 405);

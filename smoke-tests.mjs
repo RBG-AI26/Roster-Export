@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
 
-import { parseRosterText, rosterToIcs } from "./public/rosterParser.mjs";
-import { buildCombinedCalendarIcs, normaliseFeedRecord } from "./worker.mjs";
+import { parseRosterText, rosterToIcs } from "./public/shared/roster-parser.mjs";
+import { DEFAULT_AIRPORT_COUNTRY_MAP, DEFAULT_COUNTRY_RATES } from "./public/shared/dta-reference-data.mjs";
+import { getDtaPatterns, getHourlyRateForAirport } from "./public/shared/dta-engine.mjs";
+import workerApp, { buildCombinedCalendarIcs, normaliseFeedRecord } from "./worker.mjs";
 
 function test(name, fn) {
   try {
@@ -10,6 +12,51 @@ function test(name, fn) {
   } catch (error) {
     console.error(`FAIL ${name}`);
     throw error;
+  }
+}
+
+async function testAsync(name, fn) {
+  try {
+    await fn();
+    console.log(`PASS ${name}`);
+  } catch (error) {
+    console.error(`FAIL ${name}`);
+    throw error;
+  }
+}
+
+class MockKvNamespace {
+  constructor() {
+    this.map = new Map();
+  }
+
+  async get(key, type = "text") {
+    if (!this.map.has(key)) {
+      return null;
+    }
+
+    const value = this.map.get(key);
+    if (type === "json") {
+      return JSON.parse(value);
+    }
+
+    return value;
+  }
+
+  async put(key, value) {
+    this.map.set(key, String(value));
+  }
+
+  async list(options = {}) {
+    const prefix = String(options.prefix || "");
+    const limit = Number(options.limit || 1000);
+    const keys = [...this.map.keys()]
+      .filter((key) => key.startsWith(prefix))
+      .sort()
+      .slice(0, limit)
+      .map((name) => ({ name }));
+
+    return { keys, list_complete: true };
   }
 }
 
@@ -244,4 +291,158 @@ test("combined subscribed calendar preserves events across bid periods", () => {
   assert.match(combined, /UID:bp373-1@roster-export-ical/);
   assert.match(combined, /UID:bp374-1@roster-export-ical/);
   assert.match(combined, /X-WR-CALNAME:Roster Export iCal/);
+});
+
+test("shared DTA engine resolves patterns and airport hourly rates", () => {
+  const text = `BID PERIOD 999
+25 Mar 2026
+Date Duty Detail Credit
+25/03 W RC51 0000 0000
+26/03 T RC51 0000 0000
+Pattern: RC51
+QFA0003 SYD/AKL WE 0945 2245 WE 1250 0150 03:05
+QFA0004 AKL/SYD TH 0645 1745 TH 1015 2115 03:30
+----------------------------------------------------------------`;
+
+  const parsed = parseRosterText(text);
+  const patterns = getDtaPatterns(parsed);
+  const aklRate = getHourlyRateForAirport("AKL", DEFAULT_COUNTRY_RATES, DEFAULT_AIRPORT_COUNTRY_MAP);
+
+  assert.equal(patterns.length, 1);
+  assert.equal(patterns[0].patternCode, "RC51");
+  assert.equal(aklRate.country, "New Zealand");
+  assert.equal(aklRate.rate, 14.16);
+});
+
+await testAsync("worker stores and returns latest parsed roster records", async () => {
+  const env = {
+    ADMIN_PASSWORD: "admin-secret",
+    INGEST_API_TOKEN: "ingest-secret",
+    ROSTER_FEEDS: new MockKvNamespace(),
+    ASSETS: {
+      fetch() {
+        return new Response("not found", { status: 404 });
+      },
+    },
+  };
+
+  await env.ROSTER_FEEDS.put(
+    "approved-staff:504004",
+    JSON.stringify({
+      staffNumber: "504004",
+      email: "approved@example.com",
+      active: true,
+      createdAtUtc: "2026-03-25T00:00:00.000Z",
+      updatedAtUtc: "2026-03-25T00:00:00.000Z",
+    })
+  );
+
+  const rosterText = `ARMS crew
+Name: TEST USER                                 Staff No: 504004
+BID PERIOD 999
+25 Mar 2026
+Date Duty Detail Credit
+25/03 W RC51 0000 0000
+26/03 T RC51 0000 0000
+Pattern: RC51
+QFA0003 SYD/AKL WE 0945 2245 WE 1250 0150 03:05
+QFA0004 AKL/SYD TH 0645 1745 TH 1015 2115 03:30
+----------------------------------------------------------------`;
+
+  const ingestRequest = new Request("https://example.com/api/email-ingest", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-ingest-token": "ingest-secret",
+    },
+    body: JSON.stringify({
+      senderEmail: "crew@example.com",
+      subject: "Roster update",
+      messageId: "msg-1",
+      attachments: [
+        {
+          fileName: "BP999.txt",
+          contentType: "text/plain",
+          rosterText,
+        },
+      ],
+    }),
+  });
+
+  const ingestResponse = await workerApp.fetch(ingestRequest, env);
+  assert.equal(ingestResponse.status, 200);
+  const ingestData = await ingestResponse.json();
+  assert.equal(ingestData.processed.length, 1);
+  assert.equal(ingestData.processed[0].staffNumber, "504004");
+  assert.ok(ingestData.processed[0].parsedRosterStoredAtUtc);
+
+  const latestRequest = new Request("https://example.com/api/admin/rosters/latest?staffNumber=504004", {
+    headers: {
+      "x-admin-password": "admin-secret",
+    },
+  });
+
+  const latestResponse = await workerApp.fetch(latestRequest, env);
+  assert.equal(latestResponse.status, 200);
+  const latestData = await latestResponse.json();
+  assert.equal(latestData.roster.staffNumber, "504004");
+  assert.equal(latestData.roster.bidPeriod, "999");
+  assert.equal(latestData.roster.source, "gmail");
+  assert.equal(latestData.roster.parsedRoster.staffNumber, "504004");
+  assert.equal(latestData.roster.parsedRoster.bidPeriod, "999");
+});
+
+await testAsync("manual publish also stores parsed roster records", async () => {
+  const env = {
+    ROSTER_FEEDS: new MockKvNamespace(),
+    ASSETS: {
+      fetch() {
+        return new Response("not found", { status: 404 });
+      },
+    },
+  };
+
+  const parsedRoster = parseRosterText(`ARMS crew
+Name: TEST USER                                 Staff No: 777777
+BID PERIOD 888
+25 Mar 2026
+Date Duty Detail Credit
+25/03 W RC51 0000 0000
+26/03 T RC51 0000 0000
+Pattern: RC51
+QFA0003 SYD/AKL WE 0945 2245 WE 1250 0150 03:05
+QFA0004 AKL/SYD TH 0645 1745 TH 1015 2115 03:30
+----------------------------------------------------------------`);
+
+  const publishRequest = new Request("https://example.com/api/subscribed-calendar", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      bidPeriod: parsedRoster.bidPeriod,
+      fileName: `BP${parsedRoster.bidPeriod}_events.ics`,
+      rosterFileName: "manual-upload.txt",
+      icsContent: rosterToIcs(parsedRoster, "manual-upload.txt"),
+      staffNumber: parsedRoster.staffNumber,
+      parsedStaffNumber: parsedRoster.staffNumber,
+      parsedRoster,
+    }),
+  });
+
+  const publishResponse = await workerApp.fetch(publishRequest, env);
+  assert.equal(publishResponse.status, 200);
+  const publishData = await publishResponse.json();
+  assert.ok(publishData.subscriptionUrl);
+  assert.ok(publishData.parsedRosterStoredAtUtc);
+
+  const latestRecord = await env.ROSTER_FEEDS.get("parsed-roster-latest:777777", "json");
+  assert.equal(latestRecord.staffNumber, "777777");
+  assert.equal(latestRecord.bidPeriod, "888");
+
+  const storedRoster = await env.ROSTER_FEEDS.get("parsed-roster:777777:888", "json");
+  assert.equal(storedRoster.source, "manual");
+  assert.equal(storedRoster.fileName, "manual-upload.txt");
+  assert.equal(storedRoster.parsedRoster.staffNumber, "777777");
+  assert.equal(storedRoster.parsedRoster.bidPeriod, "888");
 });

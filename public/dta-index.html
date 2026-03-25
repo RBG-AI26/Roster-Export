@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DTA Calculator</title>
+    <meta name="theme-color" content="#00695c" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="DTA Calc" />
+    <link rel="manifest" href="./manifest.webmanifest?v=20260324g" />
+    <link rel="icon" type="image/svg+xml" href="./calendar-icon.svg?v=20260324g" />
+    <link rel="shortcut icon" href="./calendar-icon.svg?v=20260324g" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./calendar-icon-180.png?v=20260324g" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header>
+        <h1>DTA Calculator</h1>
+        <p>Standalone DTA checking with manual roster upload or shared backend roster loading.</p>
+      </header>
+
+      <section class="card top-card">
+        <div id="buildVersion" class="build-version" aria-label="App build version"></div>
+
+        <label for="rosterFile" class="field-label">Roster file</label>
+        <input id="rosterFile" type="file" accept=".txt,.pdf,text/plain,application/pdf" />
+
+        <div class="actions">
+          <button id="parseBtn" type="button">Parse roster</button>
+          <a class="button-link" href="./index.html">Open Roster Export App</a>
+        </div>
+
+        <h2>Load Latest Stored Roster</h2>
+        <div class="admin-auth-row">
+          <input id="adminPassword" type="password" placeholder="Admin password" />
+          <input id="staffNumber" type="text" inputmode="numeric" placeholder="Staff number" />
+          <button id="loadLatestBtn" type="button">Load Latest Stored Roster</button>
+        </div>
+
+        <p id="status" aria-live="polite">Choose a roster file to begin, or load the latest stored roster.</p>
+        <p id="sourceDetails" class="subscription-note">No roster loaded yet.</p>
+      </section>
+
+      <section class="card">
+        <h2>Trips Found</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Pattern</th>
+                <th>Trip Start</th>
+                <th>Trip End</th>
+                <th>Flights</th>
+              </tr>
+            </thead>
+            <tbody id="patternsBody">
+              <tr>
+                <td colspan="4">No roster parsed yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>DTA Checker</h2>
+        <p>Select a roster pattern and calculate DTA using Part A + Part B rules.</p>
+
+        <div class="dta-controls">
+          <label for="patternSelect" class="field-label">Pattern</label>
+          <select id="patternSelect" disabled>
+            <option value="">Parse or load a roster first</option>
+          </select>
+          <button id="checkDtaBtn" type="button" disabled>Check DTA</button>
+        </div>
+
+        <p id="dtaStatus" aria-live="polite">Parse or load a roster, then select a pattern.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Section</th>
+                <th>Time Basis (UTC)</th>
+                <th>Rate/hr</th>
+                <th>Hours</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody id="dtaSummaryBody">
+              <tr>
+                <td colspan="5">No DTA calculation yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Update DTA Rates</h3>
+        <p>
+          Hourly DTA is meal + incidental. If a country is not listed, Cost Group 1 default ($5.00 + $1.25 = $6.25/hr)
+          is used.
+        </p>
+
+        <div class="rate-import-row">
+          <input
+            id="ratesFile"
+            type="file"
+            accept=".xlsx,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"
+          />
+          <button id="importRatesBtn" type="button">Import Rates Table</button>
+          <button id="downloadRatesBtn" type="button">Download Current Table</button>
+        </div>
+
+        <h3>Airport/Country/Rate</h3>
+        <p>
+          Enter an airport code to auto-fill known country/rate. If unknown, fields stay blank so you can add and save
+          both values for future reference.
+        </p>
+
+        <form id="addAirportMapForm" class="rate-form">
+          <div class="rate-field code-field">
+            <label for="newAirportCode" class="field-label">Airport code</label>
+            <input id="newAirportCode" type="text" maxlength="3" placeholder="e.g. NOU" />
+          </div>
+          <div class="rate-field country-field">
+            <label for="newAirportCountry" class="field-label">Country</label>
+            <input id="newAirportCountry" type="text" list="countryOptions" placeholder="e.g. New Caledonia" />
+            <datalist id="countryOptions"></datalist>
+          </div>
+          <div class="rate-field hourly-field">
+            <label for="newAirportRate" class="field-label">Hourly rate</label>
+            <input id="newAirportRate" type="number" min="0" step="0.01" placeholder="e.g. 12.34" />
+          </div>
+          <button id="addAirportMapBtn" type="submit">Add / Update</button>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      (async () => {
+        try {
+          await import("./dta-app.mjs?v=20260325c");
+        } catch (error) {
+          console.error("Failed to load DTA app module", error);
+          const statusEl = document.getElementById("status");
+          if (statusEl) {
+            statusEl.textContent =
+              "DTA app failed to load. Start local server (python3 -m http.server 8000) and open http://localhost:8000/dta-index.html";
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>

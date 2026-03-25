@@ -1,13 +1,18 @@
-const CACHE_VERSION = "20260324g";
+const CACHE_VERSION = "20260325c";
 const STATIC_CACHE = `roster-export-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `roster-export-runtime-${CACHE_VERSION}`;
 
 const CORE_ASSETS = [
   "./",
   "./index.html",
+  "./dta-index.html",
   "./styles.css",
-  "./app.mjs?v=20260324g",
-  "./rosterParser.mjs?v=20260324g",
+  "./app.mjs?v=20260325c",
+  "./dta-app.mjs?v=20260325c",
+  "./shared/roster-parser.mjs?v=20260325a",
+  "./shared/dta-engine.mjs",
+  "./shared/dta-reference-data.mjs",
+  "./rosterParser.mjs",
   "./dta.mjs",
   "./manifest.webmanifest?v=20260323a",
   "./calendar-icon.svg",
