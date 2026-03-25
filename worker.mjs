@@ -594,6 +594,8 @@ async function handleEmailIngest(request, env) {
       bidPeriod: result.bidPeriod,
       fileName: result.fileName,
       eventCount: result.parsedEventCount,
+      recipientEmail: result.approvedStaff?.email || "",
+      recipientName: result.approvedStaff?.name || "",
       ...result.publishResult,
     })),
     issues: results.filter((result) => !result.ok).map((result) => result.issue),

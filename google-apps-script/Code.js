@@ -10,6 +10,7 @@ const CONFIG = {
   archiveThreadsAfterProcessing: false,
   maxThreadsPerRun: 20,
   maxMessagesPerRun: 50,
+  forwardProcessedRosterEmails: true,
 };
 
 function processRosterInbox() {
@@ -51,11 +52,14 @@ function processRosterInbox() {
         senderEmail: normaliseEmail_(message.getFrom()),
         subject: String(message.getSubject() || "").trim(),
         messageId,
-        attachments: validAttachments,
+        attachments: serialiseAttachmentsForWorker_(validAttachments),
       };
 
       const result = postToWorker_(payload);
       sendNotificationEmails_(result.notifications || []);
+      if (CONFIG.forwardProcessedRosterEmails) {
+        forwardProcessedRosterEmails_(message, validAttachments, result.processed || []);
+      }
       markMessageProcessed_(messageId, {
         processedAtUtc: new Date().toISOString(),
         processedAttachmentCount: (result.processed || []).length,
@@ -130,10 +134,13 @@ function testSingleMessageById(messageId) {
     senderEmail: normaliseEmail_(message.getFrom()),
     subject: String(message.getSubject() || "").trim(),
     messageId: message.getId(),
-    attachments: validAttachments,
+    attachments: serialiseAttachmentsForWorker_(validAttachments),
   };
   const result = postToWorker_(payload);
   sendNotificationEmails_(result.notifications || []);
+  if (CONFIG.forwardProcessedRosterEmails) {
+    forwardProcessedRosterEmails_(message, validAttachments, result.processed || []);
+  }
   Logger.log(JSON.stringify(result, null, 2));
   return result;
 }
@@ -200,10 +207,19 @@ function extractValidRosterAttachments_(message) {
       fileName,
       contentType,
       rosterText,
+      blob: attachment.copyBlob(),
     });
   }
 
   return valid;
+}
+
+function serialiseAttachmentsForWorker_(attachments) {
+  return (attachments || []).map((attachment) => ({
+    fileName: attachment.fileName,
+    contentType: attachment.contentType,
+    rosterText: attachment.rosterText,
+  }));
 }
 
 function extractTextFromPdf_(blob, fileName) {
@@ -259,6 +275,48 @@ function sendNotificationEmails_(notifications) {
       to: notification.to,
       subject: notification.subject,
       body: String(notification.body || ""),
+    });
+  }
+}
+
+function forwardProcessedRosterEmails_(message, validAttachments, processedResults) {
+  const remainingAttachments = [...(validAttachments || [])];
+
+  for (const processed of processedResults || []) {
+    const recipientEmail = normaliseEmail_(processed?.recipientEmail || "");
+    if (!recipientEmail) {
+      continue;
+    }
+
+    const attachmentIndex = remainingAttachments.findIndex((attachment) => attachment.fileName === processed.fileName);
+    const attachment = attachmentIndex >= 0 ? remainingAttachments.splice(attachmentIndex, 1)[0] : null;
+    if (!attachment?.blob) {
+      continue;
+    }
+
+    const recipientName = String(processed.recipientName || "").trim();
+    const greeting = recipientName ? `Hi ${recipientName},` : "Hello,";
+    const originalDate = Utilities.formatDate(message.getDate(), Session.getScriptTimeZone(), "dd/MM/yy HH:mm");
+    const originalSender = String(message.getFrom() || "").trim();
+    const originalSubject = String(message.getSubject() || "").trim() || "(no subject)";
+
+    MailApp.sendEmail({
+      to: recipientEmail,
+      subject: `Roster received: ${originalSubject}`,
+      body: [
+        greeting,
+        "",
+        "A roster email was received and processed for your subscription.",
+        "",
+        `Staff number: ${processed.staffNumber || "Unknown"}`,
+        `Bid period: ${processed.bidPeriod ? `BP${processed.bidPeriod}` : "Unknown"}`,
+        `Original sender: ${originalSender || "Unknown"}`,
+        `Original date: ${originalDate}`,
+        `Original subject: ${originalSubject}`,
+        "",
+        "The original roster attachment is included with this email.",
+      ].join("\n"),
+      attachments: [attachment.blob.setName(attachment.fileName)],
     });
   }
 }

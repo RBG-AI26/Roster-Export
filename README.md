@@ -163,6 +163,7 @@ The response includes:
 
 That allows a Gmail / Apps Script bridge to:
 - email the new subscription link to approved staff on first creation
+- forward a copy of each successfully processed roster email/attachment to the approved recipient email for that staff number
 - email alerts to the admin address when intake fails or an unapproved staff number is received
 
 ### Current implementation note
@@ -201,6 +202,7 @@ The Gmail-side automation script is included in:
 - converts `.pdf` attachments into a temporary Google Doc to extract text
 - POSTs all parsed roster attachments for a message to `/api/email-ingest`
 - sends any notification emails returned by the Worker
+- forwards the original processed roster attachment to the approved recipient email linked to that staff number
 - labels threads for visibility:
   - `Roster Auto/Processed`
   - `Roster Auto/Failed`
