@@ -212,6 +212,23 @@ function saveUiState() {
   }
 }
 
+function syncStaffNumberFromParsedRoster() {
+  if (!staffNumberInput || !parsedRoster?.staffNumber) {
+    return;
+  }
+
+  const currentValue = String(staffNumberInput.value || "").trim();
+  const parsedStaffNumber = String(parsedRoster.staffNumber || "").trim();
+  if (!parsedStaffNumber) {
+    return;
+  }
+
+  if (!currentValue || currentValue !== parsedStaffNumber) {
+    staffNumberInput.value = parsedStaffNumber;
+    saveUiState();
+  }
+}
+
 function loadUiState() {
   const storage = getLocalStorage();
   if (!storage) {
@@ -241,6 +258,11 @@ function restoreUiState() {
     newAirportRateInput.value = String(state.airportRate);
   }
 
+  return String(state.selectedPatternId || "");
+}
+
+function getSavedSelectedPatternId() {
+  const state = loadUiState();
   return String(state.selectedPatternId || "");
 }
 
@@ -537,7 +559,8 @@ function updateDtaSummaryForSelection() {
 
 function applyRosterToUi({ restoreSelection = false } = {}) {
   dtaPatterns = getDtaPatterns(parsedRoster);
-  const selectedPatternId = restoreSelection ? restoreUiState() : String(patternSelect.value || "");
+  syncStaffNumberFromParsedRoster();
+  const selectedPatternId = restoreSelection ? getSavedSelectedPatternId() : String(patternSelect.value || "");
 
   renderPatterns(dtaPatterns);
   populatePatternSelect(dtaPatterns, selectedPatternId);
