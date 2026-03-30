@@ -19,6 +19,9 @@ const EPA_LOCATION_CODES = {
   BN: "Brisbane",
   PH: "Perth",
 };
+const BP_ANCHOR_NUMBER = 358;
+const BP_LENGTH_DAYS = 56;
+const BP_ANCHOR_START_DATE = new Date(Date.UTC(2023, 9, 9));
 
 function parseHeaderDate(text) {
   const match = text.match(/\b(\d{2})\s+([A-Za-z]{3})\s+(\d{4})\b/);
@@ -36,23 +39,77 @@ function parseHeaderDate(text) {
   return new Date(Date.UTC(year, month, day));
 }
 
+function parseBidPeriodNumber(text) {
+  const match = String(text || "").match(/BID PERIOD\s+(\d+)/i);
+  return match ? Number(match[1]) : null;
+}
+
+function deriveBidPeriodStartDate(bidPeriodNumber) {
+  if (!Number.isFinite(bidPeriodNumber)) {
+    return null;
+  }
+
+  return addDays(BP_ANCHOR_START_DATE, (bidPeriodNumber - BP_ANCHOR_NUMBER) * BP_LENGTH_DAYS);
+}
+
+function buildDateContext(text) {
+  const headerDate = parseHeaderDate(text);
+  const bidPeriodNumber = parseBidPeriodNumber(text);
+  const bidPeriodStartDate = deriveBidPeriodStartDate(bidPeriodNumber);
+  const bidPeriodEndDate = bidPeriodStartDate ? addDays(bidPeriodStartDate, BP_LENGTH_DAYS - 1) : null;
+
+  return {
+    headerDate,
+    bidPeriodNumber,
+    bidPeriodStartDate,
+    bidPeriodEndDate,
+  };
+}
+
 function parseStaffNumber(text) {
   const match = String(text || "").match(/\bStaff\s*No:\s*(\d{4,})\b/i);
   return match ? match[1] : "";
 }
 
-function normaliseDate(day, month, headerDate) {
-  const headerYear = headerDate.getUTCFullYear();
-  let candidate = new Date(Date.UTC(headerYear, month - 1, day));
+function normaliseDate(day, month, dateContext) {
+  const context = dateContext || {};
+  const anchorDate = context.bidPeriodStartDate || context.headerDate || new Date();
+  const anchorYear = anchorDate.getUTCFullYear();
+  const maxFutureDays = 120;
+  const maxPastDays = 220;
+  const candidates = [anchorYear - 1, anchorYear, anchorYear + 1].map((year) => {
+    const candidate = new Date(Date.UTC(year, month - 1, day));
+    const diffDays = Math.floor((candidate - anchorDate) / 86400000);
+    return {
+      candidate,
+      diffDays,
+      inBidPeriodWindow:
+        context.bidPeriodStartDate instanceof Date &&
+        context.bidPeriodEndDate instanceof Date &&
+        candidate >= context.bidPeriodStartDate &&
+        candidate <= context.bidPeriodEndDate,
+      inPreferredWindow: diffDays >= -maxPastDays && diffDays <= maxFutureDays,
+    };
+  });
 
-  const daysAway = Math.floor((candidate - headerDate) / 86400000);
-  if (daysAway < -200) {
-    candidate = new Date(Date.UTC(headerYear + 1, month - 1, day));
-  } else if (daysAway > 200) {
-    candidate = new Date(Date.UTC(headerYear - 1, month - 1, day));
-  }
+  candidates.sort((left, right) => {
+    if (left.inBidPeriodWindow !== right.inBidPeriodWindow) {
+      return left.inBidPeriodWindow ? -1 : 1;
+    }
+    if (left.inPreferredWindow !== right.inPreferredWindow) {
+      return left.inPreferredWindow ? -1 : 1;
+    }
+    const absoluteDiff = Math.abs(left.diffDays) - Math.abs(right.diffDays);
+    if (absoluteDiff !== 0) {
+      return absoluteDiff;
+    }
+    if ((left.diffDays <= 0) !== (right.diffDays <= 0)) {
+      return left.diffDays <= 0 ? -1 : 1;
+    }
+    return left.diffDays - right.diffDays;
+  });
 
-  return candidate;
+  return candidates[0].candidate;
 }
 
 function isoDate(date) {
@@ -92,7 +149,7 @@ function addDays(date, days) {
   return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + days));
 }
 
-function parseScheduleSegment(segment, headerDate) {
+function parseScheduleSegment(segment, dateContext) {
   const match = segment.match(/^\s*(\d{2})\/(\d{2})\s+([MTWFS])\s+(.+)$/);
   if (!match) {
     return null;
@@ -134,7 +191,7 @@ function parseScheduleSegment(segment, headerDate) {
     .join(" ")
     .trim() || null;
 
-  const date = normaliseDate(day, month, headerDate);
+  const date = normaliseDate(day, month, dateContext);
   return {
     date,
     iso: isoDate(date),
@@ -189,7 +246,7 @@ function dedupeScheduleRows(rows) {
   return output;
 }
 
-function parseScheduleRows(lines, headerDate) {
+function parseScheduleRows(lines, dateContext) {
   const startIndex = lines.findIndex(
     (line) => /Date\s+Duty/.test(line) && /Detail/.test(line) && /Credit/.test(line)
   );
@@ -213,7 +270,7 @@ function parseScheduleRows(lines, headerDate) {
 
     const segments = splitScheduleLineIntoSegments(line);
     for (const segment of segments) {
-      const parsed = parseScheduleSegment(segment, headerDate);
+      const parsed = parseScheduleSegment(segment, dateContext);
       if (parsed) {
         rows.push(parsed);
       }
@@ -224,7 +281,7 @@ function parseScheduleRows(lines, headerDate) {
     for (const line of lines) {
       const segments = splitScheduleLineIntoSegments(line);
       for (const segment of segments) {
-        const parsed = parseScheduleSegment(segment, headerDate);
+        const parsed = parseScheduleSegment(segment, dateContext);
         if (parsed) {
           rows.push(parsed);
         }
@@ -379,14 +436,47 @@ function parsePatternBlocks(lines) {
   return patternMap;
 }
 
-function buildTripOccurrences(scheduleRows, patternMap) {
+function extractPatternSummaries(text) {
+  const summaries = [];
+  const patternRegex =
+    /\|\*\s*Pattern:\s*([A-Z0-9]+)\s*\|[\s\S]*?Days Away:\s*(\d+)\s+Minimum Pattern Credit:\s*([0-9:]+)\s+Minimum Daily Credit:\s*([0-9:]+)\s+Applicable Credit:\s*([0-9:]+)/gi;
+
+  let match;
+  while ((match = patternRegex.exec(String(text || "")))) {
+    summaries.push({
+      patternCode: String(match[1] || "").trim().toUpperCase(),
+      daysAway: Number(match[2]) || 0,
+    });
+  }
+
+  return summaries;
+}
+
+function buildPatternSummaryLookup(patternSummaries) {
+  const lookup = new Map();
+  for (const summary of patternSummaries) {
+    if (!summary.patternCode || lookup.has(summary.patternCode)) {
+      continue;
+    }
+    lookup.set(summary.patternCode, summary);
+  }
+  return lookup;
+}
+
+function buildTripOccurrences(scheduleRows, patternMap, patternSummaryLookup = new Map()) {
   const patternCodes = new Set(patternMap.keys());
   const occurrences = [];
   let current = null;
 
   for (const row of scheduleRows) {
     const isPatternDay = patternCodes.has(row.dutyCode);
+    const isUplineSickDay = row.dutyCode === "UL";
     if (!isPatternDay) {
+      if (current && isUplineSickDay) {
+        current.endDate = row.date;
+        continue;
+      }
+
       if (current) {
         occurrences.push(current);
         current = null;
@@ -423,7 +513,42 @@ function buildTripOccurrences(scheduleRows, patternMap) {
     occurrences.push(current);
   }
 
-  return occurrences;
+  if (occurrences.length <= 1) {
+    return occurrences;
+  }
+
+  const merged = [];
+  for (const occurrence of occurrences) {
+    const previous = merged[merged.length - 1] || null;
+    const summary = patternSummaryLookup.get(occurrence.patternCode) || null;
+    const totalSpanDays =
+      previous && previous.patternCode === occurrence.patternCode
+        ? Math.floor((occurrence.endDate.getTime() - previous.startDate.getTime()) / 86400000) + 1
+        : null;
+    const previousCanMerge =
+      previous &&
+      previous.patternCode === occurrence.patternCode &&
+      occurrence.startDate.getTime() <= addDays(previous.endDate, 2).getTime() &&
+      Number.isFinite(summary?.daysAway) &&
+      summary.daysAway > 0 &&
+      Number.isFinite(totalSpanDays) &&
+      totalSpanDays <= summary.daysAway;
+
+    if (previousCanMerge) {
+      if (occurrence.endDate > previous.endDate) {
+        previous.endDate = occurrence.endDate;
+      }
+      continue;
+    }
+
+    merged.push({
+      patternCode: occurrence.patternCode,
+      startDate: occurrence.startDate,
+      endDate: occurrence.endDate,
+    });
+  }
+
+  return merged;
 }
 
 function nextDateForDayCode(baseDate, dayCode) {
@@ -1047,14 +1172,14 @@ function isSamePatternOccurrence(a, b) {
 
 export function parseRosterText(text) {
   const lines = text.split(/\r?\n/);
-  const headerDate = parseHeaderDate(text);
-  const bpMatch = text.match(/BID PERIOD\s+(\d+)/);
-  const bidPeriod = bpMatch ? bpMatch[1] : "Unknown";
+  const dateContext = buildDateContext(text);
+  const bidPeriod = Number.isFinite(dateContext.bidPeriodNumber) ? String(dateContext.bidPeriodNumber) : "Unknown";
   const staffNumber = parseStaffNumber(text);
 
   const patternMap = parsePatternBlocks(lines);
-  const scheduleRows = parseScheduleRows(lines, headerDate);
-  const tripOccurrences = buildTripOccurrences(scheduleRows, patternMap);
+  const patternSummaryLookup = buildPatternSummaryLookup(extractPatternSummaries(text));
+  const scheduleRows = parseScheduleRows(lines, dateContext);
+  const tripOccurrences = buildTripOccurrences(scheduleRows, patternMap, patternSummaryLookup);
 
   const flightEvents = buildFlightEvents(tripOccurrences, patternMap, bidPeriod);
   const patternEvents = buildPatternEvents(tripOccurrences, flightEvents, bidPeriod);
@@ -1077,6 +1202,10 @@ export function parseRosterText(text) {
 
   return {
     bidPeriod,
+    bidPeriodStartIso:
+      dateContext.bidPeriodStartDate instanceof Date ? isoDate(dateContext.bidPeriodStartDate) : "",
+    bidPeriodEndIso:
+      dateContext.bidPeriodEndDate instanceof Date ? isoDate(dateContext.bidPeriodEndDate) : "",
     staffNumber,
     generatedAtUtc: new Date(),
     counts: {

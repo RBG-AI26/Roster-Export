@@ -25,6 +25,40 @@ body {
   padding: 0 1rem 2rem;
 }
 
+.analysis-page .app-shell {
+  max-width: 1520px;
+  padding-inline: 0.75rem;
+}
+
+.analysis-page .card {
+  padding: 0.8rem;
+}
+
+.analysis-page th,
+.analysis-page td {
+  padding: 0.35rem 0.35rem;
+}
+
+.analysis-page th {
+  font-size: 0.82rem;
+}
+
+.analysis-page button,
+.analysis-page .button-link {
+  padding: 0.5rem 0.9rem;
+}
+
+.analysis-page .compact-action-btn {
+  padding: 0.28rem 0.65rem;
+  font-size: 0.82rem;
+  min-width: 5.9rem;
+}
+
+.analysis-page .group-row td {
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
+}
+
 h1,
 h2 {
   margin: 0;
@@ -67,6 +101,14 @@ header p {
   gap: 0.75rem;
 }
 
+.section-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .toggle-btn {
   padding: 0.4rem 0.8rem;
   font-size: 0.9rem;
@@ -90,6 +132,7 @@ input[type="file"] {
   display: flex;
   gap: 0.75rem;
   margin-top: 1rem;
+  flex-wrap: wrap;
 }
 
 .button-link {
@@ -153,6 +196,12 @@ button:disabled {
   font-size: 0.95rem;
 }
 
+.section-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
 .admin-auth-row,
 .admin-grid {
   display: flex;
@@ -184,6 +233,56 @@ button:disabled {
 
 .table-wrap {
   overflow-x: auto;
+}
+
+.analysis-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.analysis-checkbox {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.analysis-checkbox input {
+  margin-top: 0.15rem;
+}
+
+.selection-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.8rem;
+}
+
+.summary-stat {
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--border);
+  border-radius: 0.7rem;
+  background: linear-gradient(180deg, #f8fbf8 0%, #eef5f1 100%);
+}
+
+.summary-label {
+  display: block;
+  color: var(--muted);
+  font-size: 0.86rem;
+  margin-bottom: 0.35rem;
+}
+
+.summary-stat strong {
+  font-size: 1.25rem;
+  letter-spacing: 0.02em;
 }
 
 select,
@@ -313,6 +412,183 @@ th {
   color: var(--muted);
 }
 
+.selected-row,
+.selected-row td {
+  background: #eef5fb;
+}
+
+.selected-row td {
+  border-top: 1px solid #c7d8e7;
+  border-bottom: 1px solid #c7d8e7;
+}
+
+.selected-row td:first-child {
+  border-left: 3px solid #8fb3cf;
+}
+
+.comparison-row,
+.comparison-row td {
+  background: #fff8ea;
+}
+
+.group-row td {
+  background: #e5efe9;
+  color: var(--accent-strong);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.average-row td {
+  background: #f4f8f6;
+  font-weight: 700;
+  border-top: 2px solid var(--border);
+}
+
+.roster-library-wrap th,
+.roster-library-wrap td {
+  text-align: center;
+}
+
+.roster-library-table {
+  table-layout: fixed;
+}
+
+.roster-library-table th,
+.roster-library-table td {
+  text-align: center;
+}
+
+.roster-library-table th,
+.roster-library-table td {
+  padding-inline: 0.12rem;
+}
+
+.roster-library-table th {
+  font-size: 0.74rem;
+  letter-spacing: 0.01em;
+}
+
+.roster-library-table td > button {
+  display: inline-flex;
+  justify-content: center;
+  margin-inline: auto;
+}
+
+.roster-library-table th:nth-child(1),
+.roster-library-table td:nth-child(1),
+.roster-library-table .col-select {
+  width: 3.4rem;
+}
+
+.roster-library-table th:nth-child(2),
+.roster-library-table td:nth-child(2),
+.roster-library-table th:nth-child(3),
+.roster-library-table td:nth-child(3),
+.roster-library-table .col-inspect,
+.roster-library-table .col-remove {
+  width: 6.1rem;
+}
+
+.roster-library-table th:nth-child(4),
+.roster-library-table td:nth-child(4),
+.roster-library-table .col-bp {
+  width: 3.4rem;
+}
+
+.roster-library-table th:nth-child(5),
+.roster-library-table td:nth-child(5),
+.roster-library-table th:nth-child(6),
+.roster-library-table td:nth-child(6),
+.roster-library-table th:nth-child(7),
+.roster-library-table td:nth-child(7),
+.roster-library-table th:nth-child(8),
+.roster-library-table td:nth-child(8),
+.roster-library-table th:nth-child(9),
+.roster-library-table td:nth-child(9),
+.roster-library-table th:nth-child(11),
+.roster-library-table td:nth-child(11),
+.roster-library-table .col-pattern-credit,
+.roster-library-table .col-other,
+.roster-library-table .col-training,
+.roster-library-table .col-projected,
+.roster-library-table .col-night-delta,
+.roster-library-table .col-diff {
+  width: 6.8rem;
+}
+
+.roster-library-table th:nth-child(10),
+.roster-library-table td:nth-child(10),
+.roster-library-table .col-projected-night {
+  width: 9.8rem;
+}
+
+.roster-library-wrap .group-row td,
+.roster-library-wrap .average-row td:first-child {
+  text-align: left;
+}
+
+.sort-header-btn {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  cursor: pointer;
+}
+
+.sort-header-btn:hover:not(:disabled) {
+  background: transparent;
+  color: var(--accent-strong);
+}
+
+.export-pdf-btn {
+  white-space: nowrap;
+}
+
+.captain-base-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.22rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: #f3f8f5;
+}
+
+.captain-base-btn {
+  min-width: 4.1rem;
+  padding: 0.38rem 0.8rem;
+  background: transparent;
+  color: var(--muted);
+}
+
+.captain-base-btn:hover:not(:disabled) {
+  background: rgba(0, 105, 92, 0.08);
+  color: var(--accent-strong);
+}
+
+.captain-base-btn.is-active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.captain-pattern-table th,
+.captain-pattern-table td {
+  text-align: center;
+}
+
+.captain-pattern-table th:nth-child(1),
+.captain-pattern-table td:nth-child(1),
+.captain-pattern-table th:nth-child(2),
+.captain-pattern-table td:nth-child(2),
+.captain-pattern-table th:nth-child(3),
+.captain-pattern-table td:nth-child(3) {
+  text-align: left;
+}
+
 @media (max-width: 640px) {
   .section-header {
     align-items: flex-start;
@@ -328,6 +604,11 @@ th {
   }
 
   .actions {
+    flex-direction: column;
+  }
+
+  .selection-actions {
+    width: 100%;
     flex-direction: column;
   }
 
