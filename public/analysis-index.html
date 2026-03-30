@@ -12,7 +12,7 @@
     <link rel="icon" type="image/svg+xml" href="./calendar-icon.svg?v=20260324g" />
     <link rel="shortcut icon" href="./calendar-icon.svg?v=20260324g" />
     <link rel="apple-touch-icon" sizes="180x180" href="./calendar-icon-180.png?v=20260324g" />
-    <link rel="stylesheet" href="./styles.css?v=20260329g" />
+    <link rel="stylesheet" href="./styles.css?v=20260330a" />
   </head>
   <body class="analysis-page">
     <main class="app-shell">
@@ -92,6 +92,7 @@
             <div class="captain-base-toggle" role="group" aria-label="Captain pattern base">
               <button id="captainBaseSydBtn" type="button" class="captain-base-btn">SYD</button>
               <button id="captainBaseMelBtn" type="button" class="captain-base-btn">MEL</button>
+              <button id="captainBasePerBtn" type="button" class="captain-base-btn">PER</button>
             </div>
             <p id="captainPatternSourceLabel" class="section-note">Loading captain pattern comparison.</p>
             <button id="exportCaptainPdfBtn" type="button" class="export-pdf-btn" disabled>Export PDF</button>
@@ -294,7 +295,7 @@
     <script>
       (async () => {
         try {
-          await import("./analysis-app.mjs?v=20260329w");
+          await import("./analysis-app.mjs?v=20260330a");
         } catch (error) {
           console.error("Failed to load analysis app module", error);
           const statusEl = document.getElementById("status");

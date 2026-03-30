@@ -1,9 +1,10 @@
 import { buildRosterAnalysis, formatMinutes } from "./shared/roster-analysis.mjs?v=20260329k";
 
-const APP_VERSION = "2026-03-29w";
+const APP_VERSION = "2026-03-30a";
 const CAPTAIN_PATTERN_ANALYSIS_URLS = {
   SYD: "./data/bp374-captain-night-credit.json?v=20260329a",
   MEL: "./data/bp374-captain-night-credit-mel.json?v=20260329a",
+  PER: "./data/bp374-captain-night-credit-per.json?v=20260330a",
 };
 const ROSTER_LIBRARY_STORAGE_KEY = "rosterAnalysis.library.v1";
 const UI_STATE_STORAGE_KEY = "rosterAnalysis.uiState.v1";
@@ -33,6 +34,7 @@ const withNightCreditValue = document.getElementById("withNightCreditValue");
 const creditDifferenceValue = document.getElementById("creditDifferenceValue");
 const captainBaseSydBtn = document.getElementById("captainBaseSydBtn");
 const captainBaseMelBtn = document.getElementById("captainBaseMelBtn");
+const captainBasePerBtn = document.getElementById("captainBasePerBtn");
 const captainPatternSourceLabel = document.getElementById("captainPatternSourceLabel");
 const captainPatternStatus = document.getElementById("captainPatternStatus");
 const exportCaptainPdfBtn = document.getElementById("exportCaptainPdfBtn");
@@ -57,6 +59,11 @@ const captainSortRawDelta = document.getElementById("captainSortRawDelta");
 const captainSortGovernedDelta = document.getElementById("captainSortGovernedDelta");
 const captainSortWithNight = document.getElementById("captainSortWithNight");
 const captainSortPercent = document.getElementById("captainSortPercent");
+const captainBaseButtons = {
+  SYD: captainBaseSydBtn,
+  MEL: captainBaseMelBtn,
+  PER: captainBasePerBtn,
+};
 
 const state = {
   rosters: [],
@@ -66,14 +73,8 @@ const state = {
   captainPatternBase: "SYD",
   captainPatternAnalysis: null,
   captainPatternAnalysisError: "",
-  captainPatternAnalyses: {
-    SYD: null,
-    MEL: null,
-  },
-  captainPatternAnalysisErrors: {
-    SYD: "",
-    MEL: "",
-  },
+  captainPatternAnalyses: Object.fromEntries(Object.keys(CAPTAIN_PATTERN_ANALYSIS_URLS).map((base) => [base, null])),
+  captainPatternAnalysisErrors: Object.fromEntries(Object.keys(CAPTAIN_PATTERN_ANALYSIS_URLS).map((base) => [base, ""])),
   captainPatternSortKey: "governedNightDeltaMinutes",
   captainPatternSortDirection: "desc",
 };
@@ -673,8 +674,9 @@ function renderCaptainPatternAnalysis() {
     return;
   }
 
-  captainBaseSydBtn?.classList.toggle("is-active", state.captainPatternBase === "SYD");
-  captainBaseMelBtn?.classList.toggle("is-active", state.captainPatternBase === "MEL");
+  for (const [base, button] of Object.entries(captainBaseButtons)) {
+    button?.classList.toggle("is-active", state.captainPatternBase === base);
+  }
   captainPatternsBody.innerHTML = "";
 
   const analysis = state.captainPatternAnalysis;
@@ -1201,8 +1203,9 @@ clearSelectionBtn?.addEventListener("click", () => {
 });
 
 exportCaptainPdfBtn?.addEventListener("click", exportCaptainPatternPdf);
-captainBaseSydBtn?.addEventListener("click", () => setCaptainPatternBase("SYD"));
-captainBaseMelBtn?.addEventListener("click", () => setCaptainPatternBase("MEL"));
+for (const base of Object.keys(captainBaseButtons)) {
+  captainBaseButtons[base]?.addEventListener("click", () => setCaptainPatternBase(base));
+}
 
 for (const [button, sortKey] of getCaptainSortButtonMeta()) {
   button?.addEventListener("click", () => {
