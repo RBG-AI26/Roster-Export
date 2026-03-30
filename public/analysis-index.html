@@ -12,7 +12,7 @@
     <link rel="icon" type="image/svg+xml" href="./calendar-icon.svg?v=20260324g" />
     <link rel="shortcut icon" href="./calendar-icon.svg?v=20260324g" />
     <link rel="apple-touch-icon" sizes="180x180" href="./calendar-icon-180.png?v=20260324g" />
-    <link rel="stylesheet" href="./styles.css?v=20260330a" />
+    <link rel="stylesheet" href="./styles.css?v=20260330g" />
   </head>
   <body class="analysis-page">
     <main class="app-shell">
@@ -90,21 +90,26 @@
           <h2>BP374 Captain Pattern Night Credit</h2>
           <div class="section-header-actions">
             <div class="captain-base-toggle" role="group" aria-label="Captain pattern base">
+              <button id="captainBaseAllBtn" type="button" class="captain-base-btn">ALL</button>
               <button id="captainBaseSydBtn" type="button" class="captain-base-btn">SYD</button>
               <button id="captainBaseMelBtn" type="button" class="captain-base-btn">MEL</button>
+              <button id="captainBaseBneBtn" type="button" class="captain-base-btn">BNE</button>
               <button id="captainBasePerBtn" type="button" class="captain-base-btn">PER</button>
             </div>
             <p id="captainPatternSourceLabel" class="section-note">Loading captain pattern comparison.</p>
-            <button id="exportCaptainPdfBtn" type="button" class="export-pdf-btn" disabled>Export PDF</button>
+            <div class="captain-export-actions">
+              <button id="exportCaptainExcelBtn" type="button" class="export-pdf-btn" disabled>Export Excel</button>
+              <button id="exportCaptainPdfBtn" type="button" class="export-pdf-btn" disabled>Export PDF</button>
+            </div>
           </div>
         </div>
         <div id="captainPatternSummaryGrid" class="summary-grid">
           <article class="summary-stat">
-            <span class="summary-label">Patterns</span>
+            <span class="summary-label">Flown Patterns</span>
             <strong id="captainPatternCountValue">0</strong>
           </article>
           <article class="summary-stat">
-            <span class="summary-label">4 pilot Patterns</span>
+            <span class="summary-label">4 pilot Flown</span>
             <strong id="captainFourPilotCountValue">0</strong>
           </article>
           <article class="summary-stat">
@@ -131,14 +136,20 @@
             <span class="summary-label">% Difference</span>
             <strong id="captainPercentValue">0.0%</strong>
           </article>
+          <article class="summary-stat">
+            <span class="summary-label">All Bases Weighted %</span>
+            <strong id="captainAllBasesPercentValue">0.0%</strong>
+          </article>
         </div>
 
         <div class="table-wrap">
           <table class="captain-pattern-table">
             <thead>
               <tr>
+                <th><button id="captainSortBase" class="sort-header-btn" type="button">Base</button></th>
                 <th><button id="captainSortPattern" class="sort-header-btn" type="button">Pattern</button></th>
                 <th><button id="captainSortWeeks" class="sort-header-btn" type="button">Weeks</button></th>
+                <th><button id="captainSortOccurrences" class="sort-header-btn" type="button">Occurrences</button></th>
                 <th><button id="captainSortRoute" class="sort-header-btn" type="button">Route</button></th>
                 <th><button id="captainSortCrew" class="sort-header-btn" type="button">Crew</button></th>
                 <th><button id="captainSortDays" class="sort-header-btn" type="button">Days Away</button></th>
@@ -153,7 +164,7 @@
             </thead>
             <tbody id="captainPatternsBody">
               <tr>
-                <td colspan="12">Loading captain pattern comparison.</td>
+                <td colspan="14">Loading captain pattern comparison.</td>
               </tr>
             </tbody>
           </table>
@@ -295,7 +306,7 @@
     <script>
       (async () => {
         try {
-          await import("./analysis-app.mjs?v=20260330a");
+          await import("./analysis-app.mjs?v=20260330g");
         } catch (error) {
           console.error("Failed to load analysis app module", error);
           const statusEl = document.getElementById("status");

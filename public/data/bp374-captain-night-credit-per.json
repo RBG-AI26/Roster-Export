@@ -1,5 +1,5 @@
 {
-  "generatedAtUtc": "2026-03-30T08:31:50.717Z",
+  "generatedAtUtc": "2026-03-30T09:46:08.283Z",
   "bidPeriod": "374",
   "base": "PER",
   "aircraftType": "B787",
@@ -22,16 +22,17 @@
     "governedDeltaRule": "Effective delta is governed as max(Applicable Credit, Flight Total + Deadhead Total + qualifying Night/3)."
   },
   "summary": {
-    "patternCount": 65,
-    "estimatedFourPilotPatternCount": 30,
-    "positiveGovernedPatternCount": 24,
+    "patternCodeCount": 65,
+    "patternCount": 110,
+    "estimatedFourPilotPatternCount": 73,
+    "positiveGovernedPatternCount": 68,
     "zeroedByMinimumCreditCount": 1,
-    "reducedByMinimumCreditCount": 16,
-    "applicableMinutes": 80465,
-    "rawNightDeltaMinutes": 5980,
-    "governedNightDeltaMinutes": 5415,
-    "governedWithNightMinutes": 85880,
-    "governedPercentDifference": 6.729634002361275
+    "reducedByMinimumCreditCount": 56,
+    "applicableMinutes": 170285,
+    "rawNightDeltaMinutes": 26168.333333333332,
+    "governedNightDeltaMinutes": 24605,
+    "governedWithNightMinutes": 194889.99999999997,
+    "governedPercentDifference": 14.449305575946209
   },
   "unmatchedCodes": [],
   "patterns": [
@@ -46,16 +47,16 @@
       "applicableMinutes": 2070,
       "flightMinutes": 2070,
       "nightMinutes": 1230,
-      "qualifyingNightMinutes": 720,
+      "qualifyingNightMinutes": 1230,
       "deadheadMinutes": 0,
       "flightAndDeadheadMinutes": 2070,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
       "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
-      "governedNightDeltaMinutes": 240,
-      "governedWithNightMinutes": 2310,
-      "governedPercentDifference": 11.594202898550725,
+      "rawNightDeltaMinutes": 410,
+      "governedNightDeltaMinutes": 410,
+      "governedWithNightMinutes": 2480,
+      "governedPercentDifference": 19.806763285024154,
       "sectors": [
         {
           "route": "PER/LHR",
@@ -70,10 +71,11 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 1090,
-          "flight": 510,
-          "night": 0
+          "flight": 1000,
+          "night": 510
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "1.......",
       "depDay": "MO",
       "reportLocal": "1815",
@@ -91,16 +93,16 @@
       "applicableMinutes": 2070,
       "flightMinutes": 2070,
       "nightMinutes": 1230,
-      "qualifyingNightMinutes": 720,
+      "qualifyingNightMinutes": 1230,
       "deadheadMinutes": 0,
       "flightAndDeadheadMinutes": 2070,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
       "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
-      "governedNightDeltaMinutes": 240,
-      "governedWithNightMinutes": 2310,
-      "governedPercentDifference": 11.594202898550725,
+      "rawNightDeltaMinutes": 410,
+      "governedNightDeltaMinutes": 410,
+      "governedWithNightMinutes": 2480,
+      "governedPercentDifference": 19.806763285024154,
       "sectors": [
         {
           "route": "PER/LHR",
@@ -115,10 +117,11 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 1090,
-          "flight": 510,
-          "night": 0
+          "flight": 1000,
+          "night": 510
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "1.......",
       "depDay": "TU",
       "reportLocal": "1815",
@@ -136,16 +139,16 @@
       "applicableMinutes": 2080,
       "flightMinutes": 2080,
       "nightMinutes": 1185,
-      "qualifyingNightMinutes": 720,
+      "qualifyingNightMinutes": 1185,
       "deadheadMinutes": 0,
       "flightAndDeadheadMinutes": 2080,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
       "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
-      "governedNightDeltaMinutes": 240,
-      "governedWithNightMinutes": 2320,
-      "governedPercentDifference": 11.538461538461538,
+      "rawNightDeltaMinutes": 395,
+      "governedNightDeltaMinutes": 395,
+      "governedWithNightMinutes": 2475,
+      "governedPercentDifference": 18.990384615384613,
       "sectors": [
         {
           "route": "PER/LHR",
@@ -160,10 +163,11 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 1100,
-          "flight": 465,
-          "night": 0
+          "flight": 1010,
+          "night": 465
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "1.......",
       "depDay": "FR",
       "reportLocal": "1815",
@@ -181,16 +185,16 @@
       "applicableMinutes": 2080,
       "flightMinutes": 2080,
       "nightMinutes": 1185,
-      "qualifyingNightMinutes": 720,
+      "qualifyingNightMinutes": 1185,
       "deadheadMinutes": 0,
       "flightAndDeadheadMinutes": 2080,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
       "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
-      "governedNightDeltaMinutes": 240,
-      "governedWithNightMinutes": 2320,
-      "governedPercentDifference": 11.538461538461538,
+      "rawNightDeltaMinutes": 395,
+      "governedNightDeltaMinutes": 395,
+      "governedWithNightMinutes": 2475,
+      "governedPercentDifference": 18.990384615384613,
       "sectors": [
         {
           "route": "PER/LHR",
@@ -205,104 +209,15 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 1100,
-          "flight": 465,
-          "night": 0
+          "flight": 1010,
+          "night": 465
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "1.......",
       "depDay": "SA",
       "reportLocal": "1815",
       "arrivalLocal": "1145",
-      "hasXWeek": false
-    },
-    {
-      "patternCode": "RO03",
-      "base": "PER",
-      "routeCode": "FCO05",
-      "weeksPlanned": "678",
-      "category": "CPT-B787 F/O-B787 S/O-B787",
-      "daysAway": 5,
-      "containsLhrSector": false,
-      "applicableMinutes": 1940,
-      "flightMinutes": 1940,
-      "nightMinutes": 1075,
-      "qualifyingNightMinutes": 720,
-      "deadheadMinutes": 0,
-      "flightAndDeadheadMinutes": 1940,
-      "mpcMinutes": 1650,
-      "mdcMinutes": 0,
-      "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
-      "governedNightDeltaMinutes": 240,
-      "governedWithNightMinutes": 2180,
-      "governedPercentDifference": 12.371134020618557,
-      "sectors": [
-        {
-          "route": "PER/FCO",
-          "isPax": false,
-          "isDeadhead": false,
-          "duty": 1075,
-          "flight": 985,
-          "night": 720
-        },
-        {
-          "route": "FCO/PER",
-          "isPax": false,
-          "isDeadhead": false,
-          "duty": 1045,
-          "flight": 355,
-          "night": 0
-        }
-      ],
-      "weeksDisplay": ".....678",
-      "depDay": "SU",
-      "reportLocal": "1835",
-      "arrivalLocal": "0855",
-      "hasXWeek": false
-    },
-    {
-      "patternCode": "RO05",
-      "base": "PER",
-      "routeCode": "FCO05",
-      "weeksPlanned": "78",
-      "category": "CPT-B787 F/O-B787 S/O-B787",
-      "daysAway": 5,
-      "containsLhrSector": false,
-      "applicableMinutes": 1940,
-      "flightMinutes": 1940,
-      "nightMinutes": 1075,
-      "qualifyingNightMinutes": 720,
-      "deadheadMinutes": 0,
-      "flightAndDeadheadMinutes": 1940,
-      "mpcMinutes": 1650,
-      "mdcMinutes": 0,
-      "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
-      "governedNightDeltaMinutes": 240,
-      "governedWithNightMinutes": 2180,
-      "governedPercentDifference": 12.371134020618557,
-      "sectors": [
-        {
-          "route": "PER/FCO",
-          "isPax": false,
-          "isDeadhead": false,
-          "duty": 1075,
-          "flight": 985,
-          "night": 720
-        },
-        {
-          "route": "FCO/PER",
-          "isPax": false,
-          "isDeadhead": false,
-          "duty": 1045,
-          "flight": 355,
-          "night": 0
-        }
-      ],
-      "weeksDisplay": "......78",
-      "depDay": "TU",
-      "reportLocal": "1835",
-      "arrivalLocal": "0855",
       "hasXWeek": false
     },
     {
@@ -316,16 +231,16 @@
       "applicableMinutes": 2080,
       "flightMinutes": 2080,
       "nightMinutes": 1185,
-      "qualifyingNightMinutes": 720,
+      "qualifyingNightMinutes": 1185,
       "deadheadMinutes": 0,
       "flightAndDeadheadMinutes": 2080,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
       "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
-      "governedNightDeltaMinutes": 240,
-      "governedWithNightMinutes": 2320,
-      "governedPercentDifference": 11.538461538461538,
+      "rawNightDeltaMinutes": 395,
+      "governedNightDeltaMinutes": 395,
+      "governedWithNightMinutes": 2475,
+      "governedPercentDifference": 18.990384615384613,
       "sectors": [
         {
           "route": "PER/LHR",
@@ -340,150 +255,16 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 1100,
-          "flight": 465,
-          "night": 0
+          "flight": 1010,
+          "night": 465
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "X.......",
       "depDay": "TH",
       "reportLocal": "1815",
       "arrivalLocal": "1145",
       "hasXWeek": true
-    },
-    {
-      "patternCode": "RI01",
-      "base": "PER",
-      "routeCode": "CDG05",
-      "weeksPlanned": "1",
-      "category": "CPT-B787 F/O-B787 S/O-B787",
-      "daysAway": 5,
-      "containsLhrSector": false,
-      "applicableMinutes": 2050,
-      "flightMinutes": 2050,
-      "nightMinutes": 1120,
-      "qualifyingNightMinutes": 700,
-      "deadheadMinutes": 0,
-      "flightAndDeadheadMinutes": 2050,
-      "mpcMinutes": 1650,
-      "mdcMinutes": 0,
-      "hasFourPilot": true,
-      "rawNightDeltaMinutes": 233.33333333333334,
-      "governedNightDeltaMinutes": 233.33333333333348,
-      "governedWithNightMinutes": 2283.3333333333335,
-      "governedPercentDifference": 11.38211382113822,
-      "sectors": [
-        {
-          "route": "PER/CDG",
-          "isPax": false,
-          "isDeadhead": false,
-          "duty": 1140,
-          "flight": 1050,
-          "night": 700
-        },
-        {
-          "route": "CDG/PER",
-          "isPax": false,
-          "isDeadhead": false,
-          "duty": 1090,
-          "flight": 420,
-          "night": 0
-        }
-      ],
-      "weeksDisplay": "1.......",
-      "depDay": "MO",
-      "reportLocal": "1920",
-      "arrivalLocal": "1000",
-      "hasXWeek": false
-    },
-    {
-      "patternCode": "RI05",
-      "base": "PER",
-      "routeCode": "CDG05",
-      "weeksPlanned": "1",
-      "category": "CPT-B787 F/O-B787 S/O-B787",
-      "daysAway": 5,
-      "containsLhrSector": false,
-      "applicableMinutes": 2050,
-      "flightMinutes": 2050,
-      "nightMinutes": 1120,
-      "qualifyingNightMinutes": 700,
-      "deadheadMinutes": 0,
-      "flightAndDeadheadMinutes": 2050,
-      "mpcMinutes": 1650,
-      "mdcMinutes": 0,
-      "hasFourPilot": true,
-      "rawNightDeltaMinutes": 233.33333333333334,
-      "governedNightDeltaMinutes": 233.33333333333348,
-      "governedWithNightMinutes": 2283.3333333333335,
-      "governedPercentDifference": 11.38211382113822,
-      "sectors": [
-        {
-          "route": "PER/CDG",
-          "isPax": false,
-          "isDeadhead": false,
-          "duty": 1140,
-          "flight": 1050,
-          "night": 700
-        },
-        {
-          "route": "CDG/PER",
-          "isPax": false,
-          "isDeadhead": false,
-          "duty": 1090,
-          "flight": 420,
-          "night": 0
-        }
-      ],
-      "weeksDisplay": "1.......",
-      "depDay": "WE",
-      "reportLocal": "1920",
-      "arrivalLocal": "1000",
-      "hasXWeek": false
-    },
-    {
-      "patternCode": "RI09",
-      "base": "PER",
-      "routeCode": "CDG06",
-      "weeksPlanned": "1",
-      "category": "CPT-B787 F/O-B787 S/O-B787",
-      "daysAway": 6,
-      "containsLhrSector": false,
-      "applicableMinutes": 2050,
-      "flightMinutes": 2040,
-      "nightMinutes": 1065,
-      "qualifyingNightMinutes": 700,
-      "deadheadMinutes": 0,
-      "flightAndDeadheadMinutes": 2040,
-      "mpcMinutes": 1980,
-      "mdcMinutes": 0,
-      "hasFourPilot": true,
-      "rawNightDeltaMinutes": 233.33333333333334,
-      "governedNightDeltaMinutes": 223.33333333333348,
-      "governedWithNightMinutes": 2273.3333333333335,
-      "governedPercentDifference": 10.894308943089438,
-      "sectors": [
-        {
-          "route": "PER/CDG",
-          "isPax": false,
-          "isDeadhead": false,
-          "duty": 1140,
-          "flight": 1050,
-          "night": 700
-        },
-        {
-          "route": "CDG/PER",
-          "isPax": false,
-          "isDeadhead": false,
-          "duty": 1080,
-          "flight": 365,
-          "night": 0
-        }
-      ],
-      "weeksDisplay": "1.......",
-      "depDay": "FR",
-      "reportLocal": "1920",
-      "arrivalLocal": "0855",
-      "hasXWeek": false
     },
     {
       "patternCode": "RK12",
@@ -496,16 +277,16 @@
       "applicableMinutes": 2080,
       "flightMinutes": 2060,
       "nightMinutes": 1185,
-      "qualifyingNightMinutes": 720,
+      "qualifyingNightMinutes": 1185,
       "deadheadMinutes": 0,
       "flightAndDeadheadMinutes": 2060,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
       "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
-      "governedNightDeltaMinutes": 220,
-      "governedWithNightMinutes": 2300,
-      "governedPercentDifference": 10.576923076923077,
+      "rawNightDeltaMinutes": 395,
+      "governedNightDeltaMinutes": 375,
+      "governedWithNightMinutes": 2455,
+      "governedPercentDifference": 18.028846153846153,
       "sectors": [
         {
           "route": "PER/LHR",
@@ -520,10 +301,11 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 1100,
-          "flight": 465,
-          "night": 0
+          "flight": 1010,
+          "night": 465
         }
       ],
+      "instanceCount": 6,
       "weeksDisplay": "1..45678",
       "depDay": "SU",
       "reportLocal": "1735",
@@ -541,16 +323,16 @@
       "applicableMinutes": 2080,
       "flightMinutes": 2060,
       "nightMinutes": 1185,
-      "qualifyingNightMinutes": 720,
+      "qualifyingNightMinutes": 1185,
       "deadheadMinutes": 0,
       "flightAndDeadheadMinutes": 2060,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
       "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
-      "governedNightDeltaMinutes": 220,
-      "governedWithNightMinutes": 2300,
-      "governedPercentDifference": 10.576923076923077,
+      "rawNightDeltaMinutes": 395,
+      "governedNightDeltaMinutes": 375,
+      "governedWithNightMinutes": 2455,
+      "governedPercentDifference": 18.028846153846153,
       "sectors": [
         {
           "route": "PER/LHR",
@@ -565,10 +347,11 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 1100,
-          "flight": 465,
-          "night": 0
+          "flight": 1010,
+          "night": 465
         }
       ],
+      "instanceCount": 7,
       "weeksDisplay": ".2345678",
       "depDay": "MO",
       "reportLocal": "1735",
@@ -586,16 +369,16 @@
       "applicableMinutes": 2080,
       "flightMinutes": 2060,
       "nightMinutes": 1185,
-      "qualifyingNightMinutes": 720,
+      "qualifyingNightMinutes": 1185,
       "deadheadMinutes": 0,
       "flightAndDeadheadMinutes": 2060,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
       "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
-      "governedNightDeltaMinutes": 220,
-      "governedWithNightMinutes": 2300,
-      "governedPercentDifference": 10.576923076923077,
+      "rawNightDeltaMinutes": 395,
+      "governedNightDeltaMinutes": 375,
+      "governedWithNightMinutes": 2455,
+      "governedPercentDifference": 18.028846153846153,
       "sectors": [
         {
           "route": "PER/LHR",
@@ -610,10 +393,11 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 1100,
-          "flight": 465,
-          "night": 0
+          "flight": 1010,
+          "night": 465
         }
       ],
+      "instanceCount": 4,
       "weeksDisplay": ".2345...",
       "depDay": "TU",
       "reportLocal": "1735",
@@ -631,16 +415,16 @@
       "applicableMinutes": 2080,
       "flightMinutes": 2060,
       "nightMinutes": 1185,
-      "qualifyingNightMinutes": 720,
+      "qualifyingNightMinutes": 1185,
       "deadheadMinutes": 0,
       "flightAndDeadheadMinutes": 2060,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
       "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
-      "governedNightDeltaMinutes": 220,
-      "governedWithNightMinutes": 2300,
-      "governedPercentDifference": 10.576923076923077,
+      "rawNightDeltaMinutes": 395,
+      "governedNightDeltaMinutes": 375,
+      "governedWithNightMinutes": 2455,
+      "governedPercentDifference": 18.028846153846153,
       "sectors": [
         {
           "route": "PER/LHR",
@@ -655,10 +439,11 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 1100,
-          "flight": 465,
-          "night": 0
+          "flight": 1010,
+          "night": 465
         }
       ],
+      "instanceCount": 6,
       "weeksDisplay": ".23.5678",
       "depDay": "WE",
       "reportLocal": "1735",
@@ -676,16 +461,16 @@
       "applicableMinutes": 2080,
       "flightMinutes": 2060,
       "nightMinutes": 1185,
-      "qualifyingNightMinutes": 720,
+      "qualifyingNightMinutes": 1185,
       "deadheadMinutes": 0,
       "flightAndDeadheadMinutes": 2060,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
       "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
-      "governedNightDeltaMinutes": 220,
-      "governedWithNightMinutes": 2300,
-      "governedPercentDifference": 10.576923076923077,
+      "rawNightDeltaMinutes": 395,
+      "governedNightDeltaMinutes": 375,
+      "governedWithNightMinutes": 2455,
+      "governedPercentDifference": 18.028846153846153,
       "sectors": [
         {
           "route": "PER/LHR",
@@ -700,10 +485,11 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 1100,
-          "flight": 465,
-          "night": 0
+          "flight": 1010,
+          "night": 465
         }
       ],
+      "instanceCount": 5,
       "weeksDisplay": ".234.67.",
       "depDay": "TH",
       "reportLocal": "1735",
@@ -721,16 +507,16 @@
       "applicableMinutes": 2080,
       "flightMinutes": 2060,
       "nightMinutes": 1185,
-      "qualifyingNightMinutes": 720,
+      "qualifyingNightMinutes": 1185,
       "deadheadMinutes": 0,
       "flightAndDeadheadMinutes": 2060,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
       "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
-      "governedNightDeltaMinutes": 220,
-      "governedWithNightMinutes": 2300,
-      "governedPercentDifference": 10.576923076923077,
+      "rawNightDeltaMinutes": 395,
+      "governedNightDeltaMinutes": 375,
+      "governedWithNightMinutes": 2455,
+      "governedPercentDifference": 18.028846153846153,
       "sectors": [
         {
           "route": "PER/LHR",
@@ -745,10 +531,11 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 1100,
-          "flight": 465,
-          "night": 0
+          "flight": 1010,
+          "night": 465
         }
       ],
+      "instanceCount": 2,
       "weeksDisplay": ".2.....8",
       "depDay": "FR",
       "reportLocal": "1735",
@@ -766,16 +553,16 @@
       "applicableMinutes": 2080,
       "flightMinutes": 2060,
       "nightMinutes": 1185,
-      "qualifyingNightMinutes": 720,
+      "qualifyingNightMinutes": 1185,
       "deadheadMinutes": 0,
       "flightAndDeadheadMinutes": 2060,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
       "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
-      "governedNightDeltaMinutes": 220,
-      "governedWithNightMinutes": 2300,
-      "governedPercentDifference": 10.576923076923077,
+      "rawNightDeltaMinutes": 395,
+      "governedNightDeltaMinutes": 375,
+      "governedWithNightMinutes": 2455,
+      "governedPercentDifference": 18.028846153846153,
       "sectors": [
         {
           "route": "PER/LHR",
@@ -790,10 +577,11 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 1100,
-          "flight": 465,
-          "night": 0
+          "flight": 1010,
+          "night": 465
         }
       ],
+      "instanceCount": 4,
       "weeksDisplay": "..3.567.",
       "depDay": "SA",
       "reportLocal": "1735",
@@ -811,16 +599,16 @@
       "applicableMinutes": 2080,
       "flightMinutes": 2060,
       "nightMinutes": 1185,
-      "qualifyingNightMinutes": 720,
+      "qualifyingNightMinutes": 1185,
       "deadheadMinutes": 0,
       "flightAndDeadheadMinutes": 2060,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
       "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
-      "governedNightDeltaMinutes": 220,
-      "governedWithNightMinutes": 2300,
-      "governedPercentDifference": 10.576923076923077,
+      "rawNightDeltaMinutes": 395,
+      "governedNightDeltaMinutes": 375,
+      "governedWithNightMinutes": 2455,
+      "governedPercentDifference": 18.028846153846153,
       "sectors": [
         {
           "route": "PER/LHR",
@@ -835,10 +623,11 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 1100,
-          "flight": 465,
-          "night": 0
+          "flight": 1010,
+          "night": 465
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "....X...",
       "depDay": "TH",
       "reportLocal": "1735",
@@ -856,16 +645,16 @@
       "applicableMinutes": 2080,
       "flightMinutes": 2060,
       "nightMinutes": 1185,
-      "qualifyingNightMinutes": 720,
+      "qualifyingNightMinutes": 1185,
       "deadheadMinutes": 0,
       "flightAndDeadheadMinutes": 2060,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
       "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
-      "governedNightDeltaMinutes": 220,
-      "governedWithNightMinutes": 2300,
-      "governedPercentDifference": 10.576923076923077,
+      "rawNightDeltaMinutes": 395,
+      "governedNightDeltaMinutes": 375,
+      "governedWithNightMinutes": 2455,
+      "governedPercentDifference": 18.028846153846153,
       "sectors": [
         {
           "route": "PER/LHR",
@@ -880,10 +669,11 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 1100,
-          "flight": 465,
-          "night": 0
+          "flight": 1010,
+          "night": 465
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "...X....",
       "depDay": "SA",
       "reportLocal": "1735",
@@ -901,16 +691,16 @@
       "applicableMinutes": 2080,
       "flightMinutes": 2060,
       "nightMinutes": 1185,
-      "qualifyingNightMinutes": 720,
+      "qualifyingNightMinutes": 1185,
       "deadheadMinutes": 0,
       "flightAndDeadheadMinutes": 2060,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
       "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
-      "governedNightDeltaMinutes": 220,
-      "governedWithNightMinutes": 2300,
-      "governedPercentDifference": 10.576923076923077,
+      "rawNightDeltaMinutes": 395,
+      "governedNightDeltaMinutes": 375,
+      "governedWithNightMinutes": 2455,
+      "governedPercentDifference": 18.028846153846153,
       "sectors": [
         {
           "route": "PER/LHR",
@@ -925,15 +715,246 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 1100,
-          "flight": 465,
-          "night": 0
+          "flight": 1010,
+          "night": 465
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": ".......X",
       "depDay": "TU",
       "reportLocal": "1735",
       "arrivalLocal": "1145",
       "hasXWeek": true
+    },
+    {
+      "patternCode": "RI01",
+      "base": "PER",
+      "routeCode": "CDG05",
+      "weeksPlanned": "1",
+      "category": "CPT-B787 F/O-B787 S/O-B787",
+      "daysAway": 5,
+      "containsLhrSector": false,
+      "applicableMinutes": 2050,
+      "flightMinutes": 2050,
+      "nightMinutes": 1120,
+      "qualifyingNightMinutes": 1120,
+      "deadheadMinutes": 0,
+      "flightAndDeadheadMinutes": 2050,
+      "mpcMinutes": 1650,
+      "mdcMinutes": 0,
+      "hasFourPilot": true,
+      "rawNightDeltaMinutes": 373.3333333333333,
+      "governedNightDeltaMinutes": 373.3333333333335,
+      "governedWithNightMinutes": 2423.3333333333335,
+      "governedPercentDifference": 18.211382113821145,
+      "sectors": [
+        {
+          "route": "PER/CDG",
+          "isPax": false,
+          "isDeadhead": false,
+          "duty": 1140,
+          "flight": 1050,
+          "night": 700
+        },
+        {
+          "route": "CDG/PER",
+          "isPax": false,
+          "isDeadhead": false,
+          "duty": 1090,
+          "flight": 1000,
+          "night": 420
+        }
+      ],
+      "instanceCount": 1,
+      "weeksDisplay": "1.......",
+      "depDay": "MO",
+      "reportLocal": "1920",
+      "arrivalLocal": "1000",
+      "hasXWeek": false
+    },
+    {
+      "patternCode": "RI05",
+      "base": "PER",
+      "routeCode": "CDG05",
+      "weeksPlanned": "1",
+      "category": "CPT-B787 F/O-B787 S/O-B787",
+      "daysAway": 5,
+      "containsLhrSector": false,
+      "applicableMinutes": 2050,
+      "flightMinutes": 2050,
+      "nightMinutes": 1120,
+      "qualifyingNightMinutes": 1120,
+      "deadheadMinutes": 0,
+      "flightAndDeadheadMinutes": 2050,
+      "mpcMinutes": 1650,
+      "mdcMinutes": 0,
+      "hasFourPilot": true,
+      "rawNightDeltaMinutes": 373.3333333333333,
+      "governedNightDeltaMinutes": 373.3333333333335,
+      "governedWithNightMinutes": 2423.3333333333335,
+      "governedPercentDifference": 18.211382113821145,
+      "sectors": [
+        {
+          "route": "PER/CDG",
+          "isPax": false,
+          "isDeadhead": false,
+          "duty": 1140,
+          "flight": 1050,
+          "night": 700
+        },
+        {
+          "route": "CDG/PER",
+          "isPax": false,
+          "isDeadhead": false,
+          "duty": 1090,
+          "flight": 1000,
+          "night": 420
+        }
+      ],
+      "instanceCount": 1,
+      "weeksDisplay": "1.......",
+      "depDay": "WE",
+      "reportLocal": "1920",
+      "arrivalLocal": "1000",
+      "hasXWeek": false
+    },
+    {
+      "patternCode": "RO03",
+      "base": "PER",
+      "routeCode": "FCO05",
+      "weeksPlanned": "678",
+      "category": "CPT-B787 F/O-B787 S/O-B787",
+      "daysAway": 5,
+      "containsLhrSector": false,
+      "applicableMinutes": 1940,
+      "flightMinutes": 1940,
+      "nightMinutes": 1075,
+      "qualifyingNightMinutes": 1075,
+      "deadheadMinutes": 0,
+      "flightAndDeadheadMinutes": 1940,
+      "mpcMinutes": 1650,
+      "mdcMinutes": 0,
+      "hasFourPilot": true,
+      "rawNightDeltaMinutes": 358.3333333333333,
+      "governedNightDeltaMinutes": 358.3333333333335,
+      "governedWithNightMinutes": 2298.3333333333335,
+      "governedPercentDifference": 18.47079037800688,
+      "sectors": [
+        {
+          "route": "PER/FCO",
+          "isPax": false,
+          "isDeadhead": false,
+          "duty": 1075,
+          "flight": 985,
+          "night": 720
+        },
+        {
+          "route": "FCO/PER",
+          "isPax": false,
+          "isDeadhead": false,
+          "duty": 1045,
+          "flight": 955,
+          "night": 355
+        }
+      ],
+      "instanceCount": 3,
+      "weeksDisplay": ".....678",
+      "depDay": "SU",
+      "reportLocal": "1835",
+      "arrivalLocal": "0855",
+      "hasXWeek": false
+    },
+    {
+      "patternCode": "RO05",
+      "base": "PER",
+      "routeCode": "FCO05",
+      "weeksPlanned": "78",
+      "category": "CPT-B787 F/O-B787 S/O-B787",
+      "daysAway": 5,
+      "containsLhrSector": false,
+      "applicableMinutes": 1940,
+      "flightMinutes": 1940,
+      "nightMinutes": 1075,
+      "qualifyingNightMinutes": 1075,
+      "deadheadMinutes": 0,
+      "flightAndDeadheadMinutes": 1940,
+      "mpcMinutes": 1650,
+      "mdcMinutes": 0,
+      "hasFourPilot": true,
+      "rawNightDeltaMinutes": 358.3333333333333,
+      "governedNightDeltaMinutes": 358.3333333333335,
+      "governedWithNightMinutes": 2298.3333333333335,
+      "governedPercentDifference": 18.47079037800688,
+      "sectors": [
+        {
+          "route": "PER/FCO",
+          "isPax": false,
+          "isDeadhead": false,
+          "duty": 1075,
+          "flight": 985,
+          "night": 720
+        },
+        {
+          "route": "FCO/PER",
+          "isPax": false,
+          "isDeadhead": false,
+          "duty": 1045,
+          "flight": 955,
+          "night": 355
+        }
+      ],
+      "instanceCount": 2,
+      "weeksDisplay": "......78",
+      "depDay": "TU",
+      "reportLocal": "1835",
+      "arrivalLocal": "0855",
+      "hasXWeek": false
+    },
+    {
+      "patternCode": "RI09",
+      "base": "PER",
+      "routeCode": "CDG06",
+      "weeksPlanned": "1",
+      "category": "CPT-B787 F/O-B787 S/O-B787",
+      "daysAway": 6,
+      "containsLhrSector": false,
+      "applicableMinutes": 2050,
+      "flightMinutes": 2040,
+      "nightMinutes": 1065,
+      "qualifyingNightMinutes": 1065,
+      "deadheadMinutes": 0,
+      "flightAndDeadheadMinutes": 2040,
+      "mpcMinutes": 1980,
+      "mdcMinutes": 0,
+      "hasFourPilot": true,
+      "rawNightDeltaMinutes": 355,
+      "governedNightDeltaMinutes": 345,
+      "governedWithNightMinutes": 2395,
+      "governedPercentDifference": 16.82926829268293,
+      "sectors": [
+        {
+          "route": "PER/CDG",
+          "isPax": false,
+          "isDeadhead": false,
+          "duty": 1140,
+          "flight": 1050,
+          "night": 700
+        },
+        {
+          "route": "CDG/PER",
+          "isPax": false,
+          "isDeadhead": false,
+          "duty": 1080,
+          "flight": 990,
+          "night": 365
+        }
+      ],
+      "instanceCount": 1,
+      "weeksDisplay": "1.......",
+      "depDay": "FR",
+      "reportLocal": "1920",
+      "arrivalLocal": "0855",
+      "hasXWeek": false
     },
     {
       "patternCode": "RI12",
@@ -946,16 +967,16 @@
       "applicableMinutes": 2045,
       "flightMinutes": 2020,
       "nightMinutes": 1085,
-      "qualifyingNightMinutes": 720,
+      "qualifyingNightMinutes": 1085,
       "deadheadMinutes": 0,
       "flightAndDeadheadMinutes": 2020,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
       "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
-      "governedNightDeltaMinutes": 215,
-      "governedWithNightMinutes": 2260,
-      "governedPercentDifference": 10.513447432762836,
+      "rawNightDeltaMinutes": 361.6666666666667,
+      "governedNightDeltaMinutes": 336.6666666666665,
+      "governedWithNightMinutes": 2381.6666666666665,
+      "governedPercentDifference": 16.462917685411565,
       "sectors": [
         {
           "route": "PER/CDG",
@@ -970,10 +991,11 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 1080,
-          "flight": 365,
-          "night": 0
+          "flight": 990,
+          "night": 365
         }
       ],
+      "instanceCount": 6,
       "weeksDisplay": ".234567.",
       "depDay": "MO",
       "reportLocal": "1835",
@@ -991,16 +1013,16 @@
       "applicableMinutes": 2045,
       "flightMinutes": 2020,
       "nightMinutes": 1085,
-      "qualifyingNightMinutes": 720,
+      "qualifyingNightMinutes": 1085,
       "deadheadMinutes": 0,
       "flightAndDeadheadMinutes": 2020,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
       "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
-      "governedNightDeltaMinutes": 215,
-      "governedWithNightMinutes": 2260,
-      "governedPercentDifference": 10.513447432762836,
+      "rawNightDeltaMinutes": 361.6666666666667,
+      "governedNightDeltaMinutes": 336.6666666666665,
+      "governedWithNightMinutes": 2381.6666666666665,
+      "governedPercentDifference": 16.462917685411565,
       "sectors": [
         {
           "route": "PER/CDG",
@@ -1015,10 +1037,11 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 1080,
-          "flight": 365,
-          "night": 0
+          "flight": 990,
+          "night": 365
         }
       ],
+      "instanceCount": 2,
       "weeksDisplay": "..34....",
       "depDay": "WE",
       "reportLocal": "1835",
@@ -1036,16 +1059,16 @@
       "applicableMinutes": 2045,
       "flightMinutes": 2020,
       "nightMinutes": 1085,
-      "qualifyingNightMinutes": 720,
+      "qualifyingNightMinutes": 1085,
       "deadheadMinutes": 0,
       "flightAndDeadheadMinutes": 2020,
       "mpcMinutes": 1980,
       "mdcMinutes": 0,
       "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
-      "governedNightDeltaMinutes": 215,
-      "governedWithNightMinutes": 2260,
-      "governedPercentDifference": 10.513447432762836,
+      "rawNightDeltaMinutes": 361.6666666666667,
+      "governedNightDeltaMinutes": 336.6666666666665,
+      "governedWithNightMinutes": 2381.6666666666665,
+      "governedPercentDifference": 16.462917685411565,
       "sectors": [
         {
           "route": "PER/CDG",
@@ -1060,10 +1083,11 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 1080,
-          "flight": 365,
-          "night": 0
+          "flight": 990,
+          "night": 365
         }
       ],
+      "instanceCount": 7,
       "weeksDisplay": ".2345678",
       "depDay": "FR",
       "reportLocal": "1835",
@@ -1081,16 +1105,16 @@
       "applicableMinutes": 1980,
       "flightMinutes": 1940,
       "nightMinutes": 1075,
-      "qualifyingNightMinutes": 720,
+      "qualifyingNightMinutes": 1075,
       "deadheadMinutes": 0,
       "flightAndDeadheadMinutes": 1940,
       "mpcMinutes": 1980,
       "mdcMinutes": 0,
       "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
-      "governedNightDeltaMinutes": 200,
-      "governedWithNightMinutes": 2180,
-      "governedPercentDifference": 10.1010101010101,
+      "rawNightDeltaMinutes": 358.3333333333333,
+      "governedNightDeltaMinutes": 318.3333333333335,
+      "governedWithNightMinutes": 2298.3333333333335,
+      "governedPercentDifference": 16.077441077441083,
       "sectors": [
         {
           "route": "PER/FCO",
@@ -1105,14 +1129,69 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 1045,
-          "flight": 355,
-          "night": 0
+          "flight": 955,
+          "night": 355
         }
       ],
+      "instanceCount": 2,
       "weeksDisplay": "......78",
       "depDay": "TH",
       "reportLocal": "1835",
       "arrivalLocal": "0855",
+      "hasXWeek": false
+    },
+    {
+      "patternCode": "RK28",
+      "base": "PER",
+      "routeCode": "LHR06",
+      "weeksPlanned": "6",
+      "category": "CPT-B787 F/O-B787 S/O-B787",
+      "daysAway": 6,
+      "containsLhrSector": true,
+      "applicableMinutes": 2200,
+      "flightMinutes": 1010,
+      "nightMinutes": 465,
+      "qualifyingNightMinutes": 465,
+      "deadheadMinutes": 1190,
+      "flightAndDeadheadMinutes": 2200,
+      "mpcMinutes": 1980,
+      "mdcMinutes": 0,
+      "hasFourPilot": true,
+      "rawNightDeltaMinutes": 155,
+      "governedNightDeltaMinutes": 155,
+      "governedWithNightMinutes": 2355,
+      "governedPercentDifference": 7.045454545454545,
+      "sectors": [
+        {
+          "route": "PER/SIN",
+          "isPax": true,
+          "isDeadhead": true,
+          "duty": 425,
+          "flight": 0,
+          "night": 0
+        },
+        {
+          "route": "SIN/LHR",
+          "isPax": true,
+          "isDeadhead": true,
+          "duty": 945,
+          "flight": 0,
+          "night": 0
+        },
+        {
+          "route": "LHR/PER",
+          "isPax": false,
+          "isDeadhead": false,
+          "duty": 1100,
+          "flight": 1010,
+          "night": 465
+        }
+      ],
+      "instanceCount": 1,
+      "weeksDisplay": ".....6..",
+      "depDay": "MO",
+      "reportLocal": "1115",
+      "arrivalLocal": "1145",
       "hasXWeek": false
     },
     {
@@ -1178,6 +1257,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "..X.....",
       "depDay": "MO",
       "reportLocal": "0950",
@@ -1211,8 +1291,8 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 335,
-          "flight": 245,
-          "night": 0
+          "flight": 910,
+          "night": 245
         },
         {
           "route": "SYD/PER",
@@ -1223,6 +1303,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "1.......",
       "depDay": "WE",
       "reportLocal": "1035",
@@ -1276,6 +1357,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "...X....",
       "depDay": "MO",
       "reportLocal": "1140",
@@ -1329,6 +1411,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "....X...",
       "depDay": "WE",
       "reportLocal": "1140",
@@ -1374,6 +1457,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "X.......",
       "depDay": "FR",
       "reportLocal": "1035",
@@ -1419,6 +1503,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": ".X......",
       "depDay": "MO",
       "reportLocal": "0420",
@@ -1452,8 +1537,8 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 325,
-          "flight": 235,
-          "night": 0
+          "flight": 1000,
+          "night": 235
         },
         {
           "route": "SYD/PER",
@@ -1464,6 +1549,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": ".2......",
       "depDay": "WE",
       "reportLocal": "0930",
@@ -1497,8 +1583,8 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 325,
-          "flight": 235,
-          "night": 0
+          "flight": 805,
+          "night": 235
         },
         {
           "route": "SYD/PER",
@@ -1509,6 +1595,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": ".2......",
       "depDay": "FR",
       "reportLocal": "0930",
@@ -1554,6 +1641,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "..3.....",
       "depDay": "WE",
       "reportLocal": "0930",
@@ -1587,8 +1675,8 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 325,
-          "flight": 235,
-          "night": 0
+          "flight": 1210,
+          "night": 235
         },
         {
           "route": "SYD/PER",
@@ -1599,6 +1687,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "..3.....",
       "depDay": "SU",
       "reportLocal": "0930",
@@ -1644,6 +1733,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "...4....",
       "depDay": "WE",
       "reportLocal": "0520",
@@ -1677,8 +1767,8 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 325,
-          "flight": 235,
-          "night": 0
+          "flight": 1090,
+          "night": 235
         },
         {
           "route": "SYD/PER",
@@ -1705,6 +1795,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "...4....",
       "depDay": "WE",
       "reportLocal": "0930",
@@ -1750,6 +1841,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "...4....",
       "depDay": "FR",
       "reportLocal": "0930",
@@ -1783,8 +1875,8 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 325,
-          "flight": 235,
-          "night": 0
+          "flight": 1210,
+          "night": 235
         },
         {
           "route": "SYD/PER",
@@ -1795,6 +1887,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "...4....",
       "depDay": "SU",
       "reportLocal": "0930",
@@ -1828,8 +1921,8 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 325,
-          "flight": 235,
-          "night": 0
+          "flight": 1210,
+          "night": 235
         },
         {
           "route": "SYD/PER",
@@ -1840,6 +1933,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 3,
       "weeksDisplay": "....5.78",
       "depDay": "SU",
       "reportLocal": "0930",
@@ -1885,6 +1979,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "......7.",
       "depDay": "SU",
       "reportLocal": "0520",
@@ -1918,8 +2013,8 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 325,
-          "flight": 235,
-          "night": 0
+          "flight": 1210,
+          "night": 235
         },
         {
           "route": "SYD/PER",
@@ -1930,6 +2025,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": ".......8",
       "depDay": "TU",
       "reportLocal": "0930",
@@ -1975,6 +2071,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": ".......8",
       "depDay": "TH",
       "reportLocal": "0930",
@@ -2020,6 +2117,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": ".......8",
       "depDay": "SU",
       "reportLocal": "0520",
@@ -2065,6 +2163,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": ".....6..",
       "depDay": "SU",
       "reportLocal": "0930",
@@ -2110,6 +2209,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "......7.",
       "depDay": "TH",
       "reportLocal": "0930",
@@ -2143,8 +2243,8 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 325,
-          "flight": 235,
-          "night": 0
+          "flight": 1060,
+          "night": 235
         },
         {
           "route": "SYD/PER",
@@ -2171,6 +2271,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": ".....6..",
       "depDay": "WE",
       "reportLocal": "0930",
@@ -2216,6 +2317,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "....5...",
       "depDay": "WE",
       "reportLocal": "0930",
@@ -2261,63 +2363,11 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "....5...",
       "depDay": "FR",
       "reportLocal": "0520",
       "arrivalLocal": "1700",
-      "hasXWeek": false
-    },
-    {
-      "patternCode": "RK28",
-      "base": "PER",
-      "routeCode": "LHR06",
-      "weeksPlanned": "6",
-      "category": "CPT-B787 F/O-B787 S/O-B787",
-      "daysAway": 6,
-      "containsLhrSector": true,
-      "applicableMinutes": 2200,
-      "flightMinutes": 1010,
-      "nightMinutes": 465,
-      "qualifyingNightMinutes": 0,
-      "deadheadMinutes": 1190,
-      "flightAndDeadheadMinutes": 2200,
-      "mpcMinutes": 1980,
-      "mdcMinutes": 0,
-      "hasFourPilot": true,
-      "rawNightDeltaMinutes": 0,
-      "governedNightDeltaMinutes": 0,
-      "governedWithNightMinutes": 2200,
-      "governedPercentDifference": 0,
-      "sectors": [
-        {
-          "route": "PER/SIN",
-          "isPax": true,
-          "isDeadhead": true,
-          "duty": 425,
-          "flight": 0,
-          "night": 0
-        },
-        {
-          "route": "SIN/LHR",
-          "isPax": true,
-          "isDeadhead": true,
-          "duty": 945,
-          "flight": 0,
-          "night": 0
-        },
-        {
-          "route": "LHR/PER",
-          "isPax": false,
-          "isDeadhead": false,
-          "duty": 1100,
-          "flight": 465,
-          "night": 0
-        }
-      ],
-      "weeksDisplay": ".....6..",
-      "depDay": "MO",
-      "reportLocal": "1115",
-      "arrivalLocal": "1145",
       "hasXWeek": false
     },
     {
@@ -2363,8 +2413,8 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 665,
-          "flight": 235,
-          "night": 0
+          "flight": 810,
+          "night": 235
         },
         {
           "route": "BNE/PER",
@@ -2375,6 +2425,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": ".......X",
       "depDay": "MO",
       "reportLocal": "0700",
@@ -2436,6 +2487,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "X.......",
       "depDay": "SU",
       "reportLocal": "0420",
@@ -2453,13 +2505,13 @@
       "applicableMinutes": 2640,
       "flightMinutes": 2005,
       "nightMinutes": 1075,
-      "qualifyingNightMinutes": 720,
+      "qualifyingNightMinutes": 1075,
       "deadheadMinutes": 155,
       "flightAndDeadheadMinutes": 2160,
       "mpcMinutes": 2640,
       "mdcMinutes": 0,
       "hasFourPilot": true,
-      "rawNightDeltaMinutes": 240,
+      "rawNightDeltaMinutes": 358.3333333333333,
       "governedNightDeltaMinutes": 0,
       "governedWithNightMinutes": 2640,
       "governedPercentDifference": 0,
@@ -2485,10 +2537,11 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 1045,
-          "flight": 355,
-          "night": 0
+          "flight": 955,
+          "night": 355
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": ".....6..",
       "depDay": "TU",
       "reportLocal": "1735",
@@ -2542,6 +2595,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "...X....",
       "depDay": "TU",
       "reportLocal": "0915",
@@ -2587,6 +2641,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "X.......",
       "depDay": "WE",
       "reportLocal": "1035",
@@ -2664,6 +2719,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": ".....X..",
       "depDay": "TU",
       "reportLocal": "0915",
@@ -2697,8 +2753,8 @@
           "isPax": false,
           "isDeadhead": false,
           "duty": 325,
-          "flight": 235,
-          "night": 0
+          "flight": 1210,
+          "night": 235
         },
         {
           "route": "SYD/PER",
@@ -2709,6 +2765,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": ".X......",
       "depDay": "SU",
       "reportLocal": "0930",
@@ -2770,6 +2827,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "......X.",
       "depDay": "MO",
       "reportLocal": "0950",
@@ -2823,6 +2881,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "...X....",
       "depDay": "TU",
       "reportLocal": "1140",
@@ -2884,6 +2943,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": ".X......",
       "depDay": "TU",
       "reportLocal": "0945",
@@ -2945,6 +3005,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": ".X......",
       "depDay": "WE",
       "reportLocal": "0945",
@@ -3006,6 +3067,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": ".X......",
       "depDay": "FR",
       "reportLocal": "0945",
@@ -3067,6 +3129,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "..X.....",
       "depDay": "TH",
       "reportLocal": "0945",
@@ -3128,6 +3191,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "..X.....",
       "depDay": "FR",
       "reportLocal": "0945",
@@ -3189,6 +3253,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "...X....",
       "depDay": "TU",
       "reportLocal": "0945",
@@ -3250,6 +3315,7 @@
           "night": 0
         }
       ],
+      "instanceCount": 1,
       "weeksDisplay": "...X....",
       "depDay": "SA",
       "reportLocal": "0945",

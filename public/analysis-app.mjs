@@ -1,10 +1,11 @@
 import { buildRosterAnalysis, formatMinutes } from "./shared/roster-analysis.mjs?v=20260329k";
 
-const APP_VERSION = "2026-03-30a";
+const APP_VERSION = "2026-03-30g";
 const CAPTAIN_PATTERN_ANALYSIS_URLS = {
-  SYD: "./data/bp374-captain-night-credit.json?v=20260329a",
-  MEL: "./data/bp374-captain-night-credit-mel.json?v=20260329a",
-  PER: "./data/bp374-captain-night-credit-per.json?v=20260330a",
+  SYD: "./data/bp374-captain-night-credit.json?v=20260330e",
+  MEL: "./data/bp374-captain-night-credit-mel.json?v=20260330e",
+  BNE: "./data/bp374-captain-night-credit-bne.json?v=20260330e",
+  PER: "./data/bp374-captain-night-credit-per.json?v=20260330e",
 };
 const ROSTER_LIBRARY_STORAGE_KEY = "rosterAnalysis.library.v1";
 const UI_STATE_STORAGE_KEY = "rosterAnalysis.uiState.v1";
@@ -32,11 +33,14 @@ const nightDeltaValue = document.getElementById("nightDeltaValue");
 const applicableCreditValue = document.getElementById("applicableCreditValue");
 const withNightCreditValue = document.getElementById("withNightCreditValue");
 const creditDifferenceValue = document.getElementById("creditDifferenceValue");
+const captainBaseAllBtn = document.getElementById("captainBaseAllBtn");
 const captainBaseSydBtn = document.getElementById("captainBaseSydBtn");
 const captainBaseMelBtn = document.getElementById("captainBaseMelBtn");
+const captainBaseBneBtn = document.getElementById("captainBaseBneBtn");
 const captainBasePerBtn = document.getElementById("captainBasePerBtn");
 const captainPatternSourceLabel = document.getElementById("captainPatternSourceLabel");
 const captainPatternStatus = document.getElementById("captainPatternStatus");
+const exportCaptainExcelBtn = document.getElementById("exportCaptainExcelBtn");
 const exportCaptainPdfBtn = document.getElementById("exportCaptainPdfBtn");
 const captainPatternCountValue = document.getElementById("captainPatternCountValue");
 const captainFourPilotCountValue = document.getElementById("captainFourPilotCountValue");
@@ -46,9 +50,12 @@ const captainRawDeltaValue = document.getElementById("captainRawDeltaValue");
 const captainGovernedDeltaValue = document.getElementById("captainGovernedDeltaValue");
 const captainWithNightValue = document.getElementById("captainWithNightValue");
 const captainPercentValue = document.getElementById("captainPercentValue");
+const captainAllBasesPercentValue = document.getElementById("captainAllBasesPercentValue");
 const captainPatternsBody = document.getElementById("captainPatternsBody");
+const captainSortBase = document.getElementById("captainSortBase");
 const captainSortPattern = document.getElementById("captainSortPattern");
 const captainSortWeeks = document.getElementById("captainSortWeeks");
+const captainSortOccurrences = document.getElementById("captainSortOccurrences");
 const captainSortRoute = document.getElementById("captainSortRoute");
 const captainSortCrew = document.getElementById("captainSortCrew");
 const captainSortDays = document.getElementById("captainSortDays");
@@ -60,8 +67,10 @@ const captainSortGovernedDelta = document.getElementById("captainSortGovernedDel
 const captainSortWithNight = document.getElementById("captainSortWithNight");
 const captainSortPercent = document.getElementById("captainSortPercent");
 const captainBaseButtons = {
+  ALL: captainBaseAllBtn,
   SYD: captainBaseSydBtn,
   MEL: captainBaseMelBtn,
+  BNE: captainBaseBneBtn,
   PER: captainBasePerBtn,
 };
 
@@ -109,13 +118,37 @@ function setCaptainPatternStatus(message) {
   }
 }
 
+function getAllBasesWeightedCaptainPercent() {
+  const analyses = Object.values(state.captainPatternAnalyses).filter(Boolean);
+  const totals = analyses.reduce(
+    (accumulator, analysis) => {
+      accumulator.applicableMinutes += Number(analysis?.summary?.applicableMinutes) || 0;
+      accumulator.governedNightDeltaMinutes += Number(analysis?.summary?.governedNightDeltaMinutes) || 0;
+      return accumulator;
+    },
+    { applicableMinutes: 0, governedNightDeltaMinutes: 0 }
+  );
+
+  if (totals.applicableMinutes <= 0) {
+    return 0;
+  }
+
+  return (totals.governedNightDeltaMinutes / totals.applicableMinutes) * 100;
+}
+
 function syncCaptainPatternAnalysisSelection() {
+  if (state.captainPatternBase === "ALL") {
+    state.captainPatternAnalysis = buildCombinedCaptainPatternAnalysis();
+    state.captainPatternAnalysisError = state.captainPatternAnalysis ? "" : "All-bases captain pattern comparison is still loading.";
+    return;
+  }
+
   state.captainPatternAnalysis = state.captainPatternAnalyses[state.captainPatternBase] || null;
   state.captainPatternAnalysisError = state.captainPatternAnalysisErrors[state.captainPatternBase] || "";
 }
 
 function setCaptainPatternBase(base, shouldRender = true) {
-  if (!CAPTAIN_PATTERN_ANALYSIS_URLS[base]) {
+  if (!captainBaseButtons[base]) {
     return;
   }
 
@@ -343,7 +376,7 @@ function loadPersistedState() {
     state.inspectedPatternId = validPatternIds.has(parsedUiState.inspectedPatternId)
       ? parsedUiState.inspectedPatternId
       : inspectedRoster?.analysis.patterns[0]?.id || "";
-    state.captainPatternBase = CAPTAIN_PATTERN_ANALYSIS_URLS[parsedUiState.captainPatternBase] ? parsedUiState.captainPatternBase : "SYD";
+    state.captainPatternBase = captainBaseButtons[parsedUiState.captainPatternBase] ? parsedUiState.captainPatternBase : "SYD";
 
   } catch (error) {
     console.error("Could not restore analysis UI state", error);
@@ -432,8 +465,10 @@ function getSelectedTotals() {
 
 function getCaptainSortButtonMeta() {
   return [
+    [captainSortBase, "base", "Base"],
     [captainSortPattern, "patternCode", "Pattern"],
     [captainSortWeeks, "weeksDisplay", "Weeks"],
+    [captainSortOccurrences, "instanceCount", "Occurrences"],
     [captainSortRoute, "routeCode", "Route"],
     [captainSortCrew, "crew", "Crew"],
     [captainSortDays, "daysAway", "Days Away"],
@@ -453,6 +488,8 @@ function getCaptainPatternSortValue(pattern, sortKey) {
   }
 
   switch (sortKey) {
+    case "base":
+      return String(pattern.base || "");
     case "crew":
       return pattern.hasFourPilot ? 1 : 0;
     case "patternCode":
@@ -486,6 +523,55 @@ function getSortedCaptainPatterns() {
   return [...(state.captainPatternAnalysis?.patterns || [])].sort(compareCaptainPatterns);
 }
 
+function buildCombinedCaptainPatternAnalysis() {
+  const analyses = Object.values(state.captainPatternAnalyses).filter(Boolean);
+  if (!analyses.length) {
+    return null;
+  }
+
+  const summary = analyses.reduce(
+    (totals, analysis) => {
+      const current = analysis.summary || {};
+      totals.patternCodeCount += Number(current.patternCodeCount) || 0;
+      totals.patternCount += Number(current.patternCount) || 0;
+      totals.estimatedFourPilotPatternCount += Number(current.estimatedFourPilotPatternCount) || 0;
+      totals.positiveGovernedPatternCount += Number(current.positiveGovernedPatternCount) || 0;
+      totals.zeroedByMinimumCreditCount += Number(current.zeroedByMinimumCreditCount) || 0;
+      totals.reducedByMinimumCreditCount += Number(current.reducedByMinimumCreditCount) || 0;
+      totals.applicableMinutes += Number(current.applicableMinutes) || 0;
+      totals.rawNightDeltaMinutes += Number(current.rawNightDeltaMinutes) || 0;
+      totals.governedNightDeltaMinutes += Number(current.governedNightDeltaMinutes) || 0;
+      totals.governedWithNightMinutes += Number(current.governedWithNightMinutes) || 0;
+      return totals;
+    },
+    {
+      patternCodeCount: 0,
+      patternCount: 0,
+      estimatedFourPilotPatternCount: 0,
+      positiveGovernedPatternCount: 0,
+      zeroedByMinimumCreditCount: 0,
+      reducedByMinimumCreditCount: 0,
+      applicableMinutes: 0,
+      rawNightDeltaMinutes: 0,
+      governedNightDeltaMinutes: 0,
+      governedWithNightMinutes: 0,
+      governedPercentDifference: 0,
+    }
+  );
+
+  summary.governedPercentDifference =
+    summary.applicableMinutes > 0 ? (summary.governedNightDeltaMinutes / summary.applicableMinutes) * 100 : 0;
+
+  return {
+    generatedAtUtc: new Date().toISOString(),
+    bidPeriod: analyses[0].bidPeriod || "374",
+    base: "ALL",
+    aircraftType: analyses[0].aircraftType || "B787",
+    summary,
+    patterns: analyses.flatMap((analysis) => analysis.patterns || []),
+  };
+}
+
 function exportCaptainPatternPdf() {
   const analysis = state.captainPatternAnalysis;
   if (!analysis) {
@@ -502,8 +588,8 @@ function exportCaptainPatternPdf() {
   const summary = analysis.summary || {};
   const patterns = getSortedCaptainPatterns();
   const summaryCards = [
-    ["Patterns", String(summary.patternCount || 0)],
-    ["4 pilot Patterns", String(summary.estimatedFourPilotPatternCount || 0)],
+    ["Flown Patterns", String(summary.patternCount || 0)],
+    ["4 pilot Flown", String(summary.estimatedFourPilotPatternCount || 0)],
     ["Positive Governed Uplift", String(summary.positiveGovernedPatternCount || 0)],
     ["Applicable Credit", formatMinutes(summary.applicableMinutes)],
     ["Raw Night Credit Δ", formatMinutes(summary.rawNightDeltaMinutes)],
@@ -524,8 +610,10 @@ function exportCaptainPatternPdf() {
     .map(
       (pattern) => `
         <tr class="${pattern.hasFourPilot ? "four-pilot" : ""}">
+          <td>${escapeHtml(pattern.base || analysis.base)}</td>
           <td>${escapeHtml(pattern.patternCode)}</td>
           <td>${escapeHtml(pattern.weeksDisplay)}</td>
+          <td>${escapeHtml(String(pattern.instanceCount || 1))}</td>
           <td>${escapeHtml(pattern.routeCode || "—")}</td>
           <td>${escapeHtml(getCaptainCrewLabel(pattern))}</td>
           <td>${escapeHtml(String(pattern.daysAway ?? ""))}</td>
@@ -599,8 +687,8 @@ function exportCaptainPatternPdf() {
           text-align: center;
           white-space: nowrap;
         }
-        th:nth-child(1), th:nth-child(2), th:nth-child(3),
-        td:nth-child(1), td:nth-child(2), td:nth-child(3) {
+        th:nth-child(1), th:nth-child(2), th:nth-child(3), th:nth-child(4),
+        td:nth-child(1), td:nth-child(2), td:nth-child(3), td:nth-child(4) {
           text-align: left;
         }
         th {
@@ -636,8 +724,10 @@ function exportCaptainPatternPdf() {
       <table>
         <thead>
           <tr>
+            <th>Base</th>
             <th>Pattern</th>
             <th>Weeks</th>
+            <th>Occurrences</th>
             <th>Route</th>
             <th>Crew</th>
             <th>Days Away</th>
@@ -669,6 +759,90 @@ function exportCaptainPatternPdf() {
   }, 450);
 }
 
+function downloadTextFile(fileName, text, mimeType) {
+  const blob = new Blob([text], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = fileName;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function escapeCsvCell(value) {
+  const text = String(value ?? "");
+  if (/[",\n]/.test(text)) {
+    return `"${text.replaceAll('"', '""')}"`;
+  }
+  return text;
+}
+
+function exportCaptainPatternExcel() {
+  const analysis = state.captainPatternAnalysis;
+  if (!analysis) {
+    setCaptainPatternStatus(`${state.captainPatternBase} captain pattern comparison is still loading, so there is nothing to export yet.`);
+    return;
+  }
+
+  const summary = analysis.summary || {};
+  const patterns = getSortedCaptainPatterns();
+  const rows = [
+    ["BP374 Captain Pattern Night Credit"],
+    [`Base`, analysis.base, `Aircraft`, analysis.aircraftType],
+    [],
+    ["Summary"],
+    ["Flown Patterns", summary.patternCount || 0],
+    ["Pattern Codes", summary.patternCodeCount || patterns.length],
+    ["4 pilot Flown", summary.estimatedFourPilotPatternCount || 0],
+    ["Positive Governed Uplift", summary.positiveGovernedPatternCount || 0],
+    ["Applicable Credit", formatMinutes(summary.applicableMinutes)],
+    ["Raw Night Credit Δ", formatMinutes(summary.rawNightDeltaMinutes)],
+    ["Effective Δ in Credit", formatMinutes(summary.governedNightDeltaMinutes)],
+    ["With 4 pilot NC", formatMinutes(summary.governedWithNightMinutes)],
+    ["% Difference", formatPercent(summary.governedPercentDifference) || "0.0%"],
+    [],
+    [
+      "Base",
+      "Pattern",
+      "Weeks",
+      "Occurrences",
+      "Route",
+      "Crew",
+      "Days Away",
+      "Applicable Credit",
+      "Flight Total",
+      "Night Total",
+      "Raw Night Credit Δ",
+      "Effective Δ in Credit",
+      "With 4 pilot NC",
+      "% Difference",
+    ],
+    ...patterns.map((pattern) => [
+      pattern.base,
+      pattern.patternCode,
+      pattern.weeksDisplay,
+      pattern.instanceCount || 1,
+      pattern.routeCode || "—",
+      getCaptainCrewLabel(pattern),
+      pattern.daysAway == null ? "" : String(pattern.daysAway),
+      formatMinutes(pattern.applicableMinutes),
+      formatMinutes(pattern.flightMinutes),
+      formatMinutes(pattern.nightMinutes),
+      formatMinutes(pattern.rawNightDeltaMinutes),
+      formatMinutes(pattern.governedNightDeltaMinutes),
+      formatMinutes(pattern.governedWithNightMinutes),
+      formatPercent(pattern.governedPercentDifference) || "0.0%",
+    ]),
+  ];
+
+  const csv = `\ufeff${rows.map((row) => row.map(escapeCsvCell).join(",")).join("\n")}\n`;
+  const fileName = `BP${analysis.bidPeriod}-${analysis.base}-captain-pattern-night-credit.csv`;
+  downloadTextFile(fileName, csv, "text/csv;charset=utf-8");
+  setCaptainPatternStatus(`Excel export downloaded for BP${analysis.bidPeriod} ${analysis.base}. Open the CSV in Excel to review the pattern table, including occurrences.`);
+}
+
 function renderCaptainPatternAnalysis() {
   if (!captainPatternsBody) {
     return;
@@ -681,12 +855,15 @@ function renderCaptainPatternAnalysis() {
 
   const analysis = state.captainPatternAnalysis;
   if (!analysis) {
+    if (exportCaptainExcelBtn) {
+      exportCaptainExcelBtn.disabled = true;
+    }
     if (exportCaptainPdfBtn) {
       exportCaptainPdfBtn.disabled = true;
     }
     const row = document.createElement("tr");
     const cell = document.createElement("td");
-    cell.colSpan = 12;
+    cell.colSpan = 14;
     cell.textContent = state.captainPatternAnalysisError || `Loading BP374 ${state.captainPatternBase} captain pattern comparison.`;
     row.appendChild(cell);
     captainPatternsBody.appendChild(row);
@@ -698,11 +875,14 @@ function renderCaptainPatternAnalysis() {
   }
 
   const { summary, patterns = [] } = analysis;
+  if (exportCaptainExcelBtn) {
+    exportCaptainExcelBtn.disabled = false;
+  }
   if (exportCaptainPdfBtn) {
     exportCaptainPdfBtn.disabled = false;
   }
   if (captainPatternSourceLabel) {
-    captainPatternSourceLabel.textContent = `BP${analysis.bidPeriod} | ${analysis.base} ${analysis.aircraftType} | ${patterns.length} captain patterns | ${summary.estimatedFourPilotPatternCount} estimated 4 pilot`;
+    captainPatternSourceLabel.textContent = `BP${analysis.bidPeriod} | ${analysis.base} ${analysis.aircraftType} | ${patterns.length} pattern codes | ${summary.patternCount} flown patterns | ${summary.estimatedFourPilotPatternCount} estimated 4 pilot`;
   }
   setCaptainPatternStatus("");
 
@@ -714,6 +894,9 @@ function renderCaptainPatternAnalysis() {
   captainGovernedDeltaValue.textContent = formatMinutes(summary.governedNightDeltaMinutes);
   captainWithNightValue.textContent = formatMinutes(summary.governedWithNightMinutes);
   captainPercentValue.textContent = formatPercent(summary.governedPercentDifference) || "0.0%";
+  if (captainAllBasesPercentValue) {
+    captainAllBasesPercentValue.textContent = formatPercent(getAllBasesWeightedCaptainPercent()) || "0.0%";
+  }
 
   for (const [button, sortKey, label] of getCaptainSortButtonMeta()) {
     if (!button) {
@@ -732,8 +915,10 @@ function renderCaptainPatternAnalysis() {
     }
 
     const values = [
+      pattern.base || analysis.base,
       pattern.patternCode,
       pattern.weeksDisplay,
+      pattern.instanceCount == null ? "1" : String(pattern.instanceCount),
       pattern.routeCode || "—",
       getCaptainCrewLabel(pattern),
       pattern.daysAway == null ? "" : String(pattern.daysAway),
@@ -1202,6 +1387,7 @@ clearSelectionBtn?.addEventListener("click", () => {
   renderAll();
 });
 
+exportCaptainExcelBtn?.addEventListener("click", exportCaptainPatternExcel);
 exportCaptainPdfBtn?.addEventListener("click", exportCaptainPatternPdf);
 for (const base of Object.keys(captainBaseButtons)) {
   captainBaseButtons[base]?.addEventListener("click", () => setCaptainPatternBase(base));

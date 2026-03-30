@@ -109,6 +109,14 @@ header p {
   justify-content: flex-end;
 }
 
+.captain-export-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
 .toggle-btn {
   padding: 0.4rem 0.8rem;
   font-size: 0.9rem;
@@ -267,6 +275,9 @@ button:disabled {
 }
 
 .summary-stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   padding: 0.85rem 0.95rem;
   border: 1px solid var(--border);
   border-radius: 0.7rem;
@@ -278,11 +289,16 @@ button:disabled {
   color: var(--muted);
   font-size: 0.86rem;
   margin-bottom: 0.35rem;
+  min-height: 2.6em;
+  line-height: 1.3;
 }
 
 .summary-stat strong {
+  display: block;
   font-size: 1.25rem;
   letter-spacing: 0.02em;
+  line-height: 1;
+  margin-top: auto;
 }
 
 select,

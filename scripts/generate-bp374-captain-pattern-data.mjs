@@ -150,6 +150,9 @@ function parseSectorLine(line) {
   } else if (directTimes.length >= 4) {
     flightMinutes = directTimes.at(-3);
     nightMinutes = directTimes.at(-2);
+  } else if (directTimes.length === 3) {
+    flightMinutes = directTimes[0];
+    nightMinutes = directTimes[1];
   } else if (directTimes.length >= 2) {
     flightMinutes = directTimes.at(-2);
     nightMinutes = 0;
@@ -246,6 +249,7 @@ function parsePlannedPatterns(text) {
 }
 
 function createPlaceholderPattern(base, availablePattern) {
+  const instanceCount = [...availablePattern.weeksDisplay].filter((character) => character !== ".").length;
   return {
     patternCode: availablePattern.patternCode,
     base,
@@ -268,6 +272,7 @@ function createPlaceholderPattern(base, availablePattern) {
     governedWithNightMinutes: parseMinutes(availablePattern.applicableDisplay),
     governedPercentDifference: 0,
     sectors: [],
+    instanceCount,
     weeksDisplay: availablePattern.weeksDisplay,
     depDay: availablePattern.depDay,
     reportLocal: availablePattern.reportLocal,
@@ -285,6 +290,7 @@ function buildAnalysis({ base, plannedPdf, availablePdf, ignoredCodes = [] }) {
   const unmatchedCodes = [];
 
   const patterns = availablePatterns.map((availablePattern) => {
+    const instanceCount = [...availablePattern.weeksDisplay].filter((character) => character !== ".").length;
     const plannedPattern = plannedByCode.get(availablePattern.patternCode);
     if (!plannedPattern) {
       unmatchedCodes.push(availablePattern.patternCode);
@@ -292,6 +298,8 @@ function buildAnalysis({ base, plannedPdf, availablePdf, ignoredCodes = [] }) {
     }
 
     const containsLhrSector = plannedPattern.sectors.some((sector) => sector.route.includes("LHR"));
+    const baseToPerRoute = `${base}/PER`;
+    const perToBaseRoute = `PER/${base}`;
     const hasFourPilot = plannedPattern.sectors.some(
       (sector) => !sector.isDeadhead && !sector.samePort && sector.dutyMinutes > 12 * 60
     );
@@ -305,6 +313,9 @@ function buildAnalysis({ base, plannedPdf, availablePdf, ignoredCodes = [] }) {
             return total;
           }
           if (containsLhrSector && (sector.route === "SYD/PER" || sector.route === "PER/SYD")) {
+            return total;
+          }
+          if (containsLhrSector && base !== "PER" && (sector.route === baseToPerRoute || sector.route === perToBaseRoute)) {
             return total;
           }
           return total + sector.nightMinutes;
@@ -349,6 +360,7 @@ function buildAnalysis({ base, plannedPdf, availablePdf, ignoredCodes = [] }) {
         flight: sector.flightMinutes,
         night: sector.nightMinutes,
       })),
+      instanceCount,
       weeksDisplay: availablePattern.weeksDisplay,
       depDay: availablePattern.depDay,
       reportLocal: availablePattern.reportLocal,
@@ -366,26 +378,29 @@ function buildAnalysis({ base, plannedPdf, availablePdf, ignoredCodes = [] }) {
 
   const summary = patterns.reduce(
     (totals, pattern) => {
-      totals.patternCount += 1;
+      const weight = pattern.instanceCount || 1;
+      totals.patternCodeCount += 1;
+      totals.patternCount += weight;
       if (pattern.hasFourPilot) {
-        totals.estimatedFourPilotPatternCount += 1;
+        totals.estimatedFourPilotPatternCount += weight;
       }
       if (pattern.governedNightDeltaMinutes > 0) {
-        totals.positiveGovernedPatternCount += 1;
+        totals.positiveGovernedPatternCount += weight;
       }
       if (pattern.rawNightDeltaMinutes > 0 && pattern.governedNightDeltaMinutes === 0) {
-        totals.zeroedByMinimumCreditCount += 1;
+        totals.zeroedByMinimumCreditCount += weight;
       }
       if (pattern.rawNightDeltaMinutes > pattern.governedNightDeltaMinutes) {
-        totals.reducedByMinimumCreditCount += 1;
+        totals.reducedByMinimumCreditCount += weight;
       }
-      totals.applicableMinutes += pattern.applicableMinutes;
-      totals.rawNightDeltaMinutes += pattern.rawNightDeltaMinutes;
-      totals.governedNightDeltaMinutes += pattern.governedNightDeltaMinutes;
-      totals.governedWithNightMinutes += pattern.governedWithNightMinutes;
+      totals.applicableMinutes += pattern.applicableMinutes * weight;
+      totals.rawNightDeltaMinutes += pattern.rawNightDeltaMinutes * weight;
+      totals.governedNightDeltaMinutes += pattern.governedNightDeltaMinutes * weight;
+      totals.governedWithNightMinutes += pattern.governedWithNightMinutes * weight;
       return totals;
     },
     {
+      patternCodeCount: 0,
       patternCount: 0,
       estimatedFourPilotPatternCount: 0,
       positiveGovernedPatternCount: 0,
@@ -421,9 +436,10 @@ function buildAnalysis({ base, plannedPdf, availablePdf, ignoredCodes = [] }) {
         "AKL/SYD",
         "SYD/PER on LHR patterns",
         "PER/SYD on LHR patterns",
+        ...(base === "PER" ? [] : [`${base}/PER on LHR patterns`, `PER/${base} on LHR patterns`]),
       ],
       fourPilotHeuristic:
-        "Pattern treated as 4 pilot when any non-PAX, non-deadhead sector duty exceeds 12:00. If that occurs, qualifying night includes all operating sectors except SYD/AKL and AKL/SYD, plus SYD/PER and PER/SYD on LHR patterns.",
+        `Pattern treated as 4 pilot when any non-PAX, non-deadhead sector duty exceeds 12:00. If that occurs, qualifying night includes all operating sectors except SYD/AKL and AKL/SYD, plus SYD/PER and PER/SYD on LHR patterns${base === "PER" ? "" : ` and ${base}/PER plus PER/${base} on LHR patterns`}.`,
       governedDeltaRule: "Effective delta is governed as max(Applicable Credit, Flight Total + Deadhead Total + qualifying Night/3).",
     },
     summary,
