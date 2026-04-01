@@ -510,7 +510,7 @@ th {
 .roster-library-table th:nth-child(4),
 .roster-library-table td:nth-child(4),
 .roster-library-table .col-bp {
-  width: 3rem;
+  width: 2.8rem;
 }
 
 .roster-library-table th:nth-child(5),
@@ -539,17 +539,26 @@ th {
 .roster-library-table .col-route-checks,
 .roster-library-table .col-pattern-credit,
 .roster-library-table .col-other,
-.roster-library-table .col-training,
+.roster-library-table .col-training {
+  width: 4.7rem;
+}
+
+.roster-library-table th:nth-child(12),
+.roster-library-table td:nth-child(12),
+.roster-library-table th:nth-child(13),
+.roster-library-table td:nth-child(13),
+.roster-library-table th:nth-child(15),
+.roster-library-table td:nth-child(15),
 .roster-library-table .col-projected,
 .roster-library-table .col-night-delta,
 .roster-library-table .col-diff {
-  width: 5.2rem;
+  width: 6.1rem;
 }
 
 .roster-library-table th:nth-child(14),
 .roster-library-table td:nth-child(14),
 .roster-library-table .col-projected-night {
-  width: 7.8rem;
+  width: 8.8rem;
 }
 
 .roster-library-wrap .group-row td,
