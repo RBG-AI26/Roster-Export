@@ -185,6 +185,14 @@ function getRosterTrainingMinutes(roster) {
   return Number(roster?.analysis?.totalTrainingCreditMinutes) || 0;
 }
 
+function getRosterWorkedDays(roster) {
+  return Number(roster?.analysis?.totalWorkedDayCount) || 0;
+}
+
+function getRosterLeaveDays(roster) {
+  return Number(roster?.analysis?.totalLeaveDayCount) || 0;
+}
+
 function getRosterProjectedWithNightMinutes(roster) {
   return getProjectedHoursMinutes(roster?.analysis) + getRosterNightDeltaMinutes(roster);
 }
@@ -1007,7 +1015,7 @@ function renderRosterLibrary() {
   if (!state.rosters.length) {
     const row = document.createElement("tr");
     const cell = document.createElement("td");
-    cell.colSpan = 11;
+    cell.colSpan = 13;
     cell.textContent = "No rosters loaded yet.";
     row.appendChild(cell);
     rosterLibraryBody.appendChild(row);
@@ -1019,7 +1027,7 @@ function renderRosterLibrary() {
     const groupRow = document.createElement("tr");
     groupRow.classList.add("group-row");
     const groupCell = document.createElement("td");
-    groupCell.colSpan = 11;
+    groupCell.colSpan = 13;
     groupCell.textContent = `BP${group.bidPeriod}`;
     groupRow.appendChild(groupCell);
     rosterLibraryBody.appendChild(groupRow);
@@ -1072,6 +1080,8 @@ function renderRosterLibrary() {
 
       const values = [
         roster.analysis.parsedRoster.bidPeriod || "",
+        String(getRosterWorkedDays(roster)),
+        String(getRosterLeaveDays(roster)),
         formatMinutes(roster.analysis.totalBaseApplicableCreditMinutes),
         formatMinutes(Number(roster.analysis.totalOtherCreditedDutyMinutes) || 0),
         formatMinutes(getRosterTrainingMinutes(roster)),
@@ -1098,7 +1108,7 @@ function renderRosterLibrary() {
     averageRow.classList.add("average-row");
 
     const labelCell = document.createElement("td");
-    labelCell.colSpan = 7;
+    labelCell.colSpan = 9;
     labelCell.textContent = `Selected Average (${selectedRosters.length})`;
     averageRow.appendChild(labelCell);
 

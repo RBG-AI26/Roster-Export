@@ -16,8 +16,9 @@ const MONTHS = {
   Dec: 11,
 };
 
-const LEAVE_DUTY_CODES = new Set(["AL", "SL", "LSL", "UL", "HL"]);
-const NON_PATTERN_DUTY_CODES = new Set(["A", "X", "RX", "AL", "SL", "LSL", "UL", "HL", "SR"]);
+const LEAVE_DUTY_CODES = new Set(["AL", "SL", "LSL", "GL", "UL", "HL"]);
+const SUMMARY_LEAVE_DUTY_CODES = new Set(["AL", "SL", "LSL", "GL"]);
+const NON_PATTERN_DUTY_CODES = new Set(["A", "X", "RX", "AL", "SL", "LSL", "GL", "UL", "HL", "SR"]);
 const NON_PATTERN_DUTY_PREFIXES = ["SIM", "EPA", "EPC", "EPE", "TPA", "TPAX", "TNR", "PMI", "EBT", "TSPD"];
 const TRAINING_BUCKET_PREFIXES = ["SIM", "EPA", "EPC", "EPE", "TPA", "TPAX", "TNR"];
 const HEADER_ADJUSTMENT_CODES = new Map([
@@ -356,6 +357,19 @@ function parseScheduleRows(text) {
 
   rows.sort((left, right) => left.date - right.date || left.dutyCode.localeCompare(right.dutyCode));
   return rows;
+}
+
+function countDaysByPredicate(scheduleRows, predicate) {
+  const days = new Set();
+  for (const row of Array.isArray(scheduleRows) ? scheduleRows : []) {
+    if (!row?.iso) {
+      continue;
+    }
+    if (predicate(row)) {
+      days.add(row.iso);
+    }
+  }
+  return days.size;
 }
 
 function makeScheduleRowKey(row) {
@@ -857,6 +871,14 @@ export function buildRosterAnalysis(text, fileName = "") {
     ? creditedDutyItems.filter((item) => !isTrainingDutyItem(item))
     : creditedDutyItems;
   const adjustmentItems = parseHeaderAdjustmentItems(text);
+  const totalWorkedDayCount = countDaysByPredicate(
+    scheduleRows,
+    (row) => !["A", "X", "RX"].includes(String(row?.dutyCode || "").trim().toUpperCase()) && !LEAVE_DUTY_CODES.has(String(row?.dutyCode || "").trim().toUpperCase())
+  );
+  const totalLeaveDayCount = countDaysByPredicate(
+    scheduleRows,
+    (row) => SUMMARY_LEAVE_DUTY_CODES.has(String(row?.dutyCode || "").trim().toUpperCase())
+  );
   const totalTrainingCreditedDutyMinutes = trainingItems.reduce(
     (total, item) => total + (Number(item.creditMinutes) || 0),
     0
@@ -914,6 +936,8 @@ export function buildRosterAnalysis(text, fileName = "") {
     totalBaseApplicableCreditMinutes,
     totalOtherCreditedDutyMinutes,
     totalAdjustmentCreditMinutes,
+    totalWorkedDayCount,
+    totalLeaveDayCount,
     totalApplicableCreditMinutes,
     totalWithNightPatternCreditMinutes,
     totalWithNightCreditMinutes,

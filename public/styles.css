@@ -478,11 +478,11 @@ th {
 
 .roster-library-table th,
 .roster-library-table td {
-  padding-inline: 0.12rem;
+  padding-inline: 0.08rem;
 }
 
 .roster-library-table th {
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   letter-spacing: 0.01em;
 }
 
@@ -495,7 +495,7 @@ th {
 .roster-library-table th:nth-child(1),
 .roster-library-table td:nth-child(1),
 .roster-library-table .col-select {
-  width: 3.4rem;
+  width: 3rem;
 }
 
 .roster-library-table th:nth-child(2),
@@ -504,13 +504,13 @@ th {
 .roster-library-table td:nth-child(3),
 .roster-library-table .col-inspect,
 .roster-library-table .col-remove {
-  width: 6.1rem;
+  width: 5.8rem;
 }
 
 .roster-library-table th:nth-child(4),
 .roster-library-table td:nth-child(4),
 .roster-library-table .col-bp {
-  width: 3.4rem;
+  width: 3.1rem;
 }
 
 .roster-library-table th:nth-child(5),
@@ -523,21 +523,27 @@ th {
 .roster-library-table td:nth-child(8),
 .roster-library-table th:nth-child(9),
 .roster-library-table td:nth-child(9),
+.roster-library-table th:nth-child(10),
+.roster-library-table td:nth-child(10),
 .roster-library-table th:nth-child(11),
 .roster-library-table td:nth-child(11),
+.roster-library-table th:nth-child(13),
+.roster-library-table td:nth-child(13),
+.roster-library-table .col-worked-days,
+.roster-library-table .col-leave-days,
 .roster-library-table .col-pattern-credit,
 .roster-library-table .col-other,
 .roster-library-table .col-training,
 .roster-library-table .col-projected,
 .roster-library-table .col-night-delta,
 .roster-library-table .col-diff {
-  width: 6.8rem;
+  width: 5.9rem;
 }
 
-.roster-library-table th:nth-child(10),
-.roster-library-table td:nth-child(10),
+.roster-library-table th:nth-child(12),
+.roster-library-table td:nth-child(12),
 .roster-library-table .col-projected-night {
-  width: 9.8rem;
+  width: 8.8rem;
 }
 
 .roster-library-wrap .group-row td,
