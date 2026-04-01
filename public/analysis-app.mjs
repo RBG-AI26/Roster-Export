@@ -1,11 +1,11 @@
 import { buildRosterAnalysis, formatMinutes } from "./shared/roster-analysis.mjs?v=20260329k";
 
-const APP_VERSION = "2026-03-30g";
+const APP_VERSION = "2026-04-01a";
 const CAPTAIN_PATTERN_ANALYSIS_URLS = {
-  SYD: "./data/bp374-captain-night-credit.json?v=20260330e",
-  MEL: "./data/bp374-captain-night-credit-mel.json?v=20260330e",
-  BNE: "./data/bp374-captain-night-credit-bne.json?v=20260330e",
-  PER: "./data/bp374-captain-night-credit-per.json?v=20260330e",
+  SYD: "./data/bp374-captain-night-credit.json?v=20260401a",
+  MEL: "./data/bp374-captain-night-credit-mel.json?v=20260401a",
+  BNE: "./data/bp374-captain-night-credit-bne.json?v=20260401a",
+  PER: "./data/bp374-captain-night-credit-per.json?v=20260401a",
 };
 const ROSTER_LIBRARY_STORAGE_KEY = "rosterAnalysis.library.v1";
 const UI_STATE_STORAGE_KEY = "rosterAnalysis.uiState.v1";
@@ -477,7 +477,7 @@ function getCaptainSortButtonMeta() {
     [captainSortNight, "nightMinutes", "Night Total"],
     [captainSortRawDelta, "rawNightDeltaMinutes", "Raw Night Credit Δ"],
     [captainSortGovernedDelta, "governedNightDeltaMinutes", "Effective Δ in Credit"],
-    [captainSortWithNight, "governedWithNightMinutes", "With 4 pilot NC"],
+    [captainSortWithNight, "governedWithNightMinutes", "With Proposed NC"],
     [captainSortPercent, "governedPercentDifference", "% Difference"],
   ];
 }
@@ -594,7 +594,7 @@ function exportCaptainPatternPdf() {
     ["Applicable Credit", formatMinutes(summary.applicableMinutes)],
     ["Raw Night Credit Δ", formatMinutes(summary.rawNightDeltaMinutes)],
     ["Effective Δ in Credit", formatMinutes(summary.governedNightDeltaMinutes)],
-    ["With 4 pilot NC", formatMinutes(summary.governedWithNightMinutes)],
+    ["With Proposed NC", formatMinutes(summary.governedWithNightMinutes)],
     ["% Difference", formatPercent(summary.governedPercentDifference) || "0.0%"],
   ]
     .map(
@@ -736,7 +736,7 @@ function exportCaptainPatternPdf() {
             <th>Night Total</th>
             <th>Raw Night Credit Δ</th>
             <th>Effective Δ in Credit</th>
-            <th>With 4 pilot NC</th>
+            <th>With Proposed NC</th>
             <th>% Difference</th>
           </tr>
         </thead>
@@ -800,7 +800,7 @@ function exportCaptainPatternExcel() {
     ["Applicable Credit", formatMinutes(summary.applicableMinutes)],
     ["Raw Night Credit Δ", formatMinutes(summary.rawNightDeltaMinutes)],
     ["Effective Δ in Credit", formatMinutes(summary.governedNightDeltaMinutes)],
-    ["With 4 pilot NC", formatMinutes(summary.governedWithNightMinutes)],
+    ["With Proposed NC", formatMinutes(summary.governedWithNightMinutes)],
     ["% Difference", formatPercent(summary.governedPercentDifference) || "0.0%"],
     [],
     [
@@ -816,7 +816,7 @@ function exportCaptainPatternExcel() {
       "Night Total",
       "Raw Night Credit Δ",
       "Effective Δ in Credit",
-      "With 4 pilot NC",
+      "With Proposed NC",
       "% Difference",
     ],
     ...patterns.map((pattern) => [

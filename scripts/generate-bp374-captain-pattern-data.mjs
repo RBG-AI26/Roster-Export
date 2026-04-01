@@ -262,6 +262,8 @@ function createPlaceholderPattern(base, availablePattern) {
     flightMinutes: 0,
     nightMinutes: 0,
     qualifyingNightMinutes: 0,
+    currentNightCreditMinutes: 0,
+    proposedNightCreditMinutes: 0,
     deadheadMinutes: 0,
     flightAndDeadheadMinutes: 0,
     mpcMinutes: 0,
@@ -303,31 +305,43 @@ function buildAnalysis({ base, plannedPdf, availablePdf, ignoredCodes = [] }) {
     const hasFourPilot = plannedPattern.sectors.some(
       (sector) => !sector.isDeadhead && !sector.samePort && sector.dutyMinutes > 12 * 60
     );
+    const sectorClassifications = plannedPattern.sectors.map((sector) => {
+      const isOperatingSector = !sector.isDeadhead && !sector.samePort;
+      const excludedFromFourPilot =
+        sector.route === "SYD/AKL" ||
+        sector.route === "AKL/SYD" ||
+        (containsLhrSector && (sector.route === "SYD/PER" || sector.route === "PER/SYD")) ||
+        (containsLhrSector && base !== "PER" && (sector.route === baseToPerRoute || sector.route === perToBaseRoute));
+      const isFourPilotSector = hasFourPilot && isOperatingSector && !excludedFromFourPilot;
+      const currentNightRate = !isOperatingSector ? 0 : isFourPilotSector ? 0 : 0.25;
+      const proposedNightRate = isOperatingSector ? 1 / 3 : 0;
+      return {
+        sector,
+        isOperatingSector,
+        isFourPilotSector,
+        currentNightCreditMinutes: sector.nightMinutes * currentNightRate,
+        proposedNightCreditMinutes: sector.nightMinutes * proposedNightRate,
+      };
+    });
 
-    const qualifyingNightMinutes = hasFourPilot
-      ? plannedPattern.sectors.reduce((total, sector) => {
-          if (sector.isDeadhead || sector.samePort) {
-            return total;
-          }
-          if (sector.route === "SYD/AKL" || sector.route === "AKL/SYD") {
-            return total;
-          }
-          if (containsLhrSector && (sector.route === "SYD/PER" || sector.route === "PER/SYD")) {
-            return total;
-          }
-          if (containsLhrSector && base !== "PER" && (sector.route === baseToPerRoute || sector.route === perToBaseRoute)) {
-            return total;
-          }
-          return total + sector.nightMinutes;
-        }, 0)
-      : 0;
-
-    const rawNightDeltaMinutes = qualifyingNightMinutes / 3;
+    const qualifyingNightMinutes = sectorClassifications.reduce(
+      (total, entry) => total + (entry.isOperatingSector ? entry.sector.nightMinutes : 0),
+      0
+    );
+    const currentNightCreditMinutes = sectorClassifications.reduce(
+      (total, entry) => total + entry.currentNightCreditMinutes,
+      0
+    );
+    const proposedNightCreditMinutes = sectorClassifications.reduce(
+      (total, entry) => total + entry.proposedNightCreditMinutes,
+      0
+    );
+    const rawNightDeltaMinutes = Math.max(0, proposedNightCreditMinutes - currentNightCreditMinutes);
     const baseComparisonMinutes =
       plannedPattern.flightMinutes + plannedPattern.sectors.reduce((total, sector) => total + sector.deadheadMinutes, 0);
     const governedWithNightMinutes =
       rawNightDeltaMinutes > 0
-        ? Math.max(plannedPattern.applicableMinutes, baseComparisonMinutes + rawNightDeltaMinutes)
+        ? Math.max(plannedPattern.applicableMinutes, baseComparisonMinutes + proposedNightCreditMinutes)
         : plannedPattern.applicableMinutes;
     const governedNightDeltaMinutes = Math.max(0, governedWithNightMinutes - plannedPattern.applicableMinutes);
 
@@ -343,6 +357,8 @@ function buildAnalysis({ base, plannedPdf, availablePdf, ignoredCodes = [] }) {
       flightMinutes: plannedPattern.flightMinutes,
       nightMinutes: plannedPattern.nightMinutes,
       qualifyingNightMinutes,
+      currentNightCreditMinutes,
+      proposedNightCreditMinutes,
       deadheadMinutes: plannedPattern.sectors.reduce((total, sector) => total + sector.deadheadMinutes, 0),
       flightAndDeadheadMinutes: plannedPattern.flightMinutes + plannedPattern.sectors.reduce((total, sector) => total + sector.deadheadMinutes, 0),
       mpcMinutes: plannedPattern.mpcMinutes,
@@ -440,7 +456,9 @@ function buildAnalysis({ base, plannedPdf, availablePdf, ignoredCodes = [] }) {
       ],
       fourPilotHeuristic:
         `Pattern treated as 4 pilot when any non-PAX, non-deadhead sector duty exceeds 12:00. If that occurs, qualifying night includes all operating sectors except SYD/AKL and AKL/SYD, plus SYD/PER and PER/SYD on LHR patterns${base === "PER" ? "" : ` and ${base}/PER plus PER/${base} on LHR patterns`}.`,
-      governedDeltaRule: "Effective delta is governed as max(Applicable Credit, Flight Total + Deadhead Total + qualifying Night/3).",
+      currentNightRule: "Current assumption: 2/3 pilot sectors are credited at 0.25 of night, 4 pilot sectors at 0.00.",
+      proposedNightRule: "Proposed assumption: all operating sectors are credited at 1/3 of night.",
+      governedDeltaRule: "Effective delta is governed as max(Applicable Credit, Flight Total + Deadhead Total + proposed night credit).",
     },
     summary,
     unmatchedCodes,

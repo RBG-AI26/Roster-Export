@@ -129,7 +129,7 @@
             <strong id="captainGovernedDeltaValue">0:00</strong>
           </article>
           <article class="summary-stat">
-            <span class="summary-label">With 4 pilot NC</span>
+            <span class="summary-label">With Proposed NC</span>
             <strong id="captainWithNightValue">0:00</strong>
           </article>
           <article class="summary-stat">
@@ -158,7 +158,7 @@
                 <th><button id="captainSortNight" class="sort-header-btn" type="button">Night Total</button></th>
                 <th><button id="captainSortRawDelta" class="sort-header-btn" type="button">Raw Night Credit Δ</button></th>
                 <th><button id="captainSortGovernedDelta" class="sort-header-btn" type="button">Effective Δ in Credit</button></th>
-                <th><button id="captainSortWithNight" class="sort-header-btn" type="button">With 4 pilot NC</button></th>
+                <th><button id="captainSortWithNight" class="sort-header-btn" type="button">With Proposed NC</button></th>
                 <th><button id="captainSortPercent" class="sort-header-btn" type="button">% Difference</button></th>
               </tr>
             </thead>
@@ -306,7 +306,7 @@
     <script>
       (async () => {
         try {
-          await import("./analysis-app.mjs?v=20260330g");
+          await import("./analysis-app.mjs?v=20260401a");
         } catch (error) {
           console.error("Failed to load analysis app module", error);
           const statusEl = document.getElementById("status");
