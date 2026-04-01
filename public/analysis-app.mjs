@@ -1,11 +1,11 @@
 import { buildRosterAnalysis, formatMinutes } from "./shared/roster-analysis.mjs?v=20260329k";
 
-const APP_VERSION = "2026-04-01a";
+const APP_VERSION = "2026-04-02a";
 const CAPTAIN_PATTERN_ANALYSIS_URLS = {
-  SYD: "./data/bp374-captain-night-credit.json?v=20260401a",
-  MEL: "./data/bp374-captain-night-credit-mel.json?v=20260401a",
-  BNE: "./data/bp374-captain-night-credit-bne.json?v=20260401a",
-  PER: "./data/bp374-captain-night-credit-per.json?v=20260401a",
+  SYD: "./data/bp374-captain-night-credit.json?v=20260402a",
+  MEL: "./data/bp374-captain-night-credit-mel.json?v=20260402a",
+  BNE: "./data/bp374-captain-night-credit-bne.json?v=20260402a",
+  PER: "./data/bp374-captain-night-credit-per.json?v=20260402a",
 };
 const ROSTER_LIBRARY_STORAGE_KEY = "rosterAnalysis.library.v1";
 const UI_STATE_STORAGE_KEY = "rosterAnalysis.uiState.v1";
@@ -62,6 +62,8 @@ const captainSortDays = document.getElementById("captainSortDays");
 const captainSortApplicable = document.getElementById("captainSortApplicable");
 const captainSortFlight = document.getElementById("captainSortFlight");
 const captainSortNight = document.getElementById("captainSortNight");
+const captainSortPaxSectors = document.getElementById("captainSortPaxSectors");
+const captainSortRouteChecks = document.getElementById("captainSortRouteChecks");
 const captainSortRawDelta = document.getElementById("captainSortRawDelta");
 const captainSortGovernedDelta = document.getElementById("captainSortGovernedDelta");
 const captainSortWithNight = document.getElementById("captainSortWithNight");
@@ -483,6 +485,8 @@ function getCaptainSortButtonMeta() {
     [captainSortApplicable, "applicableMinutes", "Applicable Credit"],
     [captainSortFlight, "flightMinutes", "Flight Total"],
     [captainSortNight, "nightMinutes", "Night Total"],
+    [captainSortPaxSectors, "paxSectorCount", "PAX Sectors"],
+    [captainSortRouteChecks, "routeCheckSectorCount", "Route Checks"],
     [captainSortRawDelta, "rawNightDeltaMinutes", "Raw Night Credit Δ"],
     [captainSortGovernedDelta, "governedNightDeltaMinutes", "Effective Δ in Credit"],
     [captainSortWithNight, "governedWithNightMinutes", "With Proposed NC"],
@@ -628,6 +632,8 @@ function exportCaptainPatternPdf() {
           <td>${escapeHtml(formatMinutes(pattern.applicableMinutes))}</td>
           <td>${escapeHtml(formatMinutes(pattern.flightMinutes))}</td>
           <td>${escapeHtml(formatMinutes(pattern.nightMinutes))}</td>
+          <td>${escapeHtml(String(pattern.paxSectorCount || 0))}</td>
+          <td>${escapeHtml(String(pattern.routeCheckSectorCount || 0))}</td>
           <td>${escapeHtml(formatMinutes(pattern.rawNightDeltaMinutes))}</td>
           <td>${escapeHtml(formatMinutes(pattern.governedNightDeltaMinutes))}</td>
           <td>${escapeHtml(formatMinutes(pattern.governedWithNightMinutes))}</td>
@@ -742,6 +748,8 @@ function exportCaptainPatternPdf() {
             <th>Applicable Credit</th>
             <th>Flight Total</th>
             <th>Night Total</th>
+            <th>PAX Sectors</th>
+            <th>Route Checks</th>
             <th>Raw Night Credit Δ</th>
             <th>Effective Δ in Credit</th>
             <th>With Proposed NC</th>
@@ -822,6 +830,8 @@ function exportCaptainPatternExcel() {
       "Applicable Credit",
       "Flight Total",
       "Night Total",
+      "PAX Sectors",
+      "Route Checks",
       "Raw Night Credit Δ",
       "Effective Δ in Credit",
       "With Proposed NC",
@@ -838,6 +848,8 @@ function exportCaptainPatternExcel() {
       formatMinutes(pattern.applicableMinutes),
       formatMinutes(pattern.flightMinutes),
       formatMinutes(pattern.nightMinutes),
+      pattern.paxSectorCount || 0,
+      pattern.routeCheckSectorCount || 0,
       formatMinutes(pattern.rawNightDeltaMinutes),
       formatMinutes(pattern.governedNightDeltaMinutes),
       formatMinutes(pattern.governedWithNightMinutes),
@@ -871,7 +883,7 @@ function renderCaptainPatternAnalysis() {
     }
     const row = document.createElement("tr");
     const cell = document.createElement("td");
-    cell.colSpan = 14;
+    cell.colSpan = 16;
     cell.textContent = state.captainPatternAnalysisError || `Loading BP374 ${state.captainPatternBase} captain pattern comparison.`;
     row.appendChild(cell);
     captainPatternsBody.appendChild(row);
@@ -933,6 +945,8 @@ function renderCaptainPatternAnalysis() {
       formatMinutes(pattern.applicableMinutes),
       formatMinutes(pattern.flightMinutes),
       formatMinutes(pattern.nightMinutes),
+      String(pattern.paxSectorCount || 0),
+      String(pattern.routeCheckSectorCount || 0),
       formatMinutes(pattern.rawNightDeltaMinutes),
       formatMinutes(pattern.governedNightDeltaMinutes),
       formatMinutes(pattern.governedWithNightMinutes),

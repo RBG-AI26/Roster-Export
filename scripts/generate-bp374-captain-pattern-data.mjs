@@ -103,7 +103,8 @@ function parseSectorLine(line) {
   }
 
   const service = tokens[0];
-  const indicator = routeIndex === 2 ? tokens[1] : "";
+  const markers = tokens.slice(1, routeIndex);
+  const indicator = markers.join(" ");
   const route = tokens[routeIndex];
   const remainder = tokens.slice(routeIndex + 1);
   const hasReportTime = remainder.length > 0 && !/^(MO|TU|WE|TH|FR|SA|SU)$/.test(remainder[0]);
@@ -128,8 +129,9 @@ function parseSectorLine(line) {
   const directTimeText = trailingText.replace(/\(\s*\d+:\d+\s*\)/g, " ").trim();
   const directTimes = [...directTimeText.matchAll(/\d+:\d+/g)].map((match) => parseMinutes(match[0]));
   const samePort = route.split("/")[0] === route.split("/")[1];
-  const isPax = indicator === "PAX";
-  const isDeadhead = indicator === "PAX" || indicator === "Z";
+  const isPax = markers.includes("PAX");
+  const isRouteCheck = markers.includes("Z");
+  const isDeadhead = isPax;
 
   let flightMinutes = 0;
   let nightMinutes = 0;
@@ -161,6 +163,7 @@ function parseSectorLine(line) {
   return {
     service,
     indicator,
+    markers,
     route,
     reportLocal,
     depDay,
@@ -170,6 +173,7 @@ function parseSectorLine(line) {
     arrLocal,
     arrUtc,
     isPax,
+    isRouteCheck,
     isDeadhead,
     samePort,
     flightMinutes,
@@ -268,6 +272,8 @@ function createPlaceholderPattern(base, availablePattern) {
     flightAndDeadheadMinutes: 0,
     mpcMinutes: 0,
     mdcMinutes: 0,
+    paxSectorCount: 0,
+    routeCheckSectorCount: 0,
     hasFourPilot: false,
     rawNightDeltaMinutes: 0,
     governedNightDeltaMinutes: 0,
@@ -344,6 +350,8 @@ function buildAnalysis({ base, plannedPdf, availablePdf, ignoredCodes = [] }) {
         ? Math.max(plannedPattern.applicableMinutes, baseComparisonMinutes + proposedNightCreditMinutes)
         : plannedPattern.applicableMinutes;
     const governedNightDeltaMinutes = Math.max(0, governedWithNightMinutes - plannedPattern.applicableMinutes);
+    const paxSectorCount = plannedPattern.sectors.filter((sector) => sector.isPax).length;
+    const routeCheckSectorCount = plannedPattern.sectors.filter((sector) => sector.isRouteCheck).length;
 
     return {
       patternCode: availablePattern.patternCode,
@@ -363,6 +371,8 @@ function buildAnalysis({ base, plannedPdf, availablePdf, ignoredCodes = [] }) {
       flightAndDeadheadMinutes: plannedPattern.flightMinutes + plannedPattern.sectors.reduce((total, sector) => total + sector.deadheadMinutes, 0),
       mpcMinutes: plannedPattern.mpcMinutes,
       mdcMinutes: plannedPattern.mdcMinutes,
+      paxSectorCount,
+      routeCheckSectorCount,
       hasFourPilot,
       rawNightDeltaMinutes,
       governedNightDeltaMinutes,
@@ -371,6 +381,7 @@ function buildAnalysis({ base, plannedPdf, availablePdf, ignoredCodes = [] }) {
       sectors: plannedPattern.sectors.map((sector) => ({
         route: sector.route,
         isPax: sector.isPax,
+        isRouteCheck: sector.isRouteCheck,
         isDeadhead: sector.isDeadhead,
         duty: sector.dutyMinutes,
         flight: sector.flightMinutes,

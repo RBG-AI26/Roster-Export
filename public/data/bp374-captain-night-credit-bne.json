@@ -1,5 +1,5 @@
 {
-  "generatedAtUtc": "2026-04-01T00:32:27.919Z",
+  "generatedAtUtc": "2026-04-01T22:37:37.277Z",
   "bidPeriod": "374",
   "base": "BNE",
   "aircraftType": "B787",
@@ -58,6 +58,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 463.3333333333333,
       "governedNightDeltaMinutes": 383.3333333333335,
@@ -67,6 +69,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 860,
           "flight": 770,
@@ -75,6 +78,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 940,
           "flight": 850,
@@ -106,6 +110,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 463.3333333333333,
       "governedNightDeltaMinutes": 383.3333333333335,
@@ -115,6 +121,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 860,
           "flight": 770,
@@ -123,6 +130,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 940,
           "flight": 850,
@@ -154,6 +162,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 463.3333333333333,
       "governedNightDeltaMinutes": 383.3333333333335,
@@ -163,6 +173,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 860,
           "flight": 770,
@@ -171,6 +182,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 940,
           "flight": 850,
@@ -202,6 +214,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 463.3333333333333,
       "governedNightDeltaMinutes": 383.3333333333335,
@@ -211,6 +225,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 860,
           "flight": 770,
@@ -219,6 +234,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 940,
           "flight": 850,
@@ -250,6 +266,8 @@
       "flightAndDeadheadMinutes": 1600,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 456.66666666666663,
       "governedNightDeltaMinutes": 356.6666666666665,
@@ -259,6 +277,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 860,
           "flight": 770,
@@ -267,6 +286,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 920,
           "flight": 830,
@@ -298,6 +318,8 @@
       "flightAndDeadheadMinutes": 1600,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 456.66666666666663,
       "governedNightDeltaMinutes": 356.6666666666665,
@@ -307,6 +329,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 860,
           "flight": 770,
@@ -315,6 +338,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 920,
           "flight": 830,
@@ -346,6 +370,8 @@
       "flightAndDeadheadMinutes": 1605,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 445,
       "governedNightDeltaMinutes": 350,
@@ -355,6 +381,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 865,
           "flight": 775,
@@ -363,6 +390,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 920,
           "flight": 830,
@@ -394,6 +422,8 @@
       "flightAndDeadheadMinutes": 1605,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 445,
       "governedNightDeltaMinutes": 350,
@@ -403,6 +433,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 865,
           "flight": 775,
@@ -411,6 +442,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 920,
           "flight": 830,
@@ -442,6 +474,8 @@
       "flightAndDeadheadMinutes": 1605,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 445,
       "governedNightDeltaMinutes": 350,
@@ -451,6 +485,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 865,
           "flight": 775,
@@ -459,6 +494,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 920,
           "flight": 830,
@@ -490,6 +526,8 @@
       "flightAndDeadheadMinutes": 1605,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 445,
       "governedNightDeltaMinutes": 350,
@@ -499,6 +537,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 865,
           "flight": 775,
@@ -507,6 +546,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 920,
           "flight": 830,
@@ -538,6 +578,8 @@
       "flightAndDeadheadMinutes": 1605,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 445,
       "governedNightDeltaMinutes": 350,
@@ -547,6 +589,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 865,
           "flight": 775,
@@ -555,6 +598,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 920,
           "flight": 830,
@@ -586,6 +630,8 @@
       "flightAndDeadheadMinutes": 1605,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 445,
       "governedNightDeltaMinutes": 350,
@@ -595,6 +641,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 865,
           "flight": 775,
@@ -603,6 +650,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 920,
           "flight": 830,
@@ -634,6 +682,8 @@
       "flightAndDeadheadMinutes": 1605,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 445,
       "governedNightDeltaMinutes": 350,
@@ -643,6 +693,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 865,
           "flight": 775,
@@ -651,6 +702,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 920,
           "flight": 830,
@@ -682,6 +734,8 @@
       "flightAndDeadheadMinutes": 1605,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 445,
       "governedNightDeltaMinutes": 350,
@@ -691,6 +745,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 865,
           "flight": 775,
@@ -699,6 +754,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 920,
           "flight": 830,
@@ -730,6 +786,8 @@
       "flightAndDeadheadMinutes": 1605,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 445,
       "governedNightDeltaMinutes": 350,
@@ -739,6 +797,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 865,
           "flight": 775,
@@ -747,6 +806,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 920,
           "flight": 830,
@@ -778,6 +838,8 @@
       "flightAndDeadheadMinutes": 1605,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 445,
       "governedNightDeltaMinutes": 350,
@@ -787,6 +849,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 865,
           "flight": 775,
@@ -795,6 +858,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 920,
           "flight": 830,
@@ -826,6 +890,8 @@
       "flightAndDeadheadMinutes": 1605,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 445,
       "governedNightDeltaMinutes": 350,
@@ -835,6 +901,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 865,
           "flight": 775,
@@ -843,6 +910,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 920,
           "flight": 830,
@@ -874,6 +942,8 @@
       "flightAndDeadheadMinutes": 1605,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 445,
       "governedNightDeltaMinutes": 350,
@@ -883,6 +953,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 865,
           "flight": 775,
@@ -891,6 +962,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 920,
           "flight": 830,
@@ -922,6 +994,8 @@
       "flightAndDeadheadMinutes": 1605,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 445,
       "governedNightDeltaMinutes": 350,
@@ -931,6 +1005,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 865,
           "flight": 775,
@@ -939,6 +1014,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 920,
           "flight": 830,
@@ -970,6 +1046,8 @@
       "flightAndDeadheadMinutes": 1605,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 445,
       "governedNightDeltaMinutes": 350,
@@ -979,6 +1057,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 865,
           "flight": 775,
@@ -987,6 +1066,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 920,
           "flight": 830,
@@ -1018,6 +1098,8 @@
       "flightAndDeadheadMinutes": 1605,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 445,
       "governedNightDeltaMinutes": 350,
@@ -1027,6 +1109,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 865,
           "flight": 775,
@@ -1035,6 +1118,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 920,
           "flight": 830,
@@ -1066,6 +1150,8 @@
       "flightAndDeadheadMinutes": 1605,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 445,
       "governedNightDeltaMinutes": 350,
@@ -1075,6 +1161,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 865,
           "flight": 775,
@@ -1083,6 +1170,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 920,
           "flight": 830,
@@ -1114,6 +1202,8 @@
       "flightAndDeadheadMinutes": 1605,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 445,
       "governedNightDeltaMinutes": 350,
@@ -1123,6 +1213,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 865,
           "flight": 775,
@@ -1131,6 +1222,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 920,
           "flight": 830,
@@ -1162,6 +1254,8 @@
       "flightAndDeadheadMinutes": 1605,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 445,
       "governedNightDeltaMinutes": 350,
@@ -1171,6 +1265,7 @@
         {
           "route": "BNE/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 865,
           "flight": 775,
@@ -1179,6 +1274,7 @@
         {
           "route": "LAX/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 920,
           "flight": 830,
@@ -1210,6 +1306,8 @@
       "flightAndDeadheadMinutes": 2105,
       "mpcMinutes": 1980,
       "mdcMinutes": 0,
+      "paxSectorCount": 2,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 305,
       "governedNightDeltaMinutes": 300,
@@ -1219,6 +1317,7 @@
         {
           "route": "BNE/MEL",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 225,
           "flight": 0,
@@ -1227,6 +1326,7 @@
         {
           "route": "MEL/LAX",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 950,
           "flight": 860,
@@ -1235,6 +1335,7 @@
         {
           "route": "LAX/MEL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1045,
           "flight": 955,
@@ -1243,6 +1344,7 @@
         {
           "route": "MEL/BNE",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 215,
           "flight": 0,
@@ -1274,6 +1376,8 @@
       "flightAndDeadheadMinutes": 655,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 2,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 24.58333333333333,
       "governedNightDeltaMinutes": 93.33333333333337,
@@ -1283,6 +1387,7 @@
         {
           "route": "BNE/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 190,
           "flight": 0,
@@ -1291,6 +1396,7 @@
         {
           "route": "SYD/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 655,
           "flight": 980,
@@ -1299,6 +1405,7 @@
         {
           "route": "PER/BNE",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 340,
           "flight": 0,
@@ -1330,6 +1437,8 @@
       "flightAndDeadheadMinutes": 2505,
       "mpcMinutes": 3630,
       "mdcMinutes": 0,
+      "paxSectorCount": 2,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 486.25,
       "governedNightDeltaMinutes": 0,
@@ -1339,6 +1448,7 @@
         {
           "route": "BNE/AKL",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 275,
           "flight": 0,
@@ -1347,6 +1457,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1045,
           "flight": 955,
@@ -1355,6 +1466,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1145,
           "flight": 1055,
@@ -1363,6 +1475,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -1371,6 +1484,7 @@
         {
           "route": "SYD/BNE",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 185,
           "flight": 0,
@@ -1402,6 +1516,8 @@
       "flightAndDeadheadMinutes": 405,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -1411,6 +1527,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 190,
           "flight": 115,
@@ -1419,6 +1536,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 610,
           "flight": 215,
@@ -1450,6 +1568,8 @@
       "flightAndDeadheadMinutes": 405,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -1459,6 +1579,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 190,
           "flight": 115,
@@ -1467,6 +1588,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 610,
           "flight": 215,
@@ -1498,6 +1620,8 @@
       "flightAndDeadheadMinutes": 405,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -1507,6 +1631,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 190,
           "flight": 115,
@@ -1515,6 +1640,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 610,
           "flight": 215,
@@ -1546,6 +1672,8 @@
       "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -1555,6 +1683,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 155,
@@ -1563,6 +1692,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 665,
           "flight": 235,
@@ -1594,6 +1724,8 @@
       "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -1603,6 +1735,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 155,
@@ -1611,6 +1744,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 665,
           "flight": 235,
@@ -1642,6 +1776,8 @@
       "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -1651,6 +1787,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 155,
@@ -1659,6 +1796,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 665,
           "flight": 235,
@@ -1690,6 +1828,8 @@
       "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -1699,6 +1839,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 155,
@@ -1707,6 +1848,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 665,
           "flight": 235,
@@ -1738,6 +1880,8 @@
       "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -1747,6 +1891,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 155,
@@ -1755,6 +1900,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 665,
           "flight": 235,
@@ -1786,6 +1932,8 @@
       "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -1795,6 +1943,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 155,
@@ -1803,6 +1952,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 665,
           "flight": 235,
@@ -1834,6 +1984,8 @@
       "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -1843,6 +1995,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 155,
@@ -1851,6 +2004,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 665,
           "flight": 235,
@@ -1882,6 +2036,8 @@
       "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -1891,6 +2047,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 155,
@@ -1899,6 +2056,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 665,
           "flight": 235,
@@ -1930,6 +2088,8 @@
       "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -1939,6 +2099,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 155,
@@ -1947,6 +2108,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 665,
           "flight": 235,
@@ -1978,6 +2140,8 @@
       "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -1987,6 +2151,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 155,
@@ -1995,6 +2160,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 665,
           "flight": 235,
@@ -2022,10 +2188,12 @@
       "qualifyingNightMinutes": 0,
       "currentNightCreditMinutes": 0,
       "proposedNightCreditMinutes": 0,
-      "deadheadMinutes": 390,
-      "flightAndDeadheadMinutes": 810,
+      "deadheadMinutes": 0,
+      "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 2,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -2035,17 +2203,19 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 185,
-          "flight": 0,
+          "flight": 155,
           "night": 0
         },
         {
           "route": "AKL/BNE",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 665,
-          "flight": 0,
+          "flight": 235,
           "night": 0
         }
       ],
@@ -2070,10 +2240,12 @@
       "qualifyingNightMinutes": 0,
       "currentNightCreditMinutes": 0,
       "proposedNightCreditMinutes": 0,
-      "deadheadMinutes": 215,
-      "flightAndDeadheadMinutes": 620,
+      "deadheadMinutes": 0,
+      "flightAndDeadheadMinutes": 405,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 1,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -2083,6 +2255,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 190,
           "flight": 115,
@@ -2091,9 +2264,10 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 610,
-          "flight": 0,
+          "flight": 215,
           "night": 0
         }
       ],
@@ -2122,6 +2296,8 @@
       "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -2131,6 +2307,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 155,
@@ -2139,6 +2316,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 665,
           "flight": 235,
@@ -2166,10 +2344,12 @@
       "qualifyingNightMinutes": 0,
       "currentNightCreditMinutes": 0,
       "proposedNightCreditMinutes": 0,
-      "deadheadMinutes": 390,
-      "flightAndDeadheadMinutes": 810,
+      "deadheadMinutes": 0,
+      "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 2,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -2179,17 +2359,19 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 185,
-          "flight": 0,
+          "flight": 155,
           "night": 0
         },
         {
           "route": "AKL/BNE",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 665,
-          "flight": 0,
+          "flight": 235,
           "night": 0
         }
       ],
@@ -2214,10 +2396,12 @@
       "qualifyingNightMinutes": 0,
       "currentNightCreditMinutes": 0,
       "proposedNightCreditMinutes": 0,
-      "deadheadMinutes": 390,
-      "flightAndDeadheadMinutes": 810,
+      "deadheadMinutes": 0,
+      "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 2,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -2227,17 +2411,19 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 185,
-          "flight": 0,
+          "flight": 155,
           "night": 0
         },
         {
           "route": "AKL/BNE",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 665,
-          "flight": 0,
+          "flight": 235,
           "night": 0
         }
       ],
@@ -2266,6 +2452,8 @@
       "flightAndDeadheadMinutes": 405,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -2275,6 +2463,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 190,
           "flight": 115,
@@ -2283,6 +2472,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 610,
           "flight": 215,
@@ -2314,6 +2504,8 @@
       "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -2323,6 +2515,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 155,
@@ -2331,6 +2524,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 665,
           "flight": 235,
@@ -2362,6 +2556,8 @@
       "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -2371,6 +2567,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 155,
@@ -2379,6 +2576,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 665,
           "flight": 235,
@@ -2410,6 +2608,8 @@
       "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -2419,6 +2619,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 155,
@@ -2427,6 +2628,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 665,
           "flight": 235,
@@ -2458,6 +2660,8 @@
       "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -2467,6 +2671,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 130,
@@ -2475,6 +2680,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 640,
           "flight": 235,
@@ -2506,6 +2712,8 @@
       "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -2515,6 +2723,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 130,
@@ -2523,6 +2732,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 640,
           "flight": 235,
@@ -2554,6 +2764,8 @@
       "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -2563,6 +2775,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 155,
@@ -2571,6 +2784,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 665,
           "flight": 235,
@@ -2602,6 +2816,8 @@
       "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -2611,6 +2827,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 155,
@@ -2619,6 +2836,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 665,
           "flight": 235,
@@ -2650,6 +2868,8 @@
       "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -2659,6 +2879,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 155,
@@ -2667,6 +2888,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 665,
           "flight": 235,
@@ -2698,6 +2920,8 @@
       "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -2707,6 +2931,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 155,
@@ -2715,6 +2940,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 665,
           "flight": 235,
@@ -2746,6 +2972,8 @@
       "flightAndDeadheadMinutes": 420,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -2755,6 +2983,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 155,
@@ -2763,6 +2992,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 665,
           "flight": 235,
@@ -2794,6 +3024,8 @@
       "flightAndDeadheadMinutes": 640,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 2,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -2803,6 +3035,7 @@
         {
           "route": "BNE/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 170,
           "flight": 0,
@@ -2811,6 +3044,7 @@
         {
           "route": "SYD/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 450,
           "flight": 0,
@@ -2819,6 +3053,7 @@
         {
           "route": "SYD/BNE",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 695,
           "flight": 0,
@@ -2850,6 +3085,8 @@
       "flightAndDeadheadMinutes": 640,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 2,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -2859,6 +3096,7 @@
         {
           "route": "BNE/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 170,
           "flight": 0,
@@ -2867,6 +3105,7 @@
         {
           "route": "SYD/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 450,
           "flight": 0,
@@ -2875,6 +3114,7 @@
         {
           "route": "SYD/BNE",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 695,
           "flight": 0,

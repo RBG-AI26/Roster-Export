@@ -156,6 +156,8 @@
                 <th><button id="captainSortApplicable" class="sort-header-btn" type="button">Applicable Credit</button></th>
                 <th><button id="captainSortFlight" class="sort-header-btn" type="button">Flight Total</button></th>
                 <th><button id="captainSortNight" class="sort-header-btn" type="button">Night Total</button></th>
+                <th><button id="captainSortPaxSectors" class="sort-header-btn" type="button">PAX Sectors</button></th>
+                <th><button id="captainSortRouteChecks" class="sort-header-btn" type="button">Route Checks</button></th>
                 <th><button id="captainSortRawDelta" class="sort-header-btn" type="button">Raw Night Credit Δ</button></th>
                 <th><button id="captainSortGovernedDelta" class="sort-header-btn" type="button">Effective Δ in Credit</button></th>
                 <th><button id="captainSortWithNight" class="sort-header-btn" type="button">With Proposed NC</button></th>
@@ -164,7 +166,7 @@
             </thead>
             <tbody id="captainPatternsBody">
               <tr>
-                <td colspan="14">Loading captain pattern comparison.</td>
+                <td colspan="16">Loading captain pattern comparison.</td>
               </tr>
             </tbody>
           </table>
@@ -310,7 +312,7 @@
     <script>
       (async () => {
         try {
-          await import("./analysis-app.mjs?v=20260401a");
+          await import("./analysis-app.mjs?v=20260402a");
         } catch (error) {
           console.error("Failed to load analysis app module", error);
           const statusEl = document.getElementById("status");

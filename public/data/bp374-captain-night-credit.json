@@ -1,5 +1,5 @@
 {
-  "generatedAtUtc": "2026-04-01T00:32:27.998Z",
+  "generatedAtUtc": "2026-04-01T22:37:37.371Z",
   "bidPeriod": "374",
   "base": "SYD",
   "aircraftType": "B787",
@@ -32,10 +32,10 @@
     "patternCount": 198,
     "estimatedFourPilotPatternCount": 146,
     "positiveGovernedPatternCount": 103,
-    "zeroedByMinimumCreditCount": 77,
-    "reducedByMinimumCreditCount": 155,
+    "zeroedByMinimumCreditCount": 83,
+    "reducedByMinimumCreditCount": 161,
     "applicableMinutes": 363697,
-    "rawNightDeltaMinutes": 58007.91666666668,
+    "rawNightDeltaMinutes": 58131.66666666667,
     "governedNightDeltaMinutes": 28547.66666666667,
     "governedWithNightMinutes": 392244.6666666667,
     "governedPercentDifference": 7.849299462647938
@@ -60,6 +60,8 @@
       "flightAndDeadheadMinutes": 2605,
       "mpcMinutes": 2640,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 434.16666666666663,
       "governedNightDeltaMinutes": 471.6666666666665,
@@ -69,6 +71,7 @@
         {
           "route": "SYD/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 380,
           "flight": 2905,
@@ -77,6 +80,7 @@
         {
           "route": "PER/LHR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1160,
           "flight": 1070,
@@ -85,6 +89,7 @@
         {
           "route": "LHR/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1090,
           "flight": 1000,
@@ -93,6 +98,7 @@
         {
           "route": "PER/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 320,
           "flight": 0,
@@ -124,6 +130,8 @@
       "flightAndDeadheadMinutes": 2600,
       "mpcMinutes": 2640,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 419.5833333333333,
       "governedNightDeltaMinutes": 453.3333333333335,
@@ -133,6 +141,7 @@
         {
           "route": "SYD/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 385,
           "flight": 2885,
@@ -141,6 +150,7 @@
         {
           "route": "PER/LHR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1140,
           "flight": 1050,
@@ -149,6 +159,7 @@
         {
           "route": "LHR/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1100,
           "flight": 1010,
@@ -157,6 +168,7 @@
         {
           "route": "PER/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 320,
           "flight": 0,
@@ -188,6 +200,8 @@
       "flightAndDeadheadMinutes": 2600,
       "mpcMinutes": 2640,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 419.5833333333333,
       "governedNightDeltaMinutes": 453.3333333333335,
@@ -197,6 +211,7 @@
         {
           "route": "SYD/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 385,
           "flight": 2885,
@@ -205,6 +220,7 @@
         {
           "route": "PER/LHR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1140,
           "flight": 1050,
@@ -213,6 +229,7 @@
         {
           "route": "LHR/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1100,
           "flight": 1010,
@@ -221,6 +238,7 @@
         {
           "route": "PER/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 320,
           "flight": 0,
@@ -252,6 +270,8 @@
       "flightAndDeadheadMinutes": 2600,
       "mpcMinutes": 2640,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 419.5833333333333,
       "governedNightDeltaMinutes": 453.3333333333335,
@@ -261,6 +281,7 @@
         {
           "route": "SYD/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 385,
           "flight": 2885,
@@ -269,6 +290,7 @@
         {
           "route": "PER/LHR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1140,
           "flight": 1050,
@@ -277,6 +299,7 @@
         {
           "route": "LHR/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1100,
           "flight": 1010,
@@ -285,6 +308,7 @@
         {
           "route": "PER/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 320,
           "flight": 0,
@@ -316,6 +340,8 @@
       "flightAndDeadheadMinutes": 1705,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 461.66666666666663,
       "governedNightDeltaMinutes": 446.6666666666665,
@@ -325,6 +351,7 @@
         {
           "route": "SYD/SFO",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 900,
           "flight": 810,
@@ -333,6 +360,7 @@
         {
           "route": "SFO/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 985,
           "flight": 895,
@@ -364,6 +392,8 @@
       "flightAndDeadheadMinutes": 1695,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 461.66666666666663,
       "governedNightDeltaMinutes": 446.6666666666665,
@@ -373,6 +403,7 @@
         {
           "route": "SYD/SFO",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 890,
           "flight": 800,
@@ -381,6 +412,7 @@
         {
           "route": "SFO/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 985,
           "flight": 895,
@@ -412,6 +444,8 @@
       "flightAndDeadheadMinutes": 1755,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 443.3333333333333,
       "governedNightDeltaMinutes": 438.3333333333335,
@@ -421,6 +455,7 @@
         {
           "route": "SYD/YVR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 930,
           "flight": 840,
@@ -429,6 +464,7 @@
         {
           "route": "YVR/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1005,
           "flight": 915,
@@ -460,6 +496,8 @@
       "flightAndDeadheadMinutes": 1755,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 443.3333333333333,
       "governedNightDeltaMinutes": 438.3333333333335,
@@ -469,6 +507,7 @@
         {
           "route": "SYD/YVR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 930,
           "flight": 840,
@@ -477,6 +516,7 @@
         {
           "route": "YVR/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1005,
           "flight": 915,
@@ -508,6 +548,8 @@
       "flightAndDeadheadMinutes": 1755,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 443.3333333333333,
       "governedNightDeltaMinutes": 438.3333333333335,
@@ -517,6 +559,7 @@
         {
           "route": "SYD/YVR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 930,
           "flight": 840,
@@ -525,6 +568,7 @@
         {
           "route": "YVR/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1005,
           "flight": 915,
@@ -556,6 +600,8 @@
       "flightAndDeadheadMinutes": 1695,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 441.66666666666663,
       "governedNightDeltaMinutes": 426.6666666666665,
@@ -565,6 +611,7 @@
         {
           "route": "SYD/SFO",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 890,
           "flight": 800,
@@ -573,6 +620,7 @@
         {
           "route": "SFO/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 985,
           "flight": 895,
@@ -604,6 +652,8 @@
       "flightAndDeadheadMinutes": 1695,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 421.66666666666663,
       "governedNightDeltaMinutes": 406.6666666666665,
@@ -613,6 +663,7 @@
         {
           "route": "SYD/SFO",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 890,
           "flight": 800,
@@ -621,6 +672,7 @@
         {
           "route": "SFO/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 985,
           "flight": 895,
@@ -652,6 +704,8 @@
       "flightAndDeadheadMinutes": 1695,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 421.66666666666663,
       "governedNightDeltaMinutes": 406.6666666666665,
@@ -661,6 +715,7 @@
         {
           "route": "SYD/SFO",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 890,
           "flight": 800,
@@ -669,6 +724,7 @@
         {
           "route": "SFO/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 985,
           "flight": 895,
@@ -700,6 +756,8 @@
       "flightAndDeadheadMinutes": 1695,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 421.66666666666663,
       "governedNightDeltaMinutes": 406.6666666666665,
@@ -709,6 +767,7 @@
         {
           "route": "SYD/SFO",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 890,
           "flight": 800,
@@ -717,6 +776,7 @@
         {
           "route": "SFO/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 985,
           "flight": 895,
@@ -748,6 +808,8 @@
       "flightAndDeadheadMinutes": 1695,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 421.66666666666663,
       "governedNightDeltaMinutes": 406.6666666666665,
@@ -757,6 +819,7 @@
         {
           "route": "SYD/SFO",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 890,
           "flight": 800,
@@ -765,6 +828,7 @@
         {
           "route": "SFO/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 985,
           "flight": 895,
@@ -796,6 +860,8 @@
       "flightAndDeadheadMinutes": 1695,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 421.66666666666663,
       "governedNightDeltaMinutes": 406.6666666666665,
@@ -805,6 +871,7 @@
         {
           "route": "SYD/SFO",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 890,
           "flight": 800,
@@ -813,6 +880,7 @@
         {
           "route": "SFO/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 985,
           "flight": 895,
@@ -844,6 +912,8 @@
       "flightAndDeadheadMinutes": 2605,
       "mpcMinutes": 2640,
       "mdcMinutes": 0,
+      "paxSectorCount": 2,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 395,
       "governedNightDeltaMinutes": 360,
@@ -853,6 +923,7 @@
         {
           "route": "SYD/PER",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 390,
           "flight": 0,
@@ -861,6 +932,7 @@
         {
           "route": "PER/LHR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1140,
           "flight": 1050,
@@ -869,6 +941,7 @@
         {
           "route": "LHR/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1100,
           "flight": 1010,
@@ -877,6 +950,7 @@
         {
           "route": "PER/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 320,
           "flight": 0,
@@ -908,6 +982,8 @@
       "flightAndDeadheadMinutes": 2605,
       "mpcMinutes": 2640,
       "mdcMinutes": 0,
+      "paxSectorCount": 2,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 395,
       "governedNightDeltaMinutes": 360,
@@ -917,6 +993,7 @@
         {
           "route": "SYD/PER",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 390,
           "flight": 0,
@@ -925,6 +1002,7 @@
         {
           "route": "PER/LHR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1140,
           "flight": 1050,
@@ -933,6 +1011,7 @@
         {
           "route": "LHR/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1100,
           "flight": 1010,
@@ -941,6 +1020,7 @@
         {
           "route": "PER/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 320,
           "flight": 0,
@@ -972,6 +1052,8 @@
       "flightAndDeadheadMinutes": 2605,
       "mpcMinutes": 2640,
       "mdcMinutes": 0,
+      "paxSectorCount": 2,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 395,
       "governedNightDeltaMinutes": 360,
@@ -981,6 +1063,7 @@
         {
           "route": "SYD/PER",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 390,
           "flight": 0,
@@ -989,6 +1072,7 @@
         {
           "route": "PER/LHR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1140,
           "flight": 1050,
@@ -997,6 +1081,7 @@
         {
           "route": "LHR/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1100,
           "flight": 1010,
@@ -1005,6 +1090,7 @@
         {
           "route": "PER/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 320,
           "flight": 0,
@@ -1036,6 +1122,8 @@
       "flightAndDeadheadMinutes": 2415,
       "mpcMinutes": 2640,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 495,
       "governedNightDeltaMinutes": 315,
@@ -1045,6 +1133,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 270,
           "flight": 2925,
@@ -1053,6 +1142,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1045,
           "flight": 955,
@@ -1061,6 +1151,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1145,
           "flight": 1055,
@@ -1069,6 +1160,7 @@
         {
           "route": "AKL/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 315,
           "flight": 0,
@@ -1100,6 +1192,8 @@
       "flightAndDeadheadMinutes": 2415,
       "mpcMinutes": 2640,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 495,
       "governedNightDeltaMinutes": 315,
@@ -1109,6 +1203,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 270,
           "flight": 2925,
@@ -1117,6 +1212,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1045,
           "flight": 955,
@@ -1125,6 +1221,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1145,
           "flight": 1055,
@@ -1133,6 +1230,7 @@
         {
           "route": "AKL/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 315,
           "flight": 0,
@@ -1164,6 +1262,8 @@
       "flightAndDeadheadMinutes": 2415,
       "mpcMinutes": 2640,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 495,
       "governedNightDeltaMinutes": 315,
@@ -1173,6 +1273,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 270,
           "flight": 2925,
@@ -1181,6 +1282,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1045,
           "flight": 955,
@@ -1189,6 +1291,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1145,
           "flight": 1055,
@@ -1197,6 +1300,7 @@
         {
           "route": "AKL/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 315,
           "flight": 0,
@@ -1228,6 +1332,8 @@
       "flightAndDeadheadMinutes": 2560,
       "mpcMinutes": 2640,
       "mdcMinutes": 0,
+      "paxSectorCount": 2,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 361.66666666666663,
       "governedNightDeltaMinutes": 281.6666666666665,
@@ -1237,6 +1343,7 @@
         {
           "route": "SYD/PER",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 385,
           "flight": 0,
@@ -1245,6 +1352,7 @@
         {
           "route": "PER/CDG",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1120,
           "flight": 1030,
@@ -1253,6 +1361,7 @@
         {
           "route": "CDG/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1080,
           "flight": 990,
@@ -1261,6 +1370,7 @@
         {
           "route": "PER/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 320,
           "flight": 0,
@@ -1292,6 +1402,8 @@
       "flightAndDeadheadMinutes": 1760,
       "mpcMinutes": 1980,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 473.3333333333333,
       "governedNightDeltaMinutes": 253.33333333333348,
@@ -1301,6 +1413,7 @@
         {
           "route": "SYD/YVR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 935,
           "flight": 845,
@@ -1309,6 +1422,7 @@
         {
           "route": "YVR/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1005,
           "flight": 915,
@@ -1340,6 +1454,8 @@
       "flightAndDeadheadMinutes": 1760,
       "mpcMinutes": 1980,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 473.3333333333333,
       "governedNightDeltaMinutes": 253.33333333333348,
@@ -1349,6 +1465,7 @@
         {
           "route": "SYD/YVR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 935,
           "flight": 845,
@@ -1357,6 +1474,7 @@
         {
           "route": "YVR/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1005,
           "flight": 915,
@@ -1388,6 +1506,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1320,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 249.99999999999997,
       "governedNightDeltaMinutes": 250,
@@ -1397,6 +1517,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 840,
           "flight": 750,
@@ -1405,6 +1526,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 960,
           "flight": 870,
@@ -1436,6 +1558,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1320,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 249.99999999999997,
       "governedNightDeltaMinutes": 250,
@@ -1445,6 +1569,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 840,
           "flight": 750,
@@ -1453,6 +1578,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 960,
           "flight": 870,
@@ -1484,6 +1610,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1320,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 249.99999999999997,
       "governedNightDeltaMinutes": 250,
@@ -1493,6 +1621,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 840,
           "flight": 750,
@@ -1501,6 +1630,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 960,
           "flight": 870,
@@ -1532,6 +1662,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1320,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 249.99999999999997,
       "governedNightDeltaMinutes": 250,
@@ -1541,6 +1673,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 840,
           "flight": 750,
@@ -1549,6 +1682,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 960,
           "flight": 870,
@@ -1580,6 +1714,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1320,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 249.99999999999997,
       "governedNightDeltaMinutes": 250,
@@ -1589,6 +1725,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 840,
           "flight": 750,
@@ -1597,6 +1734,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 960,
           "flight": 870,
@@ -1628,6 +1766,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1320,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 249.99999999999997,
       "governedNightDeltaMinutes": 250,
@@ -1637,6 +1777,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 840,
           "flight": 750,
@@ -1645,6 +1786,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 960,
           "flight": 870,
@@ -1676,6 +1818,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1320,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 249.99999999999997,
       "governedNightDeltaMinutes": 250,
@@ -1685,6 +1829,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 840,
           "flight": 750,
@@ -1693,6 +1838,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 960,
           "flight": 870,
@@ -1724,6 +1870,8 @@
       "flightAndDeadheadMinutes": 1755,
       "mpcMinutes": 1980,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 473.3333333333333,
       "governedNightDeltaMinutes": 248.33333333333348,
@@ -1733,6 +1881,7 @@
         {
           "route": "SYD/YVR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 930,
           "flight": 840,
@@ -1741,6 +1890,7 @@
         {
           "route": "YVR/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1005,
           "flight": 915,
@@ -1772,6 +1922,8 @@
       "flightAndDeadheadMinutes": 1755,
       "mpcMinutes": 1980,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 453.3333333333333,
       "governedNightDeltaMinutes": 228.33333333333348,
@@ -1781,6 +1933,7 @@
         {
           "route": "SYD/YVR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 930,
           "flight": 840,
@@ -1789,6 +1942,7 @@
         {
           "route": "YVR/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1005,
           "flight": 915,
@@ -1820,6 +1974,8 @@
       "flightAndDeadheadMinutes": 1918,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 2,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 230,
       "governedNightDeltaMinutes": 225,
@@ -1829,6 +1985,7 @@
         {
           "route": "SYD/YVR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 930,
           "flight": 840,
@@ -1837,6 +1994,7 @@
         {
           "route": "YVR/LAX",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 268,
           "flight": 0,
@@ -1845,6 +2003,7 @@
         {
           "route": "LAX/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 990,
           "flight": 0,
@@ -1876,6 +2035,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 249.99999999999997,
       "governedNightDeltaMinutes": 220,
@@ -1885,6 +2046,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 840,
           "flight": 750,
@@ -1893,6 +2055,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 960,
           "flight": 870,
@@ -1924,6 +2087,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 249.99999999999997,
       "governedNightDeltaMinutes": 220,
@@ -1933,6 +2098,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 840,
           "flight": 750,
@@ -1941,6 +2107,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 960,
           "flight": 870,
@@ -1972,6 +2139,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 249.99999999999997,
       "governedNightDeltaMinutes": 220,
@@ -1981,6 +2150,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 840,
           "flight": 750,
@@ -1989,6 +2159,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 960,
           "flight": 870,
@@ -2020,6 +2191,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 249.99999999999997,
       "governedNightDeltaMinutes": 220,
@@ -2029,6 +2202,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 840,
           "flight": 750,
@@ -2037,6 +2211,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 960,
           "flight": 870,
@@ -2068,6 +2243,8 @@
       "flightAndDeadheadMinutes": 1755,
       "mpcMinutes": 1980,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 443.3333333333333,
       "governedNightDeltaMinutes": 218.33333333333348,
@@ -2077,6 +2254,7 @@
         {
           "route": "SYD/YVR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 930,
           "flight": 840,
@@ -2085,6 +2263,7 @@
         {
           "route": "YVR/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1005,
           "flight": 915,
@@ -2116,6 +2295,8 @@
       "flightAndDeadheadMinutes": 1755,
       "mpcMinutes": 1980,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 443.3333333333333,
       "governedNightDeltaMinutes": 218.33333333333348,
@@ -2125,6 +2306,7 @@
         {
           "route": "SYD/YVR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 930,
           "flight": 840,
@@ -2133,6 +2315,7 @@
         {
           "route": "YVR/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1005,
           "flight": 915,
@@ -2164,6 +2347,8 @@
       "flightAndDeadheadMinutes": 1755,
       "mpcMinutes": 1980,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 443.3333333333333,
       "governedNightDeltaMinutes": 218.33333333333348,
@@ -2173,6 +2358,7 @@
         {
           "route": "SYD/YVR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 930,
           "flight": 840,
@@ -2181,6 +2367,7 @@
         {
           "route": "YVR/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1005,
           "flight": 915,
@@ -2212,6 +2399,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1320,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 209.99999999999997,
       "governedNightDeltaMinutes": 210,
@@ -2221,6 +2410,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 840,
           "flight": 750,
@@ -2229,6 +2419,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 960,
           "flight": 870,
@@ -2260,6 +2451,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1320,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 209.99999999999997,
       "governedNightDeltaMinutes": 210,
@@ -2269,6 +2462,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 840,
           "flight": 750,
@@ -2277,6 +2471,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 960,
           "flight": 870,
@@ -2308,6 +2503,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1320,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 209.99999999999997,
       "governedNightDeltaMinutes": 210,
@@ -2317,6 +2514,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 840,
           "flight": 750,
@@ -2325,6 +2523,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 960,
           "flight": 870,
@@ -2356,6 +2555,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1320,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 209.99999999999997,
       "governedNightDeltaMinutes": 210,
@@ -2365,6 +2566,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 840,
           "flight": 750,
@@ -2373,6 +2575,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 960,
           "flight": 870,
@@ -2404,6 +2607,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1320,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 213.33333333333331,
       "governedNightDeltaMinutes": 208.33333333333326,
@@ -2413,6 +2618,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 845,
           "flight": 755,
@@ -2421,6 +2627,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 955,
           "flight": 865,
@@ -2452,6 +2659,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1320,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 213.33333333333331,
       "governedNightDeltaMinutes": 208.33333333333326,
@@ -2461,6 +2670,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 845,
           "flight": 755,
@@ -2469,6 +2679,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 955,
           "flight": 865,
@@ -2500,6 +2711,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1320,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 213.33333333333331,
       "governedNightDeltaMinutes": 208.33333333333326,
@@ -2509,6 +2722,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 845,
           "flight": 755,
@@ -2517,6 +2731,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 955,
           "flight": 865,
@@ -2548,6 +2763,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 229.99999999999997,
       "governedNightDeltaMinutes": 200,
@@ -2557,6 +2774,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 840,
           "flight": 750,
@@ -2565,6 +2783,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 960,
           "flight": 870,
@@ -2596,6 +2815,8 @@
       "flightAndDeadheadMinutes": 1625,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 211.66666666666663,
       "governedNightDeltaMinutes": 186.66666666666652,
@@ -2605,6 +2826,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 845,
           "flight": 755,
@@ -2613,6 +2835,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 960,
           "flight": 870,
@@ -2644,6 +2867,8 @@
       "flightAndDeadheadMinutes": 1625,
       "mpcMinutes": 1650,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 211.66666666666663,
       "governedNightDeltaMinutes": 186.66666666666652,
@@ -2653,6 +2878,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 845,
           "flight": 755,
@@ -2661,6 +2887,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 960,
           "flight": 870,
@@ -2692,6 +2919,8 @@
       "flightAndDeadheadMinutes": 1690,
       "mpcMinutes": 1980,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 461.66666666666663,
       "governedNightDeltaMinutes": 171.66666666666652,
@@ -2701,6 +2930,7 @@
         {
           "route": "SYD/SFO",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 900,
           "flight": 810,
@@ -2709,6 +2939,7 @@
         {
           "route": "SFO/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 970,
           "flight": 880,
@@ -2740,6 +2971,8 @@
       "flightAndDeadheadMinutes": 1695,
       "mpcMinutes": 1980,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 441.66666666666663,
       "governedNightDeltaMinutes": 156.66666666666652,
@@ -2749,6 +2982,7 @@
         {
           "route": "SYD/SFO",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 890,
           "flight": 800,
@@ -2757,6 +2991,7 @@
         {
           "route": "SFO/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 985,
           "flight": 895,
@@ -2788,6 +3023,8 @@
       "flightAndDeadheadMinutes": 1695,
       "mpcMinutes": 1980,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 421.66666666666663,
       "governedNightDeltaMinutes": 136.66666666666652,
@@ -2797,6 +3034,7 @@
         {
           "route": "SYD/SFO",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 890,
           "flight": 800,
@@ -2805,6 +3043,7 @@
         {
           "route": "SFO/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 985,
           "flight": 895,
@@ -2836,6 +3075,8 @@
       "flightAndDeadheadMinutes": 1695,
       "mpcMinutes": 1980,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 421.66666666666663,
       "governedNightDeltaMinutes": 136.66666666666652,
@@ -2845,6 +3086,7 @@
         {
           "route": "SYD/SFO",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 890,
           "flight": 800,
@@ -2853,6 +3095,7 @@
         {
           "route": "SFO/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 985,
           "flight": 895,
@@ -2884,6 +3127,8 @@
       "flightAndDeadheadMinutes": 2505,
       "mpcMinutes": 2970,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 547.9166666666667,
       "governedNightDeltaMinutes": 101.66666666666697,
@@ -2893,6 +3138,7 @@
         {
           "route": "SYD/BNE",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 100,
           "flight": 0,
@@ -2901,6 +3147,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 470,
           "flight": 2975,
@@ -2909,6 +3156,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1045,
           "flight": 955,
@@ -2917,6 +3165,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1145,
           "flight": 1055,
@@ -2925,6 +3174,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -2956,6 +3206,8 @@
       "flightAndDeadheadMinutes": 545,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 12.916666666666664,
       "governedNightDeltaMinutes": 7.666666666666629,
@@ -2965,6 +3217,7 @@
         {
           "route": "SYD/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 300,
           "flight": 60,
@@ -2973,6 +3226,7 @@
         {
           "route": "PER/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 695,
           "flight": 245,
@@ -3004,6 +3258,8 @@
       "flightAndDeadheadMinutes": 2505,
       "mpcMinutes": 2970,
       "mdcMinutes": 0,
+      "paxSectorCount": 2,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 468.3333333333333,
       "governedNightDeltaMinutes": 3.333333333333485,
@@ -3013,6 +3269,7 @@
         {
           "route": "SYD/AKL",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 280,
           "flight": 0,
@@ -3021,6 +3278,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1020,
           "flight": 930,
@@ -3029,6 +3287,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1145,
           "flight": 1055,
@@ -3037,6 +3296,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 235,
           "flight": 120,
@@ -3045,6 +3305,7 @@
         {
           "route": "BNE/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 540,
           "flight": 0,
@@ -3076,6 +3337,8 @@
       "flightAndDeadheadMinutes": 1130,
       "mpcMinutes": 1320,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 48.333333333333314,
       "governedNightDeltaMinutes": 3.3333333333332575,
@@ -3085,6 +3348,7 @@
         {
           "route": "SYD/HKG",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 650,
           "flight": 560,
@@ -3093,6 +3357,7 @@
         {
           "route": "HKG/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 660,
           "flight": 0,
@@ -3117,15 +3382,17 @@
       "applicableMinutes": 990,
       "flightMinutes": 530,
       "nightMinutes": 0,
-      "qualifyingNightMinutes": 0,
-      "currentNightCreditMinutes": 0,
-      "proposedNightCreditMinutes": 0,
-      "deadheadMinutes": 530,
-      "flightAndDeadheadMinutes": 1060,
+      "qualifyingNightMinutes": 295,
+      "currentNightCreditMinutes": 73.75,
+      "proposedNightCreditMinutes": 98.33333333333333,
+      "deadheadMinutes": 0,
+      "flightAndDeadheadMinutes": 530,
       "mpcMinutes": 990,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 2,
       "hasFourPilot": false,
-      "rawNightDeltaMinutes": 0,
+      "rawNightDeltaMinutes": 24.58333333333333,
       "governedNightDeltaMinutes": 0,
       "governedWithNightMinutes": 990,
       "governedPercentDifference": 0,
@@ -3133,17 +3400,19 @@
         {
           "route": "SYD/PER",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 385,
-          "flight": 0,
-          "night": 0
+          "flight": 2400,
+          "night": 295
         },
         {
           "route": "PER/SYD",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 325,
-          "flight": 0,
+          "flight": 235,
           "night": 0
         }
       ],
@@ -3172,6 +3441,8 @@
       "flightAndDeadheadMinutes": 665,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 2,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -3181,6 +3452,7 @@
         {
           "route": "SYD/MEL",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 185,
           "flight": 0,
@@ -3189,6 +3461,7 @@
         {
           "route": "MEL/MEL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 480,
           "flight": 0,
@@ -3197,6 +3470,7 @@
         {
           "route": "MEL/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 720,
           "flight": 0,
@@ -3228,6 +3502,8 @@
       "flightAndDeadheadMinutes": 400,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -3237,6 +3513,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 75,
@@ -3245,6 +3522,7 @@
         {
           "route": "AKL/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 565,
           "flight": 0,
@@ -3276,6 +3554,8 @@
       "flightAndDeadheadMinutes": 395,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 21.25,
       "governedNightDeltaMinutes": 0,
@@ -3285,6 +3565,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 270,
           "flight": 905,
@@ -3293,6 +3574,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -3324,6 +3606,8 @@
       "flightAndDeadheadMinutes": 395,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 21.25,
       "governedNightDeltaMinutes": 0,
@@ -3333,6 +3617,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 270,
           "flight": 905,
@@ -3341,6 +3626,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -3372,6 +3658,8 @@
       "flightAndDeadheadMinutes": 405,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -3381,6 +3669,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 180,
           "flight": 115,
@@ -3389,6 +3678,7 @@
         {
           "route": "AKL/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 610,
           "flight": 0,
@@ -3420,6 +3710,8 @@
       "flightAndDeadheadMinutes": 395,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 21.25,
       "governedNightDeltaMinutes": 0,
@@ -3429,6 +3721,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 270,
           "flight": 905,
@@ -3437,6 +3730,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -3468,6 +3762,8 @@
       "flightAndDeadheadMinutes": 1115,
       "mpcMinutes": 1320,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 48.333333333333314,
       "governedNightDeltaMinutes": 0,
@@ -3477,6 +3773,7 @@
         {
           "route": "SYD/HKG",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 650,
           "flight": 560,
@@ -3485,6 +3782,7 @@
         {
           "route": "HKG/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 645,
           "flight": 0,
@@ -3516,6 +3814,8 @@
       "flightAndDeadheadMinutes": 1115,
       "mpcMinutes": 1320,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 48.333333333333314,
       "governedNightDeltaMinutes": 0,
@@ -3525,6 +3825,7 @@
         {
           "route": "SYD/HKG",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 650,
           "flight": 560,
@@ -3533,6 +3834,7 @@
         {
           "route": "HKG/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 645,
           "flight": 0,
@@ -3564,6 +3866,8 @@
       "flightAndDeadheadMinutes": 1115,
       "mpcMinutes": 1320,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 48.333333333333314,
       "governedNightDeltaMinutes": 0,
@@ -3573,6 +3877,7 @@
         {
           "route": "SYD/HKG",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 650,
           "flight": 560,
@@ -3581,6 +3886,7 @@
         {
           "route": "HKG/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 645,
           "flight": 0,
@@ -3612,6 +3918,8 @@
       "flightAndDeadheadMinutes": 1115,
       "mpcMinutes": 1320,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 48.333333333333314,
       "governedNightDeltaMinutes": 0,
@@ -3621,6 +3929,7 @@
         {
           "route": "SYD/HKG",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 650,
           "flight": 560,
@@ -3629,6 +3938,7 @@
         {
           "route": "HKG/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 645,
           "flight": 0,
@@ -3660,6 +3970,8 @@
       "flightAndDeadheadMinutes": 1115,
       "mpcMinutes": 1320,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 48.333333333333314,
       "governedNightDeltaMinutes": 0,
@@ -3669,6 +3981,7 @@
         {
           "route": "SYD/HKG",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 650,
           "flight": 560,
@@ -3677,6 +3990,7 @@
         {
           "route": "HKG/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 645,
           "flight": 0,
@@ -3708,6 +4022,8 @@
       "flightAndDeadheadMinutes": 1115,
       "mpcMinutes": 1320,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 48.333333333333314,
       "governedNightDeltaMinutes": 0,
@@ -3717,6 +4033,7 @@
         {
           "route": "SYD/HKG",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 650,
           "flight": 560,
@@ -3725,6 +4042,7 @@
         {
           "route": "HKG/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 645,
           "flight": 0,
@@ -3756,6 +4074,8 @@
       "flightAndDeadheadMinutes": 535,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 24.166666666666657,
       "governedNightDeltaMinutes": 0,
@@ -3765,6 +4085,7 @@
         {
           "route": "SYD/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 380,
           "flight": 1200,
@@ -3773,6 +4094,7 @@
         {
           "route": "PER/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 335,
           "flight": 245,
@@ -3804,6 +4126,8 @@
       "flightAndDeadheadMinutes": 185,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 9.166666666666664,
       "governedNightDeltaMinutes": 0,
@@ -3813,6 +4137,7 @@
         {
           "route": "SYD/MEL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 1040,
@@ -3821,6 +4146,7 @@
         {
           "route": "MEL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 180,
           "flight": 90,
@@ -3852,6 +4178,8 @@
       "flightAndDeadheadMinutes": 185,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 7.916666666666664,
       "governedNightDeltaMinutes": 0,
@@ -3861,6 +4189,7 @@
         {
           "route": "SYD/MEL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 1340,
@@ -3869,6 +4198,7 @@
         {
           "route": "MEL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 180,
           "flight": 90,
@@ -3900,6 +4230,8 @@
       "flightAndDeadheadMinutes": 530,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 24.58333333333333,
       "governedNightDeltaMinutes": 0,
@@ -3909,6 +4241,7 @@
         {
           "route": "SYD/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 385,
           "flight": 1280,
@@ -3917,6 +4250,7 @@
         {
           "route": "PER/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 325,
           "flight": 235,
@@ -3948,6 +4282,8 @@
       "flightAndDeadheadMinutes": 530,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 24.58333333333333,
       "governedNightDeltaMinutes": 0,
@@ -3957,6 +4293,7 @@
         {
           "route": "SYD/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 385,
           "flight": 1110,
@@ -3965,6 +4302,7 @@
         {
           "route": "PER/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 325,
           "flight": 235,
@@ -3996,6 +4334,8 @@
       "flightAndDeadheadMinutes": 185,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 7.916666666666664,
       "governedNightDeltaMinutes": 0,
@@ -4005,6 +4345,7 @@
         {
           "route": "SYD/MEL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 1280,
@@ -4013,6 +4354,7 @@
         {
           "route": "MEL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 180,
           "flight": 90,
@@ -4044,6 +4386,8 @@
       "flightAndDeadheadMinutes": 530,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 24.58333333333333,
       "governedNightDeltaMinutes": 0,
@@ -4053,6 +4397,7 @@
         {
           "route": "SYD/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 385,
           "flight": 960,
@@ -4061,6 +4406,7 @@
         {
           "route": "PER/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 325,
           "flight": 235,
@@ -4092,6 +4438,8 @@
       "flightAndDeadheadMinutes": 530,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 24.58333333333333,
       "governedNightDeltaMinutes": 0,
@@ -4101,6 +4449,7 @@
         {
           "route": "SYD/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 385,
           "flight": 960,
@@ -4109,6 +4458,7 @@
         {
           "route": "PER/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 325,
           "flight": 235,
@@ -4140,6 +4490,8 @@
       "flightAndDeadheadMinutes": 180,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -4149,6 +4501,7 @@
         {
           "route": "SYD/MEL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 95,
           "flight": 105,
@@ -4157,6 +4510,7 @@
         {
           "route": "MEL/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 375,
           "flight": 0,
@@ -4188,6 +4542,8 @@
       "flightAndDeadheadMinutes": 2390,
       "mpcMinutes": 2970,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 474.5833333333333,
       "governedNightDeltaMinutes": 0,
@@ -4197,6 +4553,7 @@
         {
           "route": "SYD/AKL",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 280,
           "flight": 0,
@@ -4205,6 +4562,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1020,
           "flight": 930,
@@ -4213,6 +4571,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1145,
           "flight": 1055,
@@ -4221,6 +4580,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -4252,6 +4612,8 @@
       "flightAndDeadheadMinutes": 2410,
       "mpcMinutes": 3300,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 501.66666666666674,
       "governedNightDeltaMinutes": 0,
@@ -4261,6 +4623,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 275,
           "flight": 2945,
@@ -4269,6 +4632,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1045,
           "flight": 955,
@@ -4277,6 +4641,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1145,
           "flight": 1055,
@@ -4285,6 +4650,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -4316,6 +4682,8 @@
       "flightAndDeadheadMinutes": 2410,
       "mpcMinutes": 3630,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 501.66666666666674,
       "governedNightDeltaMinutes": 0,
@@ -4325,6 +4693,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 275,
           "flight": 2945,
@@ -4333,6 +4702,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1045,
           "flight": 955,
@@ -4341,6 +4711,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1145,
           "flight": 1055,
@@ -4349,6 +4720,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -4380,6 +4752,8 @@
       "flightAndDeadheadMinutes": 2415,
       "mpcMinutes": 3300,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 486.25,
       "governedNightDeltaMinutes": 0,
@@ -4389,6 +4763,7 @@
         {
           "route": "SYD/AKL",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 280,
           "flight": 0,
@@ -4397,6 +4772,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1045,
           "flight": 955,
@@ -4405,6 +4781,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1145,
           "flight": 1055,
@@ -4413,6 +4790,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -4444,6 +4822,8 @@
       "flightAndDeadheadMinutes": 2405,
       "mpcMinutes": 3300,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 501.25,
       "governedNightDeltaMinutes": 0,
@@ -4453,6 +4833,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 270,
           "flight": 2925,
@@ -4461,6 +4842,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1045,
           "flight": 955,
@@ -4469,6 +4851,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1145,
           "flight": 1055,
@@ -4477,6 +4860,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -4508,6 +4892,8 @@
       "flightAndDeadheadMinutes": 2405,
       "mpcMinutes": 3630,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 501.25,
       "governedNightDeltaMinutes": 0,
@@ -4517,6 +4903,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 270,
           "flight": 2925,
@@ -4525,6 +4912,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1045,
           "flight": 955,
@@ -4533,6 +4921,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1145,
           "flight": 1055,
@@ -4541,6 +4930,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -4572,6 +4962,8 @@
       "flightAndDeadheadMinutes": 2405,
       "mpcMinutes": 3300,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 501.25,
       "governedNightDeltaMinutes": 0,
@@ -4581,6 +4973,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 270,
           "flight": 2925,
@@ -4589,6 +4982,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1045,
           "flight": 955,
@@ -4597,6 +4991,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1145,
           "flight": 1055,
@@ -4605,6 +5000,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -4636,6 +5032,8 @@
       "flightAndDeadheadMinutes": 2415,
       "mpcMinutes": 2970,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 486.25,
       "governedNightDeltaMinutes": 0,
@@ -4645,6 +5043,7 @@
         {
           "route": "SYD/AKL",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 280,
           "flight": 0,
@@ -4653,6 +5052,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1045,
           "flight": 955,
@@ -4661,6 +5061,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1145,
           "flight": 1055,
@@ -4669,6 +5070,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -4700,6 +5102,8 @@
       "flightAndDeadheadMinutes": 2405,
       "mpcMinutes": 3300,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 501.25,
       "governedNightDeltaMinutes": 0,
@@ -4709,6 +5113,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 270,
           "flight": 2925,
@@ -4717,6 +5122,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1045,
           "flight": 955,
@@ -4725,6 +5131,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1145,
           "flight": 1055,
@@ -4733,6 +5140,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -4764,6 +5172,8 @@
       "flightAndDeadheadMinutes": 2405,
       "mpcMinutes": 3630,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 501.25,
       "governedNightDeltaMinutes": 0,
@@ -4773,6 +5183,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 270,
           "flight": 2925,
@@ -4781,6 +5192,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1045,
           "flight": 955,
@@ -4789,6 +5201,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1145,
           "flight": 1055,
@@ -4797,6 +5210,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -4828,6 +5242,8 @@
       "flightAndDeadheadMinutes": 2405,
       "mpcMinutes": 3300,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 501.25,
       "governedNightDeltaMinutes": 0,
@@ -4837,6 +5253,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 270,
           "flight": 2925,
@@ -4845,6 +5262,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1045,
           "flight": 955,
@@ -4853,6 +5271,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1145,
           "flight": 1055,
@@ -4861,6 +5280,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -4892,6 +5312,8 @@
       "flightAndDeadheadMinutes": 2405,
       "mpcMinutes": 3300,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 501.25,
       "governedNightDeltaMinutes": 0,
@@ -4901,6 +5323,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 270,
           "flight": 2925,
@@ -4909,6 +5332,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1045,
           "flight": 955,
@@ -4917,6 +5341,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1145,
           "flight": 1055,
@@ -4925,6 +5350,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -4956,6 +5382,8 @@
       "flightAndDeadheadMinutes": 2405,
       "mpcMinutes": 3630,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 501.25,
       "governedNightDeltaMinutes": 0,
@@ -4965,6 +5393,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 270,
           "flight": 2925,
@@ -4973,6 +5402,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1045,
           "flight": 955,
@@ -4981,6 +5411,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1145,
           "flight": 1055,
@@ -4989,6 +5420,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -5020,6 +5452,8 @@
       "flightAndDeadheadMinutes": 2415,
       "mpcMinutes": 3630,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 486.25,
       "governedNightDeltaMinutes": 0,
@@ -5029,6 +5463,7 @@
         {
           "route": "SYD/AKL",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 280,
           "flight": 0,
@@ -5037,6 +5472,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1045,
           "flight": 955,
@@ -5045,6 +5481,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1145,
           "flight": 1055,
@@ -5053,6 +5490,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -5084,6 +5522,8 @@
       "flightAndDeadheadMinutes": 2415,
       "mpcMinutes": 2970,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 495,
       "governedNightDeltaMinutes": 0,
@@ -5093,6 +5533,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 270,
           "flight": 2925,
@@ -5101,6 +5542,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1045,
           "flight": 955,
@@ -5109,6 +5551,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1145,
           "flight": 1055,
@@ -5117,6 +5560,7 @@
         {
           "route": "AKL/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 315,
           "flight": 0,
@@ -5148,6 +5592,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1980,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 249.99999999999997,
       "governedNightDeltaMinutes": 0,
@@ -5157,6 +5603,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 840,
           "flight": 750,
@@ -5165,6 +5612,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 960,
           "flight": 870,
@@ -5196,6 +5644,8 @@
       "flightAndDeadheadMinutes": 1620,
       "mpcMinutes": 1980,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 249.99999999999997,
       "governedNightDeltaMinutes": 0,
@@ -5205,6 +5655,7 @@
         {
           "route": "SYD/SCL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 840,
           "flight": 750,
@@ -5213,6 +5664,7 @@
         {
           "route": "SCL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 960,
           "flight": 870,
@@ -5244,6 +5696,8 @@
       "flightAndDeadheadMinutes": 1760,
       "mpcMinutes": 2310,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 473.3333333333333,
       "governedNightDeltaMinutes": 0,
@@ -5253,6 +5707,7 @@
         {
           "route": "SYD/YVR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 935,
           "flight": 845,
@@ -5261,6 +5716,7 @@
         {
           "route": "YVR/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1005,
           "flight": 915,
@@ -5292,6 +5748,8 @@
       "flightAndDeadheadMinutes": 1760,
       "mpcMinutes": 2310,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 473.3333333333333,
       "governedNightDeltaMinutes": 0,
@@ -5301,6 +5759,7 @@
         {
           "route": "SYD/YVR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 935,
           "flight": 845,
@@ -5309,6 +5768,7 @@
         {
           "route": "YVR/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1005,
           "flight": 915,
@@ -5340,6 +5800,8 @@
       "flightAndDeadheadMinutes": 1755,
       "mpcMinutes": 2310,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 453.3333333333333,
       "governedNightDeltaMinutes": 0,
@@ -5349,6 +5811,7 @@
         {
           "route": "SYD/YVR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 930,
           "flight": 840,
@@ -5357,6 +5820,7 @@
         {
           "route": "YVR/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1005,
           "flight": 915,
@@ -5388,6 +5852,8 @@
       "flightAndDeadheadMinutes": 1755,
       "mpcMinutes": 2310,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 453.3333333333333,
       "governedNightDeltaMinutes": 0,
@@ -5397,6 +5863,7 @@
         {
           "route": "SYD/YVR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 930,
           "flight": 840,
@@ -5405,6 +5872,7 @@
         {
           "route": "YVR/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1005,
           "flight": 915,
@@ -5436,6 +5904,8 @@
       "flightAndDeadheadMinutes": 1755,
       "mpcMinutes": 2310,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 443.3333333333333,
       "governedNightDeltaMinutes": 0,
@@ -5445,6 +5915,7 @@
         {
           "route": "SYD/YVR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 930,
           "flight": 840,
@@ -5453,6 +5924,7 @@
         {
           "route": "YVR/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1005,
           "flight": 915,
@@ -5484,6 +5956,8 @@
       "flightAndDeadheadMinutes": 1755,
       "mpcMinutes": 2310,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 443.3333333333333,
       "governedNightDeltaMinutes": 0,
@@ -5493,6 +5967,7 @@
         {
           "route": "SYD/YVR",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 930,
           "flight": 840,
@@ -5501,6 +5976,7 @@
         {
           "route": "YVR/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1005,
           "flight": 915,
@@ -5532,6 +6008,8 @@
       "flightAndDeadheadMinutes": 540,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 24.58333333333333,
       "governedNightDeltaMinutes": 0,
@@ -5541,6 +6019,7 @@
         {
           "route": "SYD/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 385,
           "flight": 885,
@@ -5549,6 +6028,7 @@
         {
           "route": "PER/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 320,
           "flight": 0,
@@ -5573,15 +6053,17 @@
       "applicableMinutes": 660,
       "flightMinutes": 390,
       "nightMinutes": 135,
-      "qualifyingNightMinutes": 180,
-      "currentNightCreditMinutes": 45,
-      "proposedNightCreditMinutes": 60,
-      "deadheadMinutes": 135,
-      "flightAndDeadheadMinutes": 525,
+      "qualifyingNightMinutes": 315,
+      "currentNightCreditMinutes": 78.75,
+      "proposedNightCreditMinutes": 105,
+      "deadheadMinutes": 0,
+      "flightAndDeadheadMinutes": 390,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 1,
       "hasFourPilot": false,
-      "rawNightDeltaMinutes": 15,
+      "rawNightDeltaMinutes": 26.25,
       "governedNightDeltaMinutes": 0,
       "governedWithNightMinutes": 660,
       "governedPercentDifference": 0,
@@ -5589,6 +6071,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 270,
           "flight": 870,
@@ -5597,10 +6080,11 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 300,
-          "flight": 0,
-          "night": 0
+          "flight": 210,
+          "night": 135
         }
       ],
       "instanceCount": 1,
@@ -5621,15 +6105,17 @@
       "applicableMinutes": 660,
       "flightMinutes": 535,
       "nightMinutes": 0,
-      "qualifyingNightMinutes": 0,
-      "currentNightCreditMinutes": 0,
-      "proposedNightCreditMinutes": 0,
-      "deadheadMinutes": 535,
-      "flightAndDeadheadMinutes": 1070,
+      "qualifyingNightMinutes": 290,
+      "currentNightCreditMinutes": 72.5,
+      "proposedNightCreditMinutes": 96.66666666666666,
+      "deadheadMinutes": 0,
+      "flightAndDeadheadMinutes": 535,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 2,
       "hasFourPilot": false,
-      "rawNightDeltaMinutes": 0,
+      "rawNightDeltaMinutes": 24.166666666666657,
       "governedNightDeltaMinutes": 0,
       "governedWithNightMinutes": 660,
       "governedPercentDifference": 0,
@@ -5637,17 +6123,19 @@
         {
           "route": "SYD/PER",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 380,
-          "flight": 0,
-          "night": 0
+          "flight": 1200,
+          "night": 290
         },
         {
           "route": "PER/SYD",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 335,
-          "flight": 0,
+          "flight": 245,
           "night": 0
         }
       ],
@@ -5669,15 +6157,17 @@
       "applicableMinutes": 990,
       "flightMinutes": 395,
       "nightMinutes": 135,
-      "qualifyingNightMinutes": 0,
-      "currentNightCreditMinutes": 0,
-      "proposedNightCreditMinutes": 0,
-      "deadheadMinutes": 320,
-      "flightAndDeadheadMinutes": 715,
+      "qualifyingNightMinutes": 320,
+      "currentNightCreditMinutes": 80,
+      "proposedNightCreditMinutes": 106.66666666666666,
+      "deadheadMinutes": 0,
+      "flightAndDeadheadMinutes": 395,
       "mpcMinutes": 990,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 2,
       "hasFourPilot": false,
-      "rawNightDeltaMinutes": 0,
+      "rawNightDeltaMinutes": 26.666666666666657,
       "governedNightDeltaMinutes": 0,
       "governedWithNightMinutes": 990,
       "governedPercentDifference": 0,
@@ -5685,18 +6175,20 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 275,
-          "flight": 0,
-          "night": 0
+          "flight": 2305,
+          "night": 185
         },
         {
           "route": "AKL/SYD",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 300,
-          "flight": 0,
-          "night": 0
+          "flight": 210,
+          "night": 135
         }
       ],
       "instanceCount": 1,
@@ -5717,15 +6209,17 @@
       "applicableMinutes": 660,
       "flightMinutes": 395,
       "nightMinutes": 75,
-      "qualifyingNightMinutes": 0,
-      "currentNightCreditMinutes": 0,
-      "proposedNightCreditMinutes": 0,
-      "deadheadMinutes": 255,
-      "flightAndDeadheadMinutes": 650,
+      "qualifyingNightMinutes": 255,
+      "currentNightCreditMinutes": 63.75,
+      "proposedNightCreditMinutes": 85,
+      "deadheadMinutes": 0,
+      "flightAndDeadheadMinutes": 395,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 2,
       "hasFourPilot": false,
-      "rawNightDeltaMinutes": 0,
+      "rawNightDeltaMinutes": 21.25,
       "governedNightDeltaMinutes": 0,
       "governedWithNightMinutes": 660,
       "governedPercentDifference": 0,
@@ -5733,18 +6227,20 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 270,
-          "flight": 0,
-          "night": 0
+          "flight": 905,
+          "night": 180
         },
         {
           "route": "AKL/SYD",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 305,
-          "flight": 0,
-          "night": 0
+          "flight": 215,
+          "night": 75
         }
       ],
       "instanceCount": 1,
@@ -5765,15 +6261,17 @@
       "applicableMinutes": 660,
       "flightMinutes": 185,
       "nightMinutes": 0,
-      "qualifyingNightMinutes": 0,
-      "currentNightCreditMinutes": 0,
-      "proposedNightCreditMinutes": 0,
-      "deadheadMinutes": 185,
-      "flightAndDeadheadMinutes": 370,
+      "qualifyingNightMinutes": 95,
+      "currentNightCreditMinutes": 23.75,
+      "proposedNightCreditMinutes": 31.666666666666664,
+      "deadheadMinutes": 0,
+      "flightAndDeadheadMinutes": 185,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 2,
       "hasFourPilot": false,
-      "rawNightDeltaMinutes": 0,
+      "rawNightDeltaMinutes": 7.916666666666664,
       "governedNightDeltaMinutes": 0,
       "governedWithNightMinutes": 660,
       "governedPercentDifference": 0,
@@ -5781,17 +6279,19 @@
         {
           "route": "SYD/MEL",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 185,
-          "flight": 0,
-          "night": 0
+          "flight": 1280,
+          "night": 95
         },
         {
           "route": "MEL/SYD",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 180,
-          "flight": 0,
+          "flight": 90,
           "night": 0
         }
       ],
@@ -5816,10 +6316,12 @@
       "qualifyingNightMinutes": 0,
       "currentNightCreditMinutes": 0,
       "proposedNightCreditMinutes": 0,
-      "deadheadMinutes": 185,
-      "flightAndDeadheadMinutes": 275,
+      "deadheadMinutes": 95,
+      "flightAndDeadheadMinutes": 185,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 1,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -5829,6 +6331,7 @@
         {
           "route": "SYD/MEL",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 75,
           "flight": 0,
@@ -5837,9 +6340,10 @@
         {
           "route": "MEL/SYD",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 350,
-          "flight": 0,
+          "flight": 90,
           "night": 0
         }
       ],
@@ -5864,10 +6368,12 @@
       "qualifyingNightMinutes": 0,
       "currentNightCreditMinutes": 0,
       "proposedNightCreditMinutes": 0,
-      "deadheadMinutes": 190,
-      "flightAndDeadheadMinutes": 285,
+      "deadheadMinutes": 85,
+      "flightAndDeadheadMinutes": 180,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 1,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -5877,14 +6383,16 @@
         {
           "route": "SYD/MEL",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 95,
-          "flight": 0,
+          "flight": 105,
           "night": 0
         },
         {
           "route": "MEL/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 375,
           "flight": 0,
@@ -5909,15 +6417,17 @@
       "applicableMinutes": 660,
       "flightMinutes": 185,
       "nightMinutes": 0,
-      "qualifyingNightMinutes": 0,
-      "currentNightCreditMinutes": 0,
-      "proposedNightCreditMinutes": 0,
-      "deadheadMinutes": 185,
-      "flightAndDeadheadMinutes": 370,
+      "qualifyingNightMinutes": 95,
+      "currentNightCreditMinutes": 23.75,
+      "proposedNightCreditMinutes": 31.666666666666664,
+      "deadheadMinutes": 0,
+      "flightAndDeadheadMinutes": 185,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 2,
       "hasFourPilot": false,
-      "rawNightDeltaMinutes": 0,
+      "rawNightDeltaMinutes": 7.916666666666664,
       "governedNightDeltaMinutes": 0,
       "governedWithNightMinutes": 660,
       "governedPercentDifference": 0,
@@ -5925,17 +6435,19 @@
         {
           "route": "SYD/MEL",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 185,
-          "flight": 0,
-          "night": 0
+          "flight": 1280,
+          "night": 95
         },
         {
           "route": "MEL/SYD",
           "isPax": false,
-          "isDeadhead": true,
+          "isRouteCheck": true,
+          "isDeadhead": false,
           "duty": 180,
-          "flight": 0,
+          "flight": 90,
           "night": 0
         }
       ],
@@ -5964,6 +6476,8 @@
       "flightAndDeadheadMinutes": 495,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -5973,6 +6487,7 @@
         {
           "route": "SYD/BNE",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 180,
           "flight": 0,
@@ -5981,6 +6496,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 190,
           "flight": 85,
@@ -5989,6 +6505,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 580,
           "flight": 215,
@@ -6020,6 +6537,8 @@
       "flightAndDeadheadMinutes": 390,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 11.25,
       "governedNightDeltaMinutes": 0,
@@ -6029,6 +6548,7 @@
         {
           "route": "SYD/AKL",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 270,
           "flight": 0,
@@ -6037,6 +6557,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 300,
           "flight": 210,
@@ -6068,6 +6589,8 @@
       "flightAndDeadheadMinutes": 590,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 2,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -6077,6 +6600,7 @@
         {
           "route": "SYD/BNE",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 180,
           "flight": 0,
@@ -6085,6 +6609,7 @@
         {
           "route": "BNE/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 190,
           "flight": 115,
@@ -6093,6 +6618,7 @@
         {
           "route": "AKL/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 215,
           "flight": 130,
@@ -6101,6 +6627,7 @@
         {
           "route": "BNE/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 835,
           "flight": 0,
@@ -6132,6 +6659,8 @@
       "flightAndDeadheadMinutes": 530,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 24.58333333333333,
       "governedNightDeltaMinutes": 0,
@@ -6141,6 +6670,7 @@
         {
           "route": "SYD/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 385,
           "flight": 960,
@@ -6149,6 +6679,7 @@
         {
           "route": "PER/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 325,
           "flight": 235,
@@ -6180,6 +6711,8 @@
       "flightAndDeadheadMinutes": 185,
       "mpcMinutes": 330,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -6189,6 +6722,7 @@
         {
           "route": "SYD/MEL",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 75,
           "flight": 0,
@@ -6197,6 +6731,7 @@
         {
           "route": "MEL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 350,
           "flight": 90,
@@ -6228,6 +6763,8 @@
       "flightAndDeadheadMinutes": 535,
       "mpcMinutes": 990,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 24.166666666666657,
       "governedNightDeltaMinutes": 0,
@@ -6237,6 +6774,7 @@
         {
           "route": "SYD/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 380,
           "flight": 2445,
@@ -6245,6 +6783,7 @@
         {
           "route": "PER/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 335,
           "flight": 245,
@@ -6276,6 +6815,8 @@
       "flightAndDeadheadMinutes": 185,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 7.916666666666664,
       "governedNightDeltaMinutes": 0,
@@ -6285,6 +6826,7 @@
         {
           "route": "SYD/MEL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 1280,
@@ -6293,6 +6835,7 @@
         {
           "route": "MEL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 180,
           "flight": 90,
@@ -6324,6 +6867,8 @@
       "flightAndDeadheadMinutes": 185,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 7.916666666666664,
       "governedNightDeltaMinutes": 0,
@@ -6333,6 +6878,7 @@
         {
           "route": "SYD/MEL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 185,
           "flight": 1280,
@@ -6341,6 +6887,7 @@
         {
           "route": "MEL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 180,
           "flight": 90,
@@ -6372,6 +6919,8 @@
       "flightAndDeadheadMinutes": 405,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 1,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 6.25,
       "governedNightDeltaMinutes": 0,
@@ -6381,6 +6930,7 @@
         {
           "route": "SYD/AKL",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 280,
           "flight": 0,
@@ -6389,6 +6939,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -6420,6 +6971,8 @@
       "flightAndDeadheadMinutes": 2390,
       "mpcMinutes": 3300,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": true,
       "rawNightDeltaMinutes": 490,
       "governedNightDeltaMinutes": 0,
@@ -6429,6 +6982,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 275,
           "flight": 2915,
@@ -6437,6 +6991,7 @@
         {
           "route": "AKL/JFK",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1020,
           "flight": 930,
@@ -6445,6 +7000,7 @@
         {
           "route": "JFK/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 1150,
           "flight": 1060,
@@ -6453,6 +7009,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -6484,6 +7041,8 @@
       "flightAndDeadheadMinutes": 395,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 21.25,
       "governedNightDeltaMinutes": 0,
@@ -6493,6 +7052,7 @@
         {
           "route": "SYD/AKL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 270,
           "flight": 905,
@@ -6501,6 +7061,7 @@
         {
           "route": "AKL/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 305,
           "flight": 215,
@@ -6532,6 +7093,8 @@
       "flightAndDeadheadMinutes": 530,
       "mpcMinutes": 990,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 24.58333333333333,
       "governedNightDeltaMinutes": 0,
@@ -6541,6 +7104,7 @@
         {
           "route": "SYD/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 385,
           "flight": 2400,
@@ -6549,6 +7113,7 @@
         {
           "route": "PER/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 325,
           "flight": 235,
@@ -6580,6 +7145,8 @@
       "flightAndDeadheadMinutes": 530,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 0,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 24.58333333333333,
       "governedNightDeltaMinutes": 0,
@@ -6589,6 +7156,7 @@
         {
           "route": "SYD/PER",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 385,
           "flight": 960,
@@ -6597,6 +7165,7 @@
         {
           "route": "PER/SYD",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 325,
           "flight": 235,
@@ -6628,6 +7197,8 @@
       "flightAndDeadheadMinutes": 665,
       "mpcMinutes": 660,
       "mdcMinutes": 0,
+      "paxSectorCount": 2,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -6637,6 +7208,7 @@
         {
           "route": "SYD/MEL",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 185,
           "flight": 0,
@@ -6645,6 +7217,7 @@
         {
           "route": "MEL/MEL",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 480,
           "flight": 0,
@@ -6653,6 +7226,7 @@
         {
           "route": "MEL/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 690,
           "flight": 0,
@@ -6684,6 +7258,8 @@
       "flightAndDeadheadMinutes": 670,
       "mpcMinutes": 990,
       "mdcMinutes": 0,
+      "paxSectorCount": 2,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -6693,6 +7269,7 @@
         {
           "route": "SYD/BNE",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 105,
           "flight": 0,
@@ -6701,6 +7278,7 @@
         {
           "route": "BNE/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 545,
           "flight": 0,
@@ -6709,6 +7287,7 @@
         {
           "route": "BNE/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 330,
           "flight": 0,
@@ -6717,6 +7296,7 @@
         {
           "route": "BNE/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 170,
           "flight": 0,
@@ -6748,6 +7328,8 @@
       "flightAndDeadheadMinutes": 670,
       "mpcMinutes": 990,
       "mdcMinutes": 0,
+      "paxSectorCount": 2,
+      "routeCheckSectorCount": 0,
       "hasFourPilot": false,
       "rawNightDeltaMinutes": 0,
       "governedNightDeltaMinutes": 0,
@@ -6757,6 +7339,7 @@
         {
           "route": "SYD/BNE",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 345,
           "flight": 0,
@@ -6765,6 +7348,7 @@
         {
           "route": "BNE/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 785,
           "flight": 0,
@@ -6773,6 +7357,7 @@
         {
           "route": "BNE/BNE",
           "isPax": false,
+          "isRouteCheck": false,
           "isDeadhead": false,
           "duty": 330,
           "flight": 0,
@@ -6781,6 +7366,7 @@
         {
           "route": "BNE/SYD",
           "isPax": true,
+          "isRouteCheck": false,
           "isDeadhead": true,
           "duty": 170,
           "flight": 0,
