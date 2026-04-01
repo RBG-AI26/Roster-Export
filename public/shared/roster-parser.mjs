@@ -313,10 +313,13 @@ function parseFlightLine(line) {
   }
 
   const flightNumber = flightNumberMatch[1];
+  const markerText = line.slice(flightNumberMatch[0].length, sectorMatch.index).trim();
+  const markers = markerText ? markerText.split(/\s+/).filter(Boolean) : [];
   let origin = sectorMatch[1];
   let destination = sectorMatch[2];
   const sectorText = String(sectorMatch[0] || "");
-  let isPax = /PAX/i.test(sectorText);
+  let isPax = /PAX/i.test(sectorText) || markers.includes("PAX");
+  const isRouteCheck = markers.includes("Z");
 
   // Handle "AAA/PAXBBB" style where destination is captured in group 2.
   if (!isPax && /\/PAX/i.test(sectorText)) {
@@ -389,6 +392,7 @@ function parseFlightLine(line) {
     flightNumber,
     origin,
     destination,
+    isRouteCheck,
     isPax,
     reportLocal,
     depDay,
@@ -788,6 +792,7 @@ function buildFlightEvents(tripOccurrences, patternMap, bidPeriod) {
         flightNumber: flight.flightNumber,
         origin: flight.origin,
         destination: flight.destination,
+        isRouteCheck: Boolean(flight.isRouteCheck),
         isPax: Boolean(flight.isPax),
         reportLocal: flight.reportLocal,
         depLocal: flight.depLocal,

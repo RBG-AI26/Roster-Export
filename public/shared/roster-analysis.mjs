@@ -1,5 +1,5 @@
 import { getDtaPatterns } from "./dta-engine.mjs?v=20260329a";
-import { parseRosterText } from "./roster-parser.mjs?v=20260329f";
+import { parseRosterText } from "./roster-parser.mjs?v=20260402a";
 
 const MONTHS = {
   Jan: 0,
@@ -879,6 +879,12 @@ export function buildRosterAnalysis(text, fileName = "") {
     scheduleRows,
     (row) => SUMMARY_LEAVE_DUTY_CODES.has(String(row?.dutyCode || "").trim().toUpperCase())
   );
+  const totalPaxSectorCount = (parsedRoster.events || []).filter(
+    (event) => event?.eventType === "flight" && event?.isPax
+  ).length;
+  const totalRouteCheckSectorCount = (parsedRoster.events || []).filter(
+    (event) => event?.eventType === "flight" && event?.isRouteCheck
+  ).length;
   const totalTrainingCreditedDutyMinutes = trainingItems.reduce(
     (total, item) => total + (Number(item.creditMinutes) || 0),
     0
@@ -938,6 +944,8 @@ export function buildRosterAnalysis(text, fileName = "") {
     totalAdjustmentCreditMinutes,
     totalWorkedDayCount,
     totalLeaveDayCount,
+    totalPaxSectorCount,
+    totalRouteCheckSectorCount,
     totalApplicableCreditMinutes,
     totalWithNightPatternCreditMinutes,
     totalWithNightCreditMinutes,

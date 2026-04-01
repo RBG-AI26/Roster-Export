@@ -1,6 +1,6 @@
-import { buildRosterAnalysis, formatMinutes } from "./shared/roster-analysis.mjs?v=20260329k";
+import { buildRosterAnalysis, formatMinutes } from "./shared/roster-analysis.mjs?v=20260402a";
 
-const APP_VERSION = "2026-04-02a";
+const APP_VERSION = "2026-04-02b";
 const CAPTAIN_PATTERN_ANALYSIS_URLS = {
   SYD: "./data/bp374-captain-night-credit.json?v=20260402a",
   MEL: "./data/bp374-captain-night-credit-mel.json?v=20260402a",
@@ -62,8 +62,6 @@ const captainSortDays = document.getElementById("captainSortDays");
 const captainSortApplicable = document.getElementById("captainSortApplicable");
 const captainSortFlight = document.getElementById("captainSortFlight");
 const captainSortNight = document.getElementById("captainSortNight");
-const captainSortPaxSectors = document.getElementById("captainSortPaxSectors");
-const captainSortRouteChecks = document.getElementById("captainSortRouteChecks");
 const captainSortRawDelta = document.getElementById("captainSortRawDelta");
 const captainSortGovernedDelta = document.getElementById("captainSortGovernedDelta");
 const captainSortWithNight = document.getElementById("captainSortWithNight");
@@ -193,6 +191,14 @@ function getRosterWorkedDays(roster) {
 
 function getRosterLeaveDays(roster) {
   return Number(roster?.analysis?.totalLeaveDayCount) || 0;
+}
+
+function getRosterPaxSectorCount(roster) {
+  return Number(roster?.analysis?.totalPaxSectorCount) || 0;
+}
+
+function getRosterRouteCheckSectorCount(roster) {
+  return Number(roster?.analysis?.totalRouteCheckSectorCount) || 0;
 }
 
 function getRosterProjectedWithNightMinutes(roster) {
@@ -485,8 +491,6 @@ function getCaptainSortButtonMeta() {
     [captainSortApplicable, "applicableMinutes", "Applicable Credit"],
     [captainSortFlight, "flightMinutes", "Flight Total"],
     [captainSortNight, "nightMinutes", "Night Total"],
-    [captainSortPaxSectors, "paxSectorCount", "PAX Sectors"],
-    [captainSortRouteChecks, "routeCheckSectorCount", "Route Checks"],
     [captainSortRawDelta, "rawNightDeltaMinutes", "Raw Night Credit Δ"],
     [captainSortGovernedDelta, "governedNightDeltaMinutes", "Effective Δ in Credit"],
     [captainSortWithNight, "governedWithNightMinutes", "With Proposed NC"],
@@ -632,8 +636,6 @@ function exportCaptainPatternPdf() {
           <td>${escapeHtml(formatMinutes(pattern.applicableMinutes))}</td>
           <td>${escapeHtml(formatMinutes(pattern.flightMinutes))}</td>
           <td>${escapeHtml(formatMinutes(pattern.nightMinutes))}</td>
-          <td>${escapeHtml(String(pattern.paxSectorCount || 0))}</td>
-          <td>${escapeHtml(String(pattern.routeCheckSectorCount || 0))}</td>
           <td>${escapeHtml(formatMinutes(pattern.rawNightDeltaMinutes))}</td>
           <td>${escapeHtml(formatMinutes(pattern.governedNightDeltaMinutes))}</td>
           <td>${escapeHtml(formatMinutes(pattern.governedWithNightMinutes))}</td>
@@ -748,8 +750,6 @@ function exportCaptainPatternPdf() {
             <th>Applicable Credit</th>
             <th>Flight Total</th>
             <th>Night Total</th>
-            <th>PAX Sectors</th>
-            <th>Route Checks</th>
             <th>Raw Night Credit Δ</th>
             <th>Effective Δ in Credit</th>
             <th>With Proposed NC</th>
@@ -830,8 +830,6 @@ function exportCaptainPatternExcel() {
       "Applicable Credit",
       "Flight Total",
       "Night Total",
-      "PAX Sectors",
-      "Route Checks",
       "Raw Night Credit Δ",
       "Effective Δ in Credit",
       "With Proposed NC",
@@ -848,8 +846,6 @@ function exportCaptainPatternExcel() {
       formatMinutes(pattern.applicableMinutes),
       formatMinutes(pattern.flightMinutes),
       formatMinutes(pattern.nightMinutes),
-      pattern.paxSectorCount || 0,
-      pattern.routeCheckSectorCount || 0,
       formatMinutes(pattern.rawNightDeltaMinutes),
       formatMinutes(pattern.governedNightDeltaMinutes),
       formatMinutes(pattern.governedWithNightMinutes),
@@ -883,7 +879,7 @@ function renderCaptainPatternAnalysis() {
     }
     const row = document.createElement("tr");
     const cell = document.createElement("td");
-    cell.colSpan = 16;
+    cell.colSpan = 14;
     cell.textContent = state.captainPatternAnalysisError || `Loading BP374 ${state.captainPatternBase} captain pattern comparison.`;
     row.appendChild(cell);
     captainPatternsBody.appendChild(row);
@@ -945,8 +941,6 @@ function renderCaptainPatternAnalysis() {
       formatMinutes(pattern.applicableMinutes),
       formatMinutes(pattern.flightMinutes),
       formatMinutes(pattern.nightMinutes),
-      String(pattern.paxSectorCount || 0),
-      String(pattern.routeCheckSectorCount || 0),
       formatMinutes(pattern.rawNightDeltaMinutes),
       formatMinutes(pattern.governedNightDeltaMinutes),
       formatMinutes(pattern.governedWithNightMinutes),
@@ -1029,7 +1023,7 @@ function renderRosterLibrary() {
   if (!state.rosters.length) {
     const row = document.createElement("tr");
     const cell = document.createElement("td");
-    cell.colSpan = 13;
+    cell.colSpan = 15;
     cell.textContent = "No rosters loaded yet.";
     row.appendChild(cell);
     rosterLibraryBody.appendChild(row);
@@ -1041,7 +1035,7 @@ function renderRosterLibrary() {
     const groupRow = document.createElement("tr");
     groupRow.classList.add("group-row");
     const groupCell = document.createElement("td");
-    groupCell.colSpan = 13;
+    groupCell.colSpan = 15;
     groupCell.textContent = `BP${group.bidPeriod}`;
     groupRow.appendChild(groupCell);
     rosterLibraryBody.appendChild(groupRow);
@@ -1096,6 +1090,8 @@ function renderRosterLibrary() {
         roster.analysis.parsedRoster.bidPeriod || "",
         String(getRosterWorkedDays(roster)),
         String(getRosterLeaveDays(roster)),
+        String(getRosterPaxSectorCount(roster)),
+        String(getRosterRouteCheckSectorCount(roster)),
         formatMinutes(roster.analysis.totalBaseApplicableCreditMinutes),
         formatMinutes(Number(roster.analysis.totalOtherCreditedDutyMinutes) || 0),
         formatMinutes(getRosterTrainingMinutes(roster)),
@@ -1122,7 +1118,7 @@ function renderRosterLibrary() {
     averageRow.classList.add("average-row");
 
     const labelCell = document.createElement("td");
-    labelCell.colSpan = 9;
+    labelCell.colSpan = 11;
     labelCell.textContent = `Selected Average (${selectedRosters.length})`;
     averageRow.appendChild(labelCell);
 
