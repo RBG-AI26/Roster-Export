@@ -1118,16 +1118,29 @@ function renderRosterLibrary() {
     averageRow.classList.add("average-row");
 
     const labelCell = document.createElement("td");
-    labelCell.colSpan = 11;
+    labelCell.colSpan = 4;
     labelCell.textContent = `Selected Average (${selectedRosters.length})`;
     averageRow.appendChild(labelCell);
 
+    const averageWorkedDays = selectedRosters.reduce((total, roster) => total + getRosterWorkedDays(roster), 0) / selectedRosters.length;
+    const averageLeaveDays = selectedRosters.reduce((total, roster) => total + getRosterLeaveDays(roster), 0) / selectedRosters.length;
+    const averagePaxSectors =
+      selectedRosters.reduce((total, roster) => total + getRosterPaxSectorCount(roster), 0) / selectedRosters.length;
+    const averageRouteChecks =
+      selectedRosters.reduce((total, roster) => total + getRosterRouteCheckSectorCount(roster), 0) / selectedRosters.length;
     const averageProjectedMinutes = totals.projectedMinutes / selectedRosters.length;
     const averageDeltaMinutes = totals.deltaMinutes / selectedRosters.length;
     const averageWithNightMinutes = totals.withNightMinutes / selectedRosters.length;
     const averagePercent = totals.percentDifference;
 
     for (const value of [
+      averageWorkedDays.toFixed(1),
+      averageLeaveDays.toFixed(1),
+      averagePaxSectors.toFixed(1),
+      averageRouteChecks.toFixed(1),
+      "",
+      "",
+      "",
       formatMinutes(averageProjectedMinutes),
       formatMinutes(averageDeltaMinutes),
       formatMinutes(averageWithNightMinutes),
