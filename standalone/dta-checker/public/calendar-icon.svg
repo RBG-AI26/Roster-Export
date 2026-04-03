@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Calendar icon">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#12a392"/>
+      <stop offset="1" stop-color="#00695c"/>
+    </linearGradient>
+  </defs>
+  <rect x="20" y="24" width="216" height="212" rx="30" fill="#ffffff"/>
+  <rect x="20" y="24" width="216" height="54" rx="30" fill="url(#bg)"/>
+  <rect x="44" y="14" width="22" height="40" rx="10" fill="#e8f6f3"/>
+  <rect x="190" y="14" width="22" height="40" rx="10" fill="#e8f6f3"/>
+  <rect x="44" y="96" width="38" height="30" rx="8" fill="#d7efea"/>
+  <rect x="96" y="96" width="38" height="30" rx="8" fill="#d7efea"/>
+  <rect x="148" y="96" width="38" height="30" rx="8" fill="#d7efea"/>
+  <rect x="44" y="138" width="38" height="30" rx="8" fill="#d7efea"/>
+  <rect x="96" y="138" width="38" height="30" rx="8" fill="#0f8e7f"/>
+  <rect x="148" y="138" width="38" height="30" rx="8" fill="#d7efea"/>
+  <rect x="44" y="180" width="38" height="30" rx="8" fill="#d7efea"/>
+  <rect x="96" y="180" width="38" height="30" rx="8" fill="#d7efea"/>
+  <rect x="148" y="180" width="38" height="30" rx="8" fill="#d7efea"/>
+  <rect x="20" y="24" width="216" height="212" rx="30" fill="none" stroke="#0c5e54" stroke-width="8"/>
+</svg>

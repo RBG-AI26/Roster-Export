@@ -1,0 +1,31 @@
+{
+  "name": "DTA Checker",
+  "short_name": "DTA Checker",
+  "description": "Standalone local DTA checker with saved roster history by bid period.",
+  "id": "./index.html",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f5f0",
+  "theme_color": "#00695c",
+  "icons": [
+    {
+      "src": "./calendar-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./calendar-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./calendar-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roster Analysis Prototype</title>
+    <meta name="theme-color" content="#00695c" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Roster Analysis" />
+    <link rel="manifest" href="./manifest.webmanifest?v=20260324g" />
+    <link rel="icon" type="image/svg+xml" href="./calendar-icon.svg?v=20260324g" />
+    <link rel="shortcut icon" href="./calendar-icon.svg?v=20260324g" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./calendar-icon-180.png?v=20260324g" />
+    <link rel="stylesheet" href="./styles.css?v=20260330g" />
+  </head>
+  <body class="analysis-page">
+    <main class="app-shell">
+      <header>
+        <h1>Roster Analysis Prototype</h1>
+        <p>Prototype comparison view for one roster, many rosters, or every roster you load into this session.</p>
+      </header>
+
+      <section class="card top-card">
+        <div id="buildVersion" class="build-version" aria-label="App build version"></div>
+        <label for="rosterFiles" class="field-label">Roster files (.txt)</label>
+        <input id="rosterFiles" type="file" accept=".txt,text/plain" multiple />
+
+        <div class="actions">
+          <button id="loadBtn" type="button">Load Selected Files</button>
+          <button id="clearBtn" type="button">Clear Stored Library</button>
+          <a class="button-link" href="./index.html">Open Roster Export App</a>
+        </div>
+
+        <p id="status" aria-live="polite">Load one or more roster text files to begin.</p>
+        <p class="subscription-note">Uploaded rosters are kept on this device and rebuilt into the analysis library when you reopen the app.</p>
+      </section>
+
+      <section class="card">
+        <div class="section-header">
+          <h2>Selection Summary</h2>
+          <div class="selection-actions">
+            <button id="selectAllBtn" type="button">Select All</button>
+            <button id="clearSelectionBtn" type="button">Clear Selection</button>
+          </div>
+        </div>
+
+        <div id="summaryGrid" class="summary-grid">
+          <article class="summary-stat">
+            <span class="summary-label">Selected Rosters</span>
+            <strong id="selectedRostersValue">0</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Patterns</span>
+            <strong id="selectedPatternsValue">0</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Pattern Credit</span>
+            <strong id="baseCreditValue">0:00</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Other</span>
+            <strong id="otherCreditValue">0:00</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Training</span>
+            <strong id="trainingCreditValue">0:00</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Night Credit Δ</span>
+            <strong id="nightDeltaValue">0:00</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Projected Hours</span>
+            <strong id="applicableCreditValue">0:00</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Projected With 4 pilot NC</span>
+            <strong id="withNightCreditValue">0:00</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">% Difference</span>
+            <strong id="creditDifferenceValue">0.0%</strong>
+          </article>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-header">
+          <h2>BP374 Captain Pattern Night Credit</h2>
+          <div class="section-header-actions">
+            <div class="captain-base-toggle" role="group" aria-label="Captain pattern base">
+              <button id="captainBaseAllBtn" type="button" class="captain-base-btn">ALL</button>
+              <button id="captainBaseSydBtn" type="button" class="captain-base-btn">SYD</button>
+              <button id="captainBaseMelBtn" type="button" class="captain-base-btn">MEL</button>
+              <button id="captainBaseBneBtn" type="button" class="captain-base-btn">BNE</button>
+              <button id="captainBasePerBtn" type="button" class="captain-base-btn">PER</button>
+            </div>
+            <p id="captainPatternSourceLabel" class="section-note">Loading captain pattern comparison.</p>
+            <div class="captain-export-actions">
+              <button id="exportCaptainExcelBtn" type="button" class="export-pdf-btn" disabled>Export Excel</button>
+              <button id="exportCaptainPdfBtn" type="button" class="export-pdf-btn" disabled>Export PDF</button>
+            </div>
+          </div>
+        </div>
+        <div id="captainPatternSummaryGrid" class="summary-grid">
+          <article class="summary-stat">
+            <span class="summary-label">Flown Patterns</span>
+            <strong id="captainPatternCountValue">0</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">4 pilot Flown</span>
+            <strong id="captainFourPilotCountValue">0</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Positive Governed Uplift</span>
+            <strong id="captainPositiveCountValue">0</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Applicable Credit</span>
+            <strong id="captainApplicableValue">0:00</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Raw Night Credit Δ</span>
+            <strong id="captainRawDeltaValue">0:00</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Effective Δ in Credit</span>
+            <strong id="captainGovernedDeltaValue">0:00</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">With Proposed NC</span>
+            <strong id="captainWithNightValue">0:00</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">% Difference</span>
+            <strong id="captainPercentValue">0.0%</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">All Bases Weighted %</span>
+            <strong id="captainAllBasesPercentValue">0.0%</strong>
+          </article>
+        </div>
+
+        <div class="table-wrap">
+          <table class="captain-pattern-table">
+            <thead>
+              <tr>
+                <th><button id="captainSortBase" class="sort-header-btn" type="button">Base</button></th>
+                <th><button id="captainSortPattern" class="sort-header-btn" type="button">Pattern</button></th>
+                <th><button id="captainSortWeeks" class="sort-header-btn" type="button">Weeks</button></th>
+                <th><button id="captainSortOccurrences" class="sort-header-btn" type="button">Occurrences</button></th>
+                <th><button id="captainSortRoute" class="sort-header-btn" type="button">Route</button></th>
+                <th><button id="captainSortCrew" class="sort-header-btn" type="button">Crew</button></th>
+                <th><button id="captainSortDays" class="sort-header-btn" type="button">Days Away</button></th>
+                <th><button id="captainSortApplicable" class="sort-header-btn" type="button">Applicable Credit</button></th>
+                <th><button id="captainSortFlight" class="sort-header-btn" type="button">Flight Total</button></th>
+                <th><button id="captainSortNight" class="sort-header-btn" type="button">Night Total</button></th>
+                <th><button id="captainSortRawDelta" class="sort-header-btn" type="button">Raw Night Credit Δ</button></th>
+                <th><button id="captainSortGovernedDelta" class="sort-header-btn" type="button">Effective Δ in Credit</button></th>
+                <th><button id="captainSortWithNight" class="sort-header-btn" type="button">With Proposed NC</button></th>
+                <th><button id="captainSortPercent" class="sort-header-btn" type="button">% Difference</button></th>
+              </tr>
+            </thead>
+            <tbody id="captainPatternsBody">
+              <tr>
+                <td colspan="14">Loading captain pattern comparison.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-header">
+          <h2>Loaded Rosters</h2>
+        </div>
+        <p class="section-note">Rosters are grouped visually by bid period, with the newest bid periods shown first.</p>
+
+        <div class="table-wrap roster-library-wrap">
+          <table class="roster-library-table">
+            <colgroup>
+              <col class="col-select" />
+              <col class="col-inspect" />
+              <col class="col-remove" />
+              <col class="col-bp" />
+              <col class="col-worked-days" />
+              <col class="col-leave-days" />
+              <col class="col-pax-sectors" />
+              <col class="col-route-checks" />
+              <col class="col-pattern-credit" />
+              <col class="col-other" />
+              <col class="col-training" />
+              <col class="col-projected" />
+              <col class="col-night-delta" />
+              <col class="col-projected-night" />
+              <col class="col-diff" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Select</th>
+                <th>Inspect</th>
+                <th>Remove</th>
+                <th>BP</th>
+                <th>Worked Days</th>
+                <th>Leave Days</th>
+                <th>PAX Sectors</th>
+                <th>Route Checks</th>
+                <th>Pattern Credit</th>
+                <th>Other</th>
+                <th>Training</th>
+                <th>Projected Hours</th>
+                <th>Night Credit Δ</th>
+                <th>Projected With 4 pilot NC</th>
+                <th>% Difference</th>
+              </tr>
+            </thead>
+            <tbody id="rosterLibraryBody">
+              <tr>
+                <td colspan="15">No rosters loaded yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-header">
+          <h2>Pattern Drill-Down</h2>
+          <p id="inspectedRosterLabel" class="section-note">Inspect a loaded roster to see its patterns.</p>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Pattern</th>
+                <th>Trip</th>
+                <th>Days</th>
+                <th>Base Credit</th>
+                <th>Min Pattern</th>
+                <th>Night Credit Delta</th>
+                <th>Applicable Credit</th>
+                <th>With Night Credit</th>
+                <th>% Difference</th>
+              </tr>
+            </thead>
+            <tbody id="patternsBody">
+              <tr>
+                <td colspan="9">No roster selected for inspection.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-header">
+          <h2>Sector Drill-Down</h2>
+          <p id="inspectedPatternLabel" class="section-note">Select a pattern row to inspect its sectors.</p>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Sector</th>
+                <th>Route</th>
+                <th>Dep Local</th>
+                <th>Flight Time</th>
+                <th>Estimated Duty</th>
+                <th>Night Flight</th>
+                <th>Estimated Crew</th>
+                <th>Night Credit Delta</th>
+              </tr>
+            </thead>
+            <tbody id="sectorsBody">
+              <tr>
+                <td colspan="8">No pattern selected yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-header">
+          <h2>Other Credited Items</h2>
+          <p id="otherItemsLabel" class="section-note">Inspect a loaded roster to see credited leave, standby, training, and adjustments.</p>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Code</th>
+                <th>Dates</th>
+                <th>Days</th>
+                <th>Credit</th>
+                <th>Source</th>
+              </tr>
+            </thead>
+            <tbody id="otherItemsBody">
+              <tr>
+                <td colspan="6">No roster selected for inspection.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      (async () => {
+        try {
+          await import("./analysis-app.mjs?v=20260402b");
+        } catch (error) {
+          console.error("Failed to load analysis app module", error);
+          const statusEl = document.getElementById("status");
+          if (statusEl) {
+            statusEl.textContent =
+              "Analysis app failed to load. Start local server (python3 -m http.server 8000) and open http://localhost:8000/analysis-index.html";
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>

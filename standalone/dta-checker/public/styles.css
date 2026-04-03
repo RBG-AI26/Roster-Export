@@ -1,0 +1,733 @@
+:root {
+  --bg: #f4f5f0;
+  --surface: #ffffff;
+  --text: #1f2420;
+  --muted: #4e5b51;
+  --accent: #00695c;
+  --accent-strong: #004d40;
+  --border: #d8ddd9;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top right, #dff3ea 0%, var(--bg) 40%);
+  color: var(--text);
+}
+
+.app-shell {
+  max-width: 980px;
+  margin: 2rem auto;
+  padding: 0 1rem 2rem;
+}
+
+.analysis-page .app-shell {
+  max-width: 1520px;
+  padding-inline: 0.75rem;
+}
+
+.analysis-page .card {
+  padding: 0.8rem;
+}
+
+.analysis-page th,
+.analysis-page td {
+  padding: 0.35rem 0.35rem;
+}
+
+.analysis-page th {
+  font-size: 0.82rem;
+}
+
+.analysis-page button,
+.analysis-page .button-link {
+  padding: 0.5rem 0.9rem;
+}
+
+.analysis-page .compact-action-btn {
+  padding: 0.28rem 0.65rem;
+  font-size: 0.82rem;
+  min-width: 5.9rem;
+}
+
+.analysis-page .group-row td {
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
+}
+
+h1,
+h2 {
+  margin: 0;
+  font-family: "Gill Sans", "Avenir Next", sans-serif;
+  letter-spacing: 0.02em;
+}
+
+header p {
+  margin-top: 0.5rem;
+  color: var(--muted);
+}
+
+.card {
+  margin-top: 1.25rem;
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 16px rgba(32, 51, 43, 0.06);
+}
+
+.top-card {
+  position: relative;
+  padding-top: 2.25rem;
+}
+
+.build-version {
+  position: absolute;
+  top: 0.85rem;
+  right: 1rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.section-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.captain-export-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.toggle-btn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+}
+
+.collapsible-content[hidden] {
+  display: none;
+}
+
+.field-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+input[type="file"] {
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.button-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.55rem 1rem;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.button-link:hover {
+  background: var(--accent-strong);
+}
+
+button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 1rem;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  background: var(--accent-strong);
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+#status {
+  margin-top: 0.8rem;
+  color: var(--muted);
+}
+
+#subscriptionStatus {
+  margin-top: 0.8rem;
+  color: var(--muted);
+}
+
+.subscription-link {
+  margin-top: 0.55rem;
+}
+
+.subscription-link a {
+  color: var(--accent);
+  word-break: break-all;
+}
+
+.subscription-note {
+  margin-top: 0.8rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.section-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.admin-auth-row,
+.admin-grid {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.admin-auth-row input,
+.admin-grid input {
+  flex: 1 1 180px;
+}
+
+.admin-panel {
+  margin-top: 1rem;
+}
+
+.admin-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.admin-checkbox input {
+  width: auto;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.analysis-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.analysis-checkbox {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.analysis-checkbox input {
+  margin-top: 0.15rem;
+}
+
+.selection-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.8rem;
+}
+
+.summary-stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--border);
+  border-radius: 0.7rem;
+  background: linear-gradient(180deg, #f8fbf8 0%, #eef5f1 100%);
+}
+
+.summary-label {
+  display: block;
+  color: var(--muted);
+  font-size: 0.86rem;
+  margin-bottom: 0.35rem;
+  min-height: 2.6em;
+  line-height: 1.3;
+}
+
+.summary-stat strong {
+  display: block;
+  font-size: 1.25rem;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  margin-top: auto;
+}
+
+select,
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"] {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.45rem 0.6rem;
+  font: inherit;
+  color: var(--text);
+  background: #fff;
+}
+
+.dta-controls {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.6rem 0.8rem;
+  align-items: end;
+}
+
+.dta-controls .field-label {
+  margin-bottom: 0.2rem;
+  grid-column: 1 / span 2;
+}
+
+#dtaStatus {
+  margin-top: 0.8rem;
+  color: var(--muted);
+}
+
+.rate-form {
+  margin-top: 0.9rem;
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-end;
+}
+
+.rate-import-row {
+  margin-top: 0.9rem;
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.rate-import-row input[type="file"] {
+  flex: 1 1 0;
+}
+
+.rate-import-row button {
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.rate-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.rate-field .field-label {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.rate-field input {
+  min-width: 170px;
+}
+
+#addAirportMapForm {
+  flex-wrap: nowrap;
+  gap: 0.45rem;
+}
+
+#addAirportMapForm .rate-field {
+  flex: 0 0 auto;
+  gap: 0.35rem;
+}
+
+#addAirportMapForm .rate-field input {
+  min-width: 0;
+}
+
+#addAirportMapForm .code-field input {
+  width: 86px;
+}
+
+#addAirportMapForm .country-field {
+  flex: 1 1 300px;
+  min-width: 260px;
+}
+
+#addAirportMapForm .country-field input {
+  width: 100%;
+}
+
+#addAirportMapForm .hourly-field input {
+  width: 102px;
+}
+
+#addAirportMapBtn {
+  white-space: nowrap;
+  flex: 0 0 auto;
+  padding-inline: 0.8rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.75rem;
+}
+
+th,
+td {
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  padding: 0.55rem;
+  white-space: nowrap;
+}
+
+th {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.verified-tick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  color: #1e9b53;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.verified-placeholder {
+  display: inline-block;
+  min-width: 1.25rem;
+}
+
+.selected-row,
+.selected-row td {
+  background: #eef5fb;
+}
+
+.selected-row td {
+  border-top: 1px solid #c7d8e7;
+  border-bottom: 1px solid #c7d8e7;
+}
+
+.selected-row td:first-child {
+  border-left: 3px solid #8fb3cf;
+}
+
+.comparison-row,
+.comparison-row td {
+  background: #fff8ea;
+}
+
+.group-row td {
+  background: #e5efe9;
+  color: var(--accent-strong);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.average-row td {
+  background: #f4f8f6;
+  font-weight: 700;
+  border-top: 2px solid var(--border);
+}
+
+.meal-docket-separator-row td {
+  padding: 0.38rem 0;
+  border: none;
+  background: transparent;
+}
+
+.meal-docket-group-start td {
+  border-top: 2px solid #c7d8cf;
+}
+
+.meal-docket-pattern-total td {
+  background: #f5faf7;
+  font-weight: 700;
+  border-top: 1px dashed #c7d8cf;
+  border-bottom: none;
+}
+
+.meal-docket-pattern-total td:first-child {
+  color: var(--muted);
+}
+
+.roster-library-wrap th,
+.roster-library-wrap td {
+  text-align: center;
+}
+
+.roster-library-table {
+  table-layout: fixed;
+}
+
+.roster-library-table th,
+.roster-library-table td {
+  text-align: center;
+}
+
+.roster-library-table th,
+.roster-library-table td {
+  padding-inline: 0.08rem;
+}
+
+.roster-library-table th {
+  font-size: 0.72rem;
+  letter-spacing: 0.01em;
+}
+
+.roster-library-table td > button {
+  display: inline-flex;
+  justify-content: center;
+  margin-inline: auto;
+}
+
+.roster-library-table th:nth-child(1),
+.roster-library-table td:nth-child(1),
+.roster-library-table .col-select {
+  width: 3rem;
+}
+
+.roster-library-table th:nth-child(2),
+.roster-library-table td:nth-child(2),
+.roster-library-table th:nth-child(3),
+.roster-library-table td:nth-child(3),
+.roster-library-table .col-inspect,
+.roster-library-table .col-remove {
+  width: 5.8rem;
+}
+
+.roster-library-table th:nth-child(4),
+.roster-library-table td:nth-child(4),
+.roster-library-table .col-bp {
+  width: 2.8rem;
+}
+
+.roster-library-table th:nth-child(5),
+.roster-library-table td:nth-child(5),
+.roster-library-table th:nth-child(6),
+.roster-library-table td:nth-child(6),
+.roster-library-table th:nth-child(7),
+.roster-library-table td:nth-child(7),
+.roster-library-table th:nth-child(8),
+.roster-library-table td:nth-child(8),
+.roster-library-table th:nth-child(9),
+.roster-library-table td:nth-child(9),
+.roster-library-table th:nth-child(10),
+.roster-library-table td:nth-child(10),
+.roster-library-table th:nth-child(11),
+.roster-library-table td:nth-child(11),
+.roster-library-table th:nth-child(12),
+.roster-library-table td:nth-child(12),
+.roster-library-table th:nth-child(13),
+.roster-library-table td:nth-child(13),
+.roster-library-table th:nth-child(15),
+.roster-library-table td:nth-child(15),
+.roster-library-table .col-worked-days,
+.roster-library-table .col-leave-days,
+.roster-library-table .col-pax-sectors,
+.roster-library-table .col-route-checks,
+.roster-library-table .col-pattern-credit,
+.roster-library-table .col-other,
+.roster-library-table .col-training {
+  width: 4.7rem;
+}
+
+.roster-library-table th:nth-child(12),
+.roster-library-table td:nth-child(12),
+.roster-library-table th:nth-child(13),
+.roster-library-table td:nth-child(13),
+.roster-library-table th:nth-child(15),
+.roster-library-table td:nth-child(15),
+.roster-library-table .col-projected,
+.roster-library-table .col-night-delta,
+.roster-library-table .col-diff {
+  width: 6.1rem;
+}
+
+.roster-library-table th:nth-child(14),
+.roster-library-table td:nth-child(14),
+.roster-library-table .col-projected-night {
+  width: 8.8rem;
+}
+
+.roster-library-wrap .group-row td,
+.roster-library-wrap .average-row td:first-child {
+  text-align: left;
+}
+
+.sort-header-btn {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  cursor: pointer;
+}
+
+.sort-header-btn:hover:not(:disabled) {
+  background: transparent;
+  color: var(--accent-strong);
+}
+
+.export-pdf-btn {
+  white-space: nowrap;
+}
+
+.captain-base-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.22rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: #f3f8f5;
+}
+
+.captain-base-btn {
+  min-width: 4.1rem;
+  padding: 0.38rem 0.8rem;
+  background: transparent;
+  color: var(--muted);
+}
+
+.captain-base-btn:hover:not(:disabled) {
+  background: rgba(0, 105, 92, 0.08);
+  color: var(--accent-strong);
+}
+
+.captain-base-btn.is-active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.captain-pattern-table th,
+.captain-pattern-table td {
+  text-align: center;
+}
+
+.captain-pattern-table th:nth-child(1),
+.captain-pattern-table td:nth-child(1),
+.captain-pattern-table th:nth-child(2),
+.captain-pattern-table td:nth-child(2),
+.captain-pattern-table th:nth-child(3),
+.captain-pattern-table td:nth-child(3) {
+  text-align: left;
+}
+
+@media (max-width: 640px) {
+  .section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .top-card {
+    padding-top: 2.6rem;
+  }
+
+  .build-version {
+    right: 0.85rem;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .selection-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .dta-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .dta-controls .field-label {
+    grid-column: 1;
+  }
+
+  .rate-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #addAirportMapForm {
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  #newAirportCode,
+  #newAirportCountry,
+  #newAirportRate {
+    width: 100%;
+  }
+
+  #addAirportMapForm .country-field {
+    min-width: 0;
+  }
+
+  .rate-import-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .rate-field {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .rate-field .field-label {
+    margin-bottom: 0.2rem;
+  }
+}
