@@ -1338,6 +1338,29 @@ export function rosterToIcs(parsedRoster, sourceFileName = "roster.txt", options
       lines.push(foldIcsLine(`SUMMARY:${escapeIcsText(event.summary)}`));
       lines.push(foldIcsLine(`DESCRIPTION:${escapeIcsText(description)}`));
       lines.push(foldIcsLine(`LOCATION:${escapeIcsText(event.location || (event.category === "SIM" ? "Simulator" : "Training"))}`));
+    } else if (event.eventType === "standby") {
+      const description = [
+        `Bid Period: ${event.bidPeriod}`,
+        `Duty: ${event.dutyCode}`,
+        `Category: ${event.category}`,
+        `Detail: ${event.detail || "N/A"}`,
+        `Date: ${event.dateIso}`,
+        `Report: ${event.rept || "N/A"}`,
+        `End: ${event.end || "N/A"}`,
+        `Source File: ${sourceFileName}`,
+      ].join("\n");
+
+      if (event.timeKind === "floating") {
+        lines.push(`DTSTART:${event.dtStartLocal}`);
+        lines.push(`DTEND:${event.dtEndLocal}`);
+      } else {
+        lines.push(`DTSTART;VALUE=DATE:${event.dtStartDate}`);
+        lines.push(`DTEND;VALUE=DATE:${event.dtEndDate}`);
+      }
+
+      lines.push(foldIcsLine(`SUMMARY:${escapeIcsText(event.summary)}`));
+      lines.push(foldIcsLine(`DESCRIPTION:${escapeIcsText(description)}`));
+      lines.push("TRANSP:TRANSPARENT");
     } else {
       const description = [
         `Bid Period: ${event.bidPeriod}`,

@@ -172,6 +172,37 @@ Date Duty Detail Credit
   assert.equal(rxDay?.timeKind, "all_day");
 });
 
+test("HL and RX are recognised in multi-column roster layouts and exported as all-day events", () => {
+  const text = `ARMS crew
+27 Mar 2026
+BID PERIOD 370
+Date Duty Detail Rept End Credit|Date Duty Detail Rept End Credit|Date Duty Detail Rept End Credit
+27/08 W HL|30/08 S X Cleared|18/09 T X
+28/08 T HL|31/08 S X Cleared|19/09 F X
+29/08 F RX|01/09 M A|20/09 S RCG20X064 AW22 1310 11:00
+09/09 T RX|10/09 W A|27/09 S X
+`;
+
+  const parsed = parseRosterText(text);
+  const hlEvents = parsed.events.filter((event) => event.dutyCode === "HL");
+  const rxEvents = parsed.events.filter((event) => event.dutyCode === "RX");
+  const ics = rosterToIcs(parsed, "bp370.txt");
+
+  assert.equal(hlEvents.length, 2);
+  assert.equal(hlEvents[0]?.eventType, "leave_day");
+  assert.equal(hlEvents[0]?.summary, "HL");
+  assert.equal(hlEvents[1]?.summary, "HL");
+
+  assert.equal(rxEvents.length, 2);
+  assert.equal(rxEvents[0]?.eventType, "day_marker");
+  assert.equal(rxEvents[0]?.summary, "RX Day");
+  assert.equal(rxEvents[1]?.summary, "Last RX Day");
+
+  assert.match(ics, /SUMMARY:HL/);
+  assert.match(ics, /SUMMARY:RX Day/);
+  assert.match(ics, /SUMMARY:Last RX Day/);
+});
+
 test("SIM duties include the simulator exercise in the label", () => {
   const text = `BID PERIOD 999
 23 Dec 2026
@@ -217,6 +248,22 @@ Date Duty Detail Credit
   assert.equal(standby?.summary, "Standby");
   assert.equal(standby?.dtStartLocal, "20260403T060000");
   assert.equal(standby?.dtEndLocal, "20260403T140000");
+});
+
+test("SR standby duties are exported to ICS with timed local start and end", () => {
+  const text = `BID PERIOD 999
+01 Apr 2026
+Date Duty Detail Credit
+03/04 F SR AS01 0700 1900 5:30
+`;
+
+  const parsed = parseRosterText(text);
+  const ics = rosterToIcs(parsed, "bp999.txt");
+
+  assert.match(ics, /SUMMARY:Standby/);
+  assert.match(ics, /DTSTART:20260403T070000/);
+  assert.match(ics, /DTEND:20260403T190000/);
+  assert.match(ics, /Duty: SR/);
 });
 
 test("cancelled events are emitted in ICS output", () => {

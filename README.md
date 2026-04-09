@@ -42,7 +42,7 @@ Then open:
 - Flight events use UTC times from the roster data.
 - SIM/training events are exported as local-time events when start/end times are present.
 - Description fields include bid period, duty/flight details, and source filename.
-- Supported non-flying duty codes include `A`, `X`, `AL`, `GL`, `LSL`, `SL`, and `SR` (Standby).
+- Supported non-flying duty codes include `A`, `X`, `RX`, `AL`, `GL`, `HL`, `LSL`, `SL`, and `SR` (Standby).
 
 ## Cloudflare Worker subscription feed
 
