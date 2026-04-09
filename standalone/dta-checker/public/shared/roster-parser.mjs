@@ -22,6 +22,7 @@ const EPA_LOCATION_CODES = {
 const BP_ANCHOR_NUMBER = 358;
 const BP_LENGTH_DAYS = 56;
 const BP_ANCHOR_START_DATE = new Date(Date.UTC(2023, 9, 9));
+const MAX_HEADER_TO_BP_START_DAYS = 365;
 
 function parseHeaderDate(text) {
   const match = text.match(/\b(\d{2})\s+([A-Za-z]{3})\s+(\d{4})\b/);
@@ -55,7 +56,13 @@ function deriveBidPeriodStartDate(bidPeriodNumber) {
 function buildDateContext(text) {
   const headerDate = parseHeaderDate(text);
   const bidPeriodNumber = parseBidPeriodNumber(text);
-  const bidPeriodStartDate = deriveBidPeriodStartDate(bidPeriodNumber);
+  const derivedBidPeriodStartDate = deriveBidPeriodStartDate(bidPeriodNumber);
+  const headerToBidPeriodDays =
+    derivedBidPeriodStartDate instanceof Date
+      ? Math.abs(Math.floor((derivedBidPeriodStartDate - headerDate) / 86400000))
+      : Number.POSITIVE_INFINITY;
+  const bidPeriodStartDate =
+    headerToBidPeriodDays <= MAX_HEADER_TO_BP_START_DAYS ? derivedBidPeriodStartDate : null;
   const bidPeriodEndDate = bidPeriodStartDate ? addDays(bidPeriodStartDate, BP_LENGTH_DAYS - 1) : null;
 
   return {

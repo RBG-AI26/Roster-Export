@@ -124,6 +124,20 @@ Date Duty Detail Credit
   assert.equal(leave?.dtEndDate, "20260311");
 });
 
+test("placeholder bid periods do not override the roster header year", () => {
+  const text = `BID PERIOD 999
+10 Mar 2026
+Date Duty Detail Credit
+10/03 T X 00:00
+`;
+
+  const parsed = parseRosterText(text);
+  const day = parsed.events.find((event) => event.dutyCode === "X");
+
+  assert.equal(day?.dtStartDate, "20260310");
+  assert.equal(day?.dtEndDate, "20260311");
+});
+
 test("high priority leave is created as an all-day leave event", () => {
   const text = `BID PERIOD 999
 10 Mar 2026
