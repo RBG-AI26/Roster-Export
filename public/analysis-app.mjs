@@ -1,6 +1,6 @@
 import { buildRosterAnalysis, formatMinutes } from "./shared/roster-analysis.mjs?v=20260402a";
 
-const APP_VERSION = "2026-04-02b";
+const APP_VERSION = "2026-04-10a";
 const CAPTAIN_PATTERN_ANALYSIS_URLS = {
   SYD: "./data/bp374-captain-night-credit.json?v=20260402a",
   MEL: "./data/bp374-captain-night-credit-mel.json?v=20260402a",

@@ -12,7 +12,7 @@
     <link rel="icon" type="image/svg+xml" href="./calendar-icon.svg?v=20260324g" />
     <link rel="shortcut icon" href="./calendar-icon.svg?v=20260324g" />
     <link rel="apple-touch-icon" sizes="180x180" href="./calendar-icon-180.png?v=20260324g" />
-    <link rel="stylesheet" href="./styles.css?v=20260330g" />
+    <link rel="stylesheet" href="./styles.css?v=20260409a" />
   </head>
   <body class="analysis-page">
     <main class="app-shell">
@@ -34,141 +34,6 @@
 
         <p id="status" aria-live="polite">Load one or more roster text files to begin.</p>
         <p class="subscription-note">Uploaded rosters are kept on this device and rebuilt into the analysis library when you reopen the app.</p>
-      </section>
-
-      <section class="card">
-        <div class="section-header">
-          <h2>Selection Summary</h2>
-          <div class="selection-actions">
-            <button id="selectAllBtn" type="button">Select All</button>
-            <button id="clearSelectionBtn" type="button">Clear Selection</button>
-          </div>
-        </div>
-
-        <div id="summaryGrid" class="summary-grid">
-          <article class="summary-stat">
-            <span class="summary-label">Selected Rosters</span>
-            <strong id="selectedRostersValue">0</strong>
-          </article>
-          <article class="summary-stat">
-            <span class="summary-label">Patterns</span>
-            <strong id="selectedPatternsValue">0</strong>
-          </article>
-          <article class="summary-stat">
-            <span class="summary-label">Pattern Credit</span>
-            <strong id="baseCreditValue">0:00</strong>
-          </article>
-          <article class="summary-stat">
-            <span class="summary-label">Other</span>
-            <strong id="otherCreditValue">0:00</strong>
-          </article>
-          <article class="summary-stat">
-            <span class="summary-label">Training</span>
-            <strong id="trainingCreditValue">0:00</strong>
-          </article>
-          <article class="summary-stat">
-            <span class="summary-label">Night Credit Δ</span>
-            <strong id="nightDeltaValue">0:00</strong>
-          </article>
-          <article class="summary-stat">
-            <span class="summary-label">Projected Hours</span>
-            <strong id="applicableCreditValue">0:00</strong>
-          </article>
-          <article class="summary-stat">
-            <span class="summary-label">Projected With 4 pilot NC</span>
-            <strong id="withNightCreditValue">0:00</strong>
-          </article>
-          <article class="summary-stat">
-            <span class="summary-label">% Difference</span>
-            <strong id="creditDifferenceValue">0.0%</strong>
-          </article>
-        </div>
-      </section>
-
-      <section class="card">
-        <div class="section-header">
-          <h2>BP374 Captain Pattern Night Credit</h2>
-          <div class="section-header-actions">
-            <div class="captain-base-toggle" role="group" aria-label="Captain pattern base">
-              <button id="captainBaseAllBtn" type="button" class="captain-base-btn">ALL</button>
-              <button id="captainBaseSydBtn" type="button" class="captain-base-btn">SYD</button>
-              <button id="captainBaseMelBtn" type="button" class="captain-base-btn">MEL</button>
-              <button id="captainBaseBneBtn" type="button" class="captain-base-btn">BNE</button>
-              <button id="captainBasePerBtn" type="button" class="captain-base-btn">PER</button>
-            </div>
-            <p id="captainPatternSourceLabel" class="section-note">Loading captain pattern comparison.</p>
-            <div class="captain-export-actions">
-              <button id="exportCaptainExcelBtn" type="button" class="export-pdf-btn" disabled>Export Excel</button>
-              <button id="exportCaptainPdfBtn" type="button" class="export-pdf-btn" disabled>Export PDF</button>
-            </div>
-          </div>
-        </div>
-        <div id="captainPatternSummaryGrid" class="summary-grid">
-          <article class="summary-stat">
-            <span class="summary-label">Flown Patterns</span>
-            <strong id="captainPatternCountValue">0</strong>
-          </article>
-          <article class="summary-stat">
-            <span class="summary-label">4 pilot Flown</span>
-            <strong id="captainFourPilotCountValue">0</strong>
-          </article>
-          <article class="summary-stat">
-            <span class="summary-label">Positive Governed Uplift</span>
-            <strong id="captainPositiveCountValue">0</strong>
-          </article>
-          <article class="summary-stat">
-            <span class="summary-label">Applicable Credit</span>
-            <strong id="captainApplicableValue">0:00</strong>
-          </article>
-          <article class="summary-stat">
-            <span class="summary-label">Raw Night Credit Δ</span>
-            <strong id="captainRawDeltaValue">0:00</strong>
-          </article>
-          <article class="summary-stat">
-            <span class="summary-label">Effective Δ in Credit</span>
-            <strong id="captainGovernedDeltaValue">0:00</strong>
-          </article>
-          <article class="summary-stat">
-            <span class="summary-label">With Proposed NC</span>
-            <strong id="captainWithNightValue">0:00</strong>
-          </article>
-          <article class="summary-stat">
-            <span class="summary-label">% Difference</span>
-            <strong id="captainPercentValue">0.0%</strong>
-          </article>
-          <article class="summary-stat">
-            <span class="summary-label">All Bases Weighted %</span>
-            <strong id="captainAllBasesPercentValue">0.0%</strong>
-          </article>
-        </div>
-
-        <div class="table-wrap">
-          <table class="captain-pattern-table">
-            <thead>
-              <tr>
-                <th><button id="captainSortBase" class="sort-header-btn" type="button">Base</button></th>
-                <th><button id="captainSortPattern" class="sort-header-btn" type="button">Pattern</button></th>
-                <th><button id="captainSortWeeks" class="sort-header-btn" type="button">Weeks</button></th>
-                <th><button id="captainSortOccurrences" class="sort-header-btn" type="button">Occurrences</button></th>
-                <th><button id="captainSortRoute" class="sort-header-btn" type="button">Route</button></th>
-                <th><button id="captainSortCrew" class="sort-header-btn" type="button">Crew</button></th>
-                <th><button id="captainSortDays" class="sort-header-btn" type="button">Days Away</button></th>
-                <th><button id="captainSortApplicable" class="sort-header-btn" type="button">Applicable Credit</button></th>
-                <th><button id="captainSortFlight" class="sort-header-btn" type="button">Flight Total</button></th>
-                <th><button id="captainSortNight" class="sort-header-btn" type="button">Night Total</button></th>
-                <th><button id="captainSortRawDelta" class="sort-header-btn" type="button">Raw Night Credit Δ</button></th>
-                <th><button id="captainSortGovernedDelta" class="sort-header-btn" type="button">Effective Δ in Credit</button></th>
-                <th><button id="captainSortWithNight" class="sort-header-btn" type="button">With Proposed NC</button></th>
-                <th><button id="captainSortPercent" class="sort-header-btn" type="button">% Difference</button></th>
-              </tr>
-            </thead>
-            <tbody id="captainPatternsBody">
-              <tr>
-                <td colspan="14">Loading captain pattern comparison.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
       </section>
 
       <section class="card">
@@ -221,6 +86,55 @@
               </tr>
             </tbody>
           </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-header">
+          <h2>Selection Summary</h2>
+          <div class="selection-actions">
+            <button id="selectAllBtn" type="button">Select All</button>
+            <button id="clearSelectionBtn" type="button">Clear Selection</button>
+          </div>
+        </div>
+
+        <div id="summaryGrid" class="summary-grid">
+          <article class="summary-stat">
+            <span class="summary-label">Selected Rosters</span>
+            <strong id="selectedRostersValue">0</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Patterns</span>
+            <strong id="selectedPatternsValue">0</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Pattern Credit</span>
+            <strong id="baseCreditValue">0:00</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Other</span>
+            <strong id="otherCreditValue">0:00</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Training</span>
+            <strong id="trainingCreditValue">0:00</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Night Credit Δ</span>
+            <strong id="nightDeltaValue">0:00</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Projected Hours</span>
+            <strong id="applicableCreditValue">0:00</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Projected With 4 pilot NC</span>
+            <strong id="withNightCreditValue">0:00</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">% Difference</span>
+            <strong id="creditDifferenceValue">0.0%</strong>
+          </article>
         </div>
       </section>
 
@@ -309,12 +223,121 @@
           </table>
         </div>
       </section>
+
+      <section class="card">
+        <div class="section-header">
+          <h2>BP374 Captain Pattern Night Credit</h2>
+          <div class="section-header-actions">
+            <div class="captain-base-toggle" role="group" aria-label="Captain pattern base">
+              <button id="captainBaseAllBtn" type="button" class="captain-base-btn">ALL</button>
+              <button id="captainBaseSydBtn" type="button" class="captain-base-btn">SYD</button>
+              <button id="captainBaseMelBtn" type="button" class="captain-base-btn">MEL</button>
+              <button id="captainBaseBneBtn" type="button" class="captain-base-btn">BNE</button>
+              <button id="captainBasePerBtn" type="button" class="captain-base-btn">PER</button>
+            </div>
+            <p id="captainPatternSourceLabel" class="section-note">Loading captain pattern comparison.</p>
+            <div class="captain-export-actions">
+              <button id="exportCaptainExcelBtn" type="button" class="export-pdf-btn" disabled>Export Excel</button>
+              <button id="exportCaptainPdfBtn" type="button" class="export-pdf-btn" disabled>Export PDF</button>
+            </div>
+          </div>
+        </div>
+        <div id="captainPatternSummaryGrid" class="summary-grid">
+          <article class="summary-stat">
+            <span class="summary-label">Flown Patterns</span>
+            <strong id="captainPatternCountValue">0</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">4 pilot Flown</span>
+            <strong id="captainFourPilotCountValue">0</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Positive Governed Uplift</span>
+            <strong id="captainPositiveCountValue">0</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Applicable Credit</span>
+            <strong id="captainApplicableValue">0:00</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Raw Night Credit Δ</span>
+            <strong id="captainRawDeltaValue">0:00</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">Effective Δ in Credit</span>
+            <strong id="captainGovernedDeltaValue">0:00</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">With Proposed NC</span>
+            <strong id="captainWithNightValue">0:00</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">% Difference</span>
+            <strong id="captainPercentValue">0.0%</strong>
+          </article>
+          <article class="summary-stat">
+            <span class="summary-label">All Bases Weighted %</span>
+            <strong id="captainAllBasesPercentValue">0.0%</strong>
+          </article>
+        </div>
+
+        <div class="table-wrap">
+          <table class="captain-pattern-table">
+            <thead>
+              <tr>
+                <th><button id="captainSortBase" class="sort-header-btn" type="button">Base</button></th>
+                <th><button id="captainSortPattern" class="sort-header-btn" type="button">Pattern</button></th>
+                <th><button id="captainSortWeeks" class="sort-header-btn" type="button">Weeks</button></th>
+                <th><button id="captainSortOccurrences" class="sort-header-btn" type="button">Occurrences</button></th>
+                <th><button id="captainSortRoute" class="sort-header-btn" type="button">Route</button></th>
+                <th><button id="captainSortCrew" class="sort-header-btn" type="button">Crew</button></th>
+                <th><button id="captainSortDays" class="sort-header-btn" type="button">Days Away</button></th>
+                <th><button id="captainSortApplicable" class="sort-header-btn" type="button">Applicable Credit</button></th>
+                <th><button id="captainSortFlight" class="sort-header-btn" type="button">Flight Total</button></th>
+                <th><button id="captainSortNight" class="sort-header-btn" type="button">Night Total</button></th>
+                <th><button id="captainSortRawDelta" class="sort-header-btn" type="button">Raw Night Credit Δ</button></th>
+                <th><button id="captainSortGovernedDelta" class="sort-header-btn" type="button">Effective Δ in Credit</button></th>
+                <th><button id="captainSortWithNight" class="sort-header-btn" type="button">With Proposed NC</button></th>
+                <th><button id="captainSortPercent" class="sort-header-btn" type="button">% Difference</button></th>
+              </tr>
+            </thead>
+            <tbody id="captainPatternsBody">
+              <tr>
+                <td colspan="14">Loading captain pattern comparison.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </main>
 
     <script>
       (async () => {
         try {
-          await import("./analysis-app.mjs?v=20260402b");
+          const refreshToken = "20260410a";
+          if ("serviceWorker" in navigator) {
+            try {
+              const registrations = await navigator.serviceWorker.getRegistrations();
+              await Promise.all(registrations.map((registration) => registration.unregister()));
+            } catch (serviceWorkerError) {
+              console.warn("Analysis page could not unregister old service workers", serviceWorkerError);
+            }
+          }
+          if ("caches" in window) {
+            try {
+              const cacheKeys = await caches.keys();
+              await Promise.all(cacheKeys.map((key) => caches.delete(key)));
+            } catch (cacheError) {
+              console.warn("Analysis page could not clear caches", cacheError);
+            }
+          }
+          if (!window.location.search.includes(`fresh=${refreshToken}`)) {
+            const nextUrl = new URL(window.location.href);
+            nextUrl.searchParams.set("fresh", refreshToken);
+            window.location.replace(nextUrl.toString());
+            return;
+          }
+          await import(`./analysis-app.mjs?v=${refreshToken}`);
         } catch (error) {
           console.error("Failed to load analysis app module", error);
           const statusEl = document.getElementById("status");
