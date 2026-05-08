@@ -94,6 +94,38 @@ QF33 PAXSYD/PER MO 1530 0730 MO 1720 0920 04:50
   assert.equal(flight?.summary, "QF33 PAX SYD/PER 1530 1720");
 });
 
+test("interleaved SIM rows do not split one pattern occurrence", () => {
+  const text = `ARMS crew
+07 May 2026
+BID PERIOD 375
+Date Duty Detail Rept End Credit
+21/05 T ZDA60 AW99 0615 4:50
+21/05 T SIM07CA AW99 1015 1545 5:30
+22/05 F SIM07CB AW99 1415 1945 5:30
+22/05 F ZDA60 2345
+Pattern: ZDA60      INT  Base: MEL   Route Code:         Weeks: 1         Category:  CPT-B787                         Days Away:  2
+Service T Pax    Sectors             Time     Day    LT    UTC     Day    LT    UTC     of Duty   Total     Night   Period    Credit
+QFA0604   PAX   MEL/BNE              0615     TH    0700   2100    TH    0920   2320      1:40   (  2:20)
+SIM07CA   &     BNE/BNE                       TH    1100   0100    TH    1500   0500     22:30      4:00              9:30
+SIM07CB   &     BNE/BNE              1415     FR    1500   0500    FR    1900   0900      1:45      4:00
+QFA1259   PAX   BNE/MEL                       FR    2045   1045    FR    2315   1315             (  2:30)             9:30
+----------------------------------------------------------------`;
+
+  const parsed = parseRosterText(text);
+  const zda60Patterns = parsed.events.filter((event) => event.eventType === "pattern" && event.patternCode === "ZDA60");
+  const zda60Flights = parsed.events.filter((event) => event.eventType === "flight" && event.patternCode === "ZDA60");
+
+  assert.equal(zda60Patterns.length, 1);
+  assert.equal(zda60Patterns[0]?.tripStartIso, "2026-05-21");
+  assert.equal(zda60Patterns[0]?.tripEndIso, "2026-05-22");
+  assert.deepEqual(
+    zda60Flights.map((event) => event.flightNumber),
+    ["QFA0604", "QFA1259"]
+  );
+  assert.equal(zda60Flights[0]?.previewStart, "2026-05-20T21:00:00Z");
+  assert.equal(zda60Flights[1]?.previewStart, "2026-05-22T10:45:00Z");
+});
+
 test("staff number is parsed from the roster header", () => {
   const text = `ARMS crew
 Name: TEST   USER                                 Staff No: 504004

@@ -449,8 +449,7 @@ function parsePatternBlocks(lines) {
 
 function extractPatternSummaries(text) {
   const summaries = [];
-  const patternRegex =
-    /\|\*\s*Pattern:\s*([A-Z0-9]+)\s*\|[\s\S]*?Days Away:\s*(\d+)\s+Minimum Pattern Credit:\s*([0-9:]+)\s+Minimum Daily Credit:\s*([0-9:]+)\s+Applicable Credit:\s*([0-9:]+)/gi;
+  const patternRegex = /\bPattern\s*:?\s*([A-Z0-9]{4,})\b[^\n]*\bDays Away:\s*(\d+)/gi;
 
   let match;
   while ((match = patternRegex.exec(String(text || "")))) {
@@ -476,10 +475,11 @@ function buildPatternSummaryLookup(patternSummaries) {
 
 function buildTripOccurrences(scheduleRows, patternMap, patternSummaryLookup = new Map()) {
   const patternCodes = new Set(patternMap.keys());
+  const patternRows = scheduleRows.filter((row) => patternCodes.has(row.dutyCode) || row.dutyCode === "UL");
   const occurrences = [];
   let current = null;
 
-  for (const row of scheduleRows) {
+  for (const row of patternRows) {
     const isPatternDay = patternCodes.has(row.dutyCode);
     const isUplineSickDay = row.dutyCode === "UL";
     if (!isPatternDay) {
