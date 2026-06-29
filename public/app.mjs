@@ -1,7 +1,7 @@
-import { parseRosterText, rosterToIcs } from "./shared/roster-parser.mjs?v=20260507a";
+import { parseRosterText, rosterToIcs } from "./shared/roster-parser.mjs?v=20260629a";
 
-const APP_VERSION = "2026-05-07a";
-const SERVICE_WORKER_URL = "./sw.js?v=20260507a";
+const APP_VERSION = "2026-06-29a";
+const SERVICE_WORKER_URL = "./sw.js?v=20260629a";
 const LAST_ROSTER_STORAGE_KEY = "rosterExport.lastRoster.v1";
 const UI_STATE_STORAGE_KEY = "rosterExport.uiState.v2";
 const EXPORT_SNAPSHOT_STORAGE_KEY = "rosterExport.lastExportSnapshot.v1";

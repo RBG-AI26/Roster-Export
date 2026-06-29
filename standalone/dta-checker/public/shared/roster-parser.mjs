@@ -887,6 +887,10 @@ function buildPatternEvents(tripOccurrences, flightEvents, bidPeriod) {
 
 function identifyTrainingCategory(row) {
   const haystack = `${row.dutyCode || ""} ${row.detail || ""}`.toUpperCase();
+  if (String(row.dutyCode || "").toUpperCase() === "TSPD") {
+    return "TRAINING";
+  }
+
   if (haystack.includes("SIM")) {
     return "SIM";
   }
@@ -930,6 +934,10 @@ function buildTrainingLabel(row) {
   const dutyCodeUpper = String(row.dutyCode || "").toUpperCase();
   const detailUpper = String(row.detail || "").toUpperCase();
 
+  if (dutyCodeUpper === "TSPD") {
+    return "TSPD";
+  }
+
   if (dutyCodeUpper.includes("EPA") || detailUpper.includes("EPA")) {
     return epaLocationCode ? `EPs-${epaLocationCode}` : "EPs";
   }
@@ -952,8 +960,9 @@ function buildTrainingEvents(scheduleRows, bidPeriod) {
 
     const label = buildTrainingLabel(row);
     const location = parseEpaLocation(row);
+    const isTspd = String(row.dutyCode || "").toUpperCase() === "TSPD";
     const isEmergencyProcedures = String(row.dutyCode || "").toUpperCase().includes("EPA") || String(row.detail || "").toUpperCase().includes("EPA");
-    const summary = isEmergencyProcedures ? label : `${category}: ${label}`;
+    const summary = isEmergencyProcedures || isTspd ? label : `${category}: ${label}`;
     const uidBase = `${bidPeriod}-${row.dutyCode}-${row.iso}`;
 
     if (row.rept && row.end) {
@@ -974,6 +983,7 @@ function buildTrainingEvents(scheduleRows, bidPeriod) {
         dutyCode: row.dutyCode,
         detail: row.detail,
         location,
+        timeZone: isTspd ? "Australia/Melbourne" : "",
         dateIso: row.iso,
         rept: row.rept,
         end: row.end,
@@ -1000,6 +1010,7 @@ function buildTrainingEvents(scheduleRows, bidPeriod) {
       dutyCode: row.dutyCode,
       detail: row.detail,
       location,
+      timeZone: isTspd ? "Australia/Melbourne" : "",
       dateIso: row.iso,
       summary,
       dtStartDate: ymdForIcs(row.date),
@@ -1335,8 +1346,9 @@ export function rosterToIcs(parsedRoster, sourceFileName = "roster.txt", options
       ].join("\n");
 
       if (event.timeKind === "floating") {
-        lines.push(`DTSTART:${event.dtStartLocal}`);
-        lines.push(`DTEND:${event.dtEndLocal}`);
+        const timeZoneParameter = event.timeZone ? `;TZID=${event.timeZone}` : "";
+        lines.push(`DTSTART${timeZoneParameter}:${event.dtStartLocal}`);
+        lines.push(`DTEND${timeZoneParameter}:${event.dtEndLocal}`);
       } else {
         lines.push(`DTSTART;VALUE=DATE:${event.dtStartDate}`);
         lines.push(`DTEND;VALUE=DATE:${event.dtEndDate}`);

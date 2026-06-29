@@ -202,6 +202,28 @@ Date Duty Detail Credit
   assert.match(ics, /LOCATION:Sydney/);
 });
 
+test("TSPD is exported as a timed Melbourne event", () => {
+  const text = `ARMS crew
+28 Jun 2026
+BID PERIOD 376
+Date Duty Detail Rept End Credit|Date Duty Detail Rept End Credit|Date Duty Detail Rept End Credit
+13/07 M A|01/08 S X|20/08 T TSPD 0900 1700
+`;
+
+  const parsed = parseRosterText(text);
+  const tspd = parsed.events.find((event) => event.dutyCode === "TSPD");
+  const ics = rosterToIcs(parsed, "bp376.txt");
+
+  assert.equal(tspd?.eventType, "training");
+  assert.equal(tspd?.summary, "TSPD");
+  assert.equal(tspd?.timeZone, "Australia/Melbourne");
+  assert.equal(tspd?.dtStartLocal, "20260820T090000");
+  assert.equal(tspd?.dtEndLocal, "20260820T170000");
+  assert.match(ics, /DTSTART;TZID=Australia\/Melbourne:20260820T090000/);
+  assert.match(ics, /DTEND;TZID=Australia\/Melbourne:20260820T170000/);
+  assert.match(ics, /SUMMARY:TSPD/);
+});
+
 test("RX duties are treated as X-style all-day days off", () => {
   const text = `BID PERIOD 999
 23 Dec 2026
